@@ -1,6 +1,32 @@
 
 jQuery(document).ready(function() {    
-    
+
+
+
+    // when prev / next is hit, check for blank rows in the questionnaire and remove them prior to submission
+/*    $('.prevnext').each(function() {
+        $(this).replaceWith('<a class="btn btn-primary span2 prevnext" href="#">' + $(this).val() + '</a>');
+    });
+    var removeblankrows = function(event) {
+        event.preventDefault();
+        $('.formrow').each(function() {
+            var remove = true;
+            $(this).find('.inrows').each(function() {
+                $(this).val().length != 0 ? remove = false : false;
+            });
+            remove ? $(this).remove() : false;
+        });
+        $('form').trigger('submit');
+    }
+    $('.prevnext').bind('click',removeblankrows);*/
+
+
+
+
+
+
+    // A LOT OF THE FOLLOWING MAY NOT BE NEEDED
+
     // show the loading page on ajax call
     $.ajaxSetup({
         beforeSend:function(){

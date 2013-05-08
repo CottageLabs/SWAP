@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+		<div class="row-fluid">
+		    <div class="span12">
+		        <div class="hero-unit">
+		            <h2>{{ form.title }}</h2>
+		            <p>{{ form.explanation|safe }}</p>
+		        </div>
+		    </div>
+		</div>
+
+        <form action="" name="questionnaire" method="post">
+        <fieldset>
+		
+		<div class="row-fluid">
+		    <div class="span12">
+		
+		        <table>
+		            {% if form.headers %}
+		            <thead>
+		                <tr>
+                        {% for header in form.headers %}
+			                <th>{{ header }}</th>
+		                {% endfor %}
+		                    <th></th>
+		                </tr>
+		            </thead>
+		            {% endif %}
+		            
+		            <tbody>
+		            {% for field in form %}
+                        {% if field.name != 'csrf_token' %}
+                    	    {% if field.type == 'FormField' %}
+                              	<tr id="{{ form.prefix }}-row" class="dynamic-form formrow">
+	                            {% for subfield in field %}
+	                                {% if subfield.name != field.name + "-csrf_token" %}
+					                    <td>
+					                    {% if subfield.type == "DateField" %}
+    					                    {{ subfield(class_="datepicker inrows") }}
+					                    {% else %}
+    					                    {{ subfield(class_="inrows") }}
+    					                {% endif %}
+					                    {% if subfield.errors %}
+					                        {% for error in subfield.errors %}
+					                        <br><span class="formerror">{{ error|escape }}</span>
+					                        {% endfor %}
+                        				{% endif %}
+					                    </td>
+					                {% else %}
+					                    {{ subfield }}
+					                {% endif %}
+	                            {% endfor %}
+	                                <td>
+	                                    <a id="remove-{{ form.prefix }}-row" class="btn delete-row" style="width:68px;" href="#">delete row</a>
+                                        {% if loop.last %}
+                            		        <br><a class="btn add-row" style="width:68px;margin-top:10px;" href="#">add another</a>
+                                        {% endif %}
+
+	                                </td>
+        		                </tr>
+
+                    	    {% else %}
+                    	        <tr>
+			                    <td style="text-align:right;padding:2px 10px 0 0;">{{ field.label }}</td>
+			                    <td>
+			                    {% if field.type == "DateField" %}
+				                    {{ field(class_="datepicker") }}
+			                    {% else %}
+				                    {{ field }}
+				                {% endif %}
+			                    </td>
+                        		<td style="color:#000066;padding:2px 0 0 10px;">{{ field.description|safe }}</td>
+			                    {% if field.errors %}
+				                    {% for error in field.errors %}
+				                    <td class="formerror">{{ error|escape }}</td>
+				                    {% endfor %}
+			                    {% endif %}
+			                    </tr>
+			                {% endif %}
+			            {% else %}
+			                {{ field }}
+			            {% endif %}
+                    {% endfor %}
+                    </tbody>
+
+		        </table>
+		    </div>
+		</div>
+
+        <div class="row-fluid" style="margin-top:30px;">
+            <div class="span6" style="text-align:center;">
+		        {% if form.previous %}
+            		<input class="btn btn-primary span2 prevnext" type="submit" name="submit" value="Previous" />
+                {% else %}
+                    <span>&nbsp;</span>
+                {% endif %}
+            </div>
+            <div class="span6" style="text-align:center;">
+		        {% if form.next %}
+            		<input class="btn btn-primary span2 prevnext" type="submit" name="submit" value="Next" />
+                {% else %}
+            		<input class="btn btn-primary span2 prevnext" type="submit" name="submit" value="Submit" />
+                {% endif %}
+            </div>
+        </div>
+        
+		</fieldset>
+		</form>
+
+
+{% endblock %}
+
+
+

@@ -12,6 +12,13 @@ When using portality in your own flask app, perhaps better to make your own mode
 '''
 
 
+class Student(DomainObject):
+    __type__ = 'student'
+    
+class Survey(DomainObject):
+    __type__ = 'survey'
+
+
 # an example account object, which requires the further additional imports
 # There is a more complex example below that also requires these imports
 import portality.auth as auth

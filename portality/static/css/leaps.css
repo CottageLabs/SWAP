@@ -1,0 +1,99 @@
+body {
+	font:14px Arial, Helvetica, sans-serif; 
+	color:#0c2335; 
+	background:#0c2335; 
+	padding:0;
+	margin:0;
+}
+
+#container{
+	width:900px;
+	margin:20px auto 50px auto;
+	padding:0 10px 10px 10px;
+	background:#ffffff;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+#logo{
+	margin:-40px -10px 40px -10px;
+	text-align:center;
+}
+
+#logo img{
+    width:100%;
+}
+
+img.chart{
+    display:block;
+    margin:0 auto 0 auto;
+}
+
+footer{
+    clear:both;
+	margin:50px 0px 0px 0px;
+	padding:40px 0 0 0;
+	border-top:1px solid #666661; 
+}
+
+td{
+	vertical-align:top;
+}
+
+td ul{
+    padding:0;
+    margin:0;
+}
+
+td ul li{
+    float:left;
+    width:60px;
+    padding:0;
+    margin:0 0 5px 10px;
+    list-style-type:none;
+}
+
+.formerror{
+    color:red;
+    font-weight:bold;
+    padding:2px 0 0 5px;
+}
+
+textarea{
+	height:90px;
+}
+
+span.counter{
+	color:grey;
+	font-size:0.9em;
+}
+
+td span.counter{
+    display:block;
+}
+
+label{
+	font-weight:bold; 
+	color:#666;	
+	width:250px;
+	display:block;
+	float:left;
+	clear:both;
+}
+
+form legend{
+	font-weight:bold;
+	background:#f2f2e6; 
+	font:17px Calibri, Arial, Helvetica, sans-serif; 
+	padding:0 10px; 
+	margin:0; 
+	font-weight:bold; 
+	border:1px solid #e5e5c3; 
+}
+form label{
+	display:inline-block;
+	line-height:1.8;
+	vertical-align:top;
+}
+
+

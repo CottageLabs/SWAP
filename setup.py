@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = 'portality',
-    version = '0.7',
+    name = 'leaps',
+    version = '1.0.1',
     packages = find_packages(),
     install_requires = [
         "Flask==0.8",
@@ -11,7 +11,10 @@ setup(
         "requests==1.1.0",
         "markdown",
         "topia.termextract",
-        "html2text"
+        "html2text",
+        "pisa",
+        "reportlab",
+        "html5lib"
     ],
     url = 'http://cottagelabs.com/',
     author = 'Cottage Labs',
