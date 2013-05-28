@@ -22,7 +22,7 @@ from portality.view.graph import blueprint as graph
 from portality.view.query import blueprint as query
 from portality.view.stream import blueprint as stream
 
-from portality.view.forms import blueprint as survey
+from portality.view.leaps.forms import blueprint as survey
 
 
 app.register_blueprint(account, url_prefix='/account')

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>{{ app.config['SERVICE_NAME'] }}</title>
     <meta name="description" content="{{ app.config['SERVICE_TAGLINE'] }}">
@@ -23,17 +23,23 @@
     <script type="text/javascript" src="/static/portality/vendor/bootstrap/js/bootstrap.min.js"></script>
 
     <!-- get tablesorter js and css -->
-    <script type="text/javascript" src="/static/portality/vendor/tablesorter/js/jquery.tablesorter.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/portality/vendor/tablesorter/css/blue/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/portality/vendor/tablesorter/themes/blue/style.css">
+    <script type="text/javascript" src="/static/portality/vendor/tablesorter/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/jquery.tablesorter.widgets.js"></script>
 
     <!-- get facetview -->
+    <script type="text/javascript" src="/static/portality/vendor/facetview/vendor/linkify/1.0/jquery.linkify-1.0-min.js"></script>
     <script type="text/javascript" src="/static/portality/vendor/facetview/jquery.facetview.js"></script>
+
+    <!-- get parsley -->
+    <script type="text/javascript" src="/static/vendor/parsley/parsley.extend.min.js"></script>    
+    <script type="text/javascript" src="/static/vendor/parsley/parsley.min.js"></script>    
 
     <!-- get our js and css -->
     <link rel="stylesheet" type="text/css" href="/static/portality/css/portality.css">
     <link rel="stylesheet" type="text/css" href="/static/css/leaps.css">
     <script type="text/javascript" src="/static/js/leaps.js"></script>
                 
-  </head>
+</head>
 
 

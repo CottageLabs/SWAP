@@ -8,6 +8,10 @@ from portality.core import app
 import portality.models as models
 
 
+from portality.view.leaps.imports import blueprint as imports
+app.register_blueprint(imports, url_prefix='/import')
+
+
 blueprint = Blueprint('admin', __name__)
 
 
@@ -15,8 +19,9 @@ blueprint = Blueprint('admin', __name__)
 @blueprint.before_request
 def restrict():
     if current_user.is_anonymous():
-        return redirect('/account/login')
-    
+        return redirect('/account/login?next=' + request.path)
+    elif not current_user.view_only:
+        abort(401)
 
 # build an admin page where things can be done
 @blueprint.route('/')
@@ -34,15 +39,15 @@ def surveys():
 # show a particular student record for editing
 @blueprint.route('/student/<uuid>')
 def student(uuid):
-    student = models.Student.pull(uuid)
+    if uuid == "new":
+        student = models.Student()
+    else:
+        student = models.Student.pull(uuid)
+        if student is None: abort(404)
 
-    if student is None:
-        abort(404)
-    
-    elif request.method == 'GET':
+    if request.method == 'GET':
         # TODO: this should obv render an editable template
         return render_template('leaps/admin/student.html')
-
     elif request.method == 'POST':
         # TODO: save the posted changes
         # do some validation / grabbing of other data if necessary
@@ -51,9 +56,36 @@ def student(uuid):
     
 # do updating of schools / institutes / courses / pae answers / interview data
 @blueprint.route('/data')
-def data():
-    return render_template('leaps/admin/data.html')
-    
+@blueprint.route('/data/<model>/<uuid>')
+def data(model=None,uuid=None):
+    if request.method == 'GET':
+        if model is None:
+            return render_template('leaps/admin/data.html')
+        else:
+            # which model to pull?
+            if uuid == "new" or uuid is None:
+                # TODO: render a new input form
+                return render_template('leaps/admin/datamodel.html', model=model, record=None)
+            else:
+                klass = getattr(models, model[0].capitalize() + model[1:] )
+                rec = klass().pull(uuid)
+                if rec is None:
+                    abort(404)
+                else:
+                    # TODO: this should render an editable copy of the datum
+                    return render_template('leaps/admin/datamodel.html', model=model, record=rec)
+    elif request.method == 'POST':
+        if model is not None:
+            klass = getattr(models, model[0].capitalize() + model[1:] )
+            if uuid is not None:
+                rec = klass().pull(uuid)
+                rec.data = request.values
+            else:
+                rec = klass(**request.values)
+            rec.save()
+        else:
+            abort(404)
+
 
 # do archiving
 @blueprint.route('/archives')

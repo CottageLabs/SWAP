@@ -23,7 +23,7 @@ class DomainObject(UserDict.IterableUserDict):
             
     @classmethod
     def target(cls):
-        t = 'http://' + str(app.config['ELASTIC_SEARCH_HOST']).lstrip('http://').rstrip('/') + '/'
+        t = str(app.config['ELASTIC_SEARCH_HOST']) + '/'
         t += app.config['ELASTIC_SEARCH_DB'] + '/' + cls.__type__ + '/'
         return t
     
@@ -171,4 +171,9 @@ class DomainObject(UserDict.IterableUserDict):
     def delete(self):        
         r = requests.delete(self.target() + self.id)
 
+    # this was added for LEAPS, not in portality
+    @classmethod
+    def delete(cls):
+        r = requests.delete(cls.target())
+        r = requests.put(cls.target() + '_mapping', json.dumps(app.config['MAPPINGS'][cls.__type__]))
 

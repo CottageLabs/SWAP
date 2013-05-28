@@ -22,7 +22,7 @@ blueprint = Blueprint('stream', __name__)
 @blueprint.route('/')
 @blueprint.route('/<index>')
 @blueprint.route('/<index>/<key>')
-def stream(index='record',key='tags'):
+def stream(index='record',key='tags',size=100):
 
     if index in app.config['NO_QUERY_VIA_API']: abort(401)
     indices = []
@@ -42,7 +42,7 @@ def stream(index='record',key='tags'):
         'facets':{}
     }
     for ky in keys:
-        qry['facets'][ky] = {"terms":{"field":ky+app.config['FACET_FIELD'],"order":request.values.get('order','term'), "size":request.values.get('size',100)}}
+        qry['facets'][ky] = {"terms":{"field":ky+app.config['FACET_FIELD'],"order":request.values.get('order','term'), "size":request.values.get('size',size)}}
     
     r = models.Everything.query(q=qry)
 

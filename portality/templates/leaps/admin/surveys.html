@@ -5,25 +5,114 @@
 <script>
 jQuery(document).ready(function() {
     var post = function() {
-        var results = $.fn.facetview.options.rawdata;
+        //var results = $.fn.facetview.options.rawdata;
+        //alert($('.tablesorter').html());
+        $(".tablesorter").tablesorter({
+            "headers":{0:{"sorter":false}}, 
+/*            "widgets":["filter"],
+            "widgetOptions": {
+                filter_childRows : false,
+                filter_columnFilters : true,
+                filter_cssFilter : 'tablesorter-filter',
+                filter_filteredRow   : 'filtered',
+                filter_formatter : null,
+                filter_functions : null,
+                filter_hideFilters : true,
+                filter_ignoreCase : true,
+                filter_liveSearch : true,
+                filter_searchDelay : 200,
+                filter_serversideFiltering: false,
+                filter_startsWith : false,
+                filter_useParsedData : false
+            }*/
+        }); 
     }
     
     $('.facetview').facetview({
-        search_url: '/query?',
+        search_url: '/query/student?',
         facets: [
-            {'field':'year.exact', 'display': 'year'}, 
-            {'field':'publisher.exact', 'display': 'publisher'}
+            {'field':'archive.exact', 'display': 'archive'}, 
+            {'field':'school.exact', 'display': 'school'},
+            {'field':'SHEP_school', 'display': 'SHEP school'},
+            {'field':'LEAPS_category.exact', 'display': 'LEAPS category'},
+            {'field':'SIMD_decile.exact', 'display': 'SIMD decile'},
+            {'field':'status.exact', 'display': 'status'}
         ],
         paging: {
           from: 0,
-          size: 20
+          size: 50
         },
+        pager_on_top: true,
+        sharesave_link: false,
         default_operator: 'AND',
         default_freetext_fuzzify: true,
-        searchwrap_start: '<table class="table table-striped table-bordered tablesorter"><thead><tr><th>status</th><th>name</th></tr></thead><tbody>',
+        searchwrap_start: '<table class="tablesorter table table-striped table-bordered"><thead><tr><th><input type="checkbox" name="selectall" class="filter-false"></th><th>Submitted</th><th>Last name</th><th>First name</th><th>D.O.B</th><th>Post code</th><th>SIMD decile</th><th>school</th><th>SHEP school</th><th>Status</th><th>Archive</th></tr></thead><tbody id="facetview_results">',
         resultwrap_start: '<tr>',
         resultwrap_end: '</tr>',
         searchwrap_end: '</tbody></table>',
+        result_display: [
+            [
+                {
+                    "pre": '<td><input type="checkbox" name="select_',
+                    "field": "id",
+                    "post": '"></td>'
+                },
+                {
+                    "pre": "<td>",
+                    "field": "created_date",
+                    "post": "</td>"
+                },
+                {
+                    "pre": '<td><a alt="click to view student record" title="click to view student record" href="/admin/student/',
+                    "field": "id",
+                    "post": '">'
+                },
+                {
+                    "field": "last_name",
+                    "post": '</a></td>'
+                },
+                {
+                    "pre": "<td>",
+                    "field": "first_name",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "date_of_birth",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "post_code",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "SIMD_decile",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "school",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "SHEP_school",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "status",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "archive",
+                    "post": "</td>"
+                }
+            ]
+        ],
         post_search_callback: post
     });
 });

@@ -1,9 +1,11 @@
-import os, requests, json
+import os, requests, json, uuid
 from flask import Flask
 
 from portality import default_settings
 from flask.ext.login import LoginManager, current_user
 login_manager = LoginManager()
+
+from werkzeug import generate_password_hash
 
 def create_app():
     app = Flask(__name__)
@@ -23,7 +25,7 @@ def configure_app(app):
 
 def initialise_index(app):
     mappings = app.config["MAPPINGS"]
-    i = 'http://' + str(app.config['ELASTIC_SEARCH_HOST']).lstrip('http://').rstrip('/')
+    i = str(app.config['ELASTIC_SEARCH_HOST']).rstrip('/')
     i += '/' + app.config['ELASTIC_SEARCH_DB']
     for key, mapping in mappings.iteritems():
         im = i + '/' + key + '/_mapping'
@@ -32,6 +34,19 @@ def initialise_index(app):
             ri = requests.post(i)
             r = requests.put(im, json.dumps(mapping))
             print key, r.status_code
+    if len(app.config.get('SUPER_USER',[])) != 0:
+        un = app.config['SUPER_USER'][0]
+        ia = i + '/account/' + un
+        ae = requests.get(ia)
+        if ae.status_code != 200:
+            su = {
+                "id":un, 
+                "email":"test@test.com",
+                "api_key":str(uuid.uuid4()),
+                "password":generate_password_hash(un)
+            }
+            c = requests.post(ia, data=json.dumps(su))
+            print "first superuser account created for user " + un + " with password " + un 
 
 def setup_error_email(app):
     ADMINS = app.config.get('ADMINS', '')

@@ -4,7 +4,9 @@ from copy import deepcopy
 from flask import Blueprint, request, url_for, flash, redirect, abort
 from flask import render_template
 from flask.ext.login import login_user, logout_user, current_user
-from flask.ext.wtf import Form, TextField, TextAreaField, SelectField, PasswordField, validators, ValidationError
+from flask.ext.wtf import Form, TextField, TextAreaField, SelectField, PasswordField, HiddenField, validators, ValidationError
+
+from urlparse import urlparse, urljoin
 
 from portality import auth
 from portality.core import app
@@ -86,7 +88,34 @@ def username(username):
             )
 
 
-class LoginForm(Form):
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+           ref_url.netloc == test_url.netloc
+
+def get_redirect_target():
+    for target in request.args.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            return target
+
+class RedirectForm(Form):
+    next = HiddenField()
+
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+        if not self.next.data:
+            self.next.data = get_redirect_target() or ''
+
+    def redirect(self, endpoint='index', **values):
+        if is_safe_url(self.next.data):
+            return redirect(self.next.data)
+        target = get_redirect_target()
+        return redirect(target or url_for(endpoint, **values))
+
+class LoginForm(RedirectForm):
     username = TextField('Username', [validators.Required()])
     password = PasswordField('Password', [validators.Required()])
 
@@ -100,7 +129,7 @@ def login():
         if user and user.check_password(password):
             login_user(user, remember=True)
             flash('Welcome back.', 'success')
-            return redirect('/')
+            return form.redirect('index')
         else:
             flash('Incorrect username/password', 'error')
     if request.method == 'POST' and not form.validate():

@@ -15,7 +15,9 @@ blueprint = Blueprint('schools', __name__)
 @blueprint.before_request
 def restrict():
     if current_user.is_anonymous():
-        return redirect('/account/login')
+        return redirect('/account/login?next=' + request.path)
+    if not current_user.is_school:
+        abort(401)
     
 
 # build an admin page where things can be done
