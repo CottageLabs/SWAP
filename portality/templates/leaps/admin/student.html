@@ -3,14 +3,440 @@
 {% block content %}
 
 <script>
-jQuery(document).ready(function() {
+jQuery(document).ready(function() {    
+
+    $("[data-required]").attr('data-required-message',"");
+
+    // add a datepicker to all datepicker classes
+    // need to amend when is a recent date
+    var opts = {
+        yearRange: "-22:+0",
+        inline: true,
+        dateFormat: 'dd/mm/yy',
+        defaultDate: '-17y',
+        minDate: '-22y',
+        maxDate: '-12y',
+        changeYear: true
+    }
+    $('.datepicker').datepicker(opts);
+    
+    // add / remove rows to list items
+    var first = true;
+    $('table.multi').find('tbody').children('tr').each(function() {
+        $(this).children('td').first().prepend('<a class="btn btn-warning delete-row" style="margin:-10px 2px 0 0;" href="#">delete</a>').children('select, input').addClass('narrow');
+    });
+    $('table.multi').find('tbody').append('<tr><td><a class="btn btn-success add-row" href="#">add</a></td></tr>');
+
+    var addrow = function(event) {
+        event.preventDefault();
+        $(this).closest('tr').siblings().length == 5 ? $(this).hide() : false;
+        if ( $(this).closest('tr').siblings().length < 6 ) {
+            var row = $(this).closest('tr').prev().clone(true).get(0);
+            $(row).insertBefore($(this).closest('tr'));
+            $(row).find('.delete-row').bind('click',deleterow);
+        }
+    }
+    var deleterow = function(event) {
+        event.preventDefault();
+        var row = $(this).closest('tr').clone(true).get(0);
+        $(this).closest('tr').siblings().length == 6 ? $(this).closest('tr').siblings().find('.add-row').show() : false;
+        $(this).closest('tr').siblings().length == 1 ? $(row).insertBefore($(this).closest('tr')) : false;
+        $(this).closest('tr').remove();
+    }
+    $('.add-row').bind('click',addrow);
+    $('.delete-row').bind('click',deleterow);
+
 });
 </script>
 
-<div class="row-fluid">
-    <div class="span12">
-    </div>
+<style>
+.part .well{
+    margin-top:50px;
+}
+.part .hero-unit{
+    margin-top:50px;
+}
+.narrow{
+    width:180px;
+}
+.narrow.datepicker{
+    width:100px;
+}
+input, textarea {
+    width:200px;
+}
+select {
+    width:210px;
+}
+.add-row, .delete-row {
+    width:35px;
+}
+textarea.bigfield{
+    width:400px;
+    height:150px;
+}
+input.bigfield{
+    width:360px;
+    height:150px;
+}
+</style>
+
+<form action="" id="survey" name="survey" method="post" data-validate="parsley">
+<fieldset>
+
+
+
+<!-- the student details page -->
+<div class="part student">
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table>
+	            <tbody>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">First name</td>
+                		<td><input type="text" name="first_name" data-required="true"></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Last name</td>
+                		<td><input type="text" name="last_name" data-required="true"></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Date of birth</td>
+                		<td><input type="text" class="datepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout"></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">UCAS number</td>
+                		<td><input type="text" name="ucas_number"></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">School</td>
+                		<td><select name="school" data-required="true">
+                		    <option></option>
+                		    {% for opt in selections.schools %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">School house</td>
+                		<td><input type="text" name="school_house"></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Year group</td>
+                		<td><select name="year" data-required="true">
+                		    <option></option>
+                		    {% for opt in selections.years %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Gender</td>
+                		<td><select name="gender">
+                		    <option></option>
+                		    <option>Male</option>
+                		    <option>Female</option>
+                		</select></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Email address</td>
+                		<td><input type="text" name="email" data-type="email" data-required="true" data-trigger="keyup focusout"></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Address</td>
+                		<td><input type="text" name="address_line_1"></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Home phone</td>
+                		<td><input type="text" name="home_phone"></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">...</td>
+                		<td><input type="text" name="address_line_2"></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Mobile phone</td>
+                		<td><input type="text" name="mobile_phone"></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">City</td>
+                		<td><input type="text" name="city"></td>
+                    </tr>
+        	        <tr>
+        	            <td></td>
+        	            <td></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Region</td>
+                		<td colspan="3"><input type="text" name="region"></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">
+	                        I agree to the <br>
+                            <a target="_blank" href="/policy">LEAPS data policy</a>
+	                    </td>
+                		<td><select name="data_policy_agreement" data-required="true" data-inlist="Yes" data-inlist-message="You must agree in order to continue">
+                		    <option></option>
+                		    <option>Yes</option>
+                		    <option>No</option>
+                		</select></td>
+                    
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
+                		<td><input type="text" name="post_code" data-required="true"></td>
+                    </tr>
+                </tbody>
+	        </table>
+	    </div>
+	</div>
+
 </div>
 
 
+
+<!-- the qualifications page -->
+<!-- TODO: need to show existing data including lists of values available below -->
+<div class="part qualifications">
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table class="multi">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>School year taken</th>
+                        <th>Level of qualification</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                		<td><select name="qualification_subject">
+                		    <option></option>
+                		    {% for opt in selections.subjects %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td><select name="qualification_year">
+                		    <option></option>
+                		    {% for opt in selections.years %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td><select name="qualification_level">
+                		    <option></option>
+                		    {% for opt in selections.levels %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td><select name="qualification_grade">
+                		    <option></option>
+                		    {% for opt in selections.grades %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                    </tr>
+                </tbody>
+	        </table>
+	    </div>
+	</div>
+
+</div>
+
+
+
+        
+
+
+
+<!-- the applications page -->
+<div class="part applications">
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table class="multi">
+                <thead>
+                    <tr>
+                        <th>College / University</th>
+                        <th>Subject</th>
+                        <th>Level of study</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                		<td><select name="application_institute">
+                		    <option></option>
+                		    {% for opt in selections.institutions %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td><select name="application_subject">
+                		    <option></option>
+                		    {% for opt in selections.subjects %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td><select name="application_level">
+                		    <option></option>
+                		    {% for opt in selections.advancedlevels %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                    </tr>
+                </tbody>
+	        </table>
+	    </div>
+	</div>
+
+</div>
+
+
+
+
+
+
+        
+
+<!-- the interests page -->
+<div class="part interests">
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table class="multi">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Brief Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                		<td><input type="text" name="interest_title"></td>
+                		<td><textarea class="bigfield" name="interest_brief_description" data-maxwords="200" data-trigger="keyup focusout change"></textarea></td>
+                    </tr>
+                </tbody>
+	        </table>
+	    </div>
+	</div>
+
+</div>
+
+
+
+
+
+
+        
+
+
+<!-- the experience page -->
+<div class="part experience">
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table class="multi">
+                <thead>
+                    <tr>
+                        <th>Date from</th>
+                        <th>Date to</th>
+                        <th>Job title</th>
+                        <th>Brief Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                		<td><input type="text" class="datepicker narrow" name="experience_date_from"></td>
+                		<td><input type="text" class="datepicker narrow" name="experience_date_to"></td>
+                		<td><input type="text" class="narrow" name="experience_title"></td>
+                		<td><textarea class="bigfield" name="experience_brief_description" data-maxwords="200" data-trigger="keyup focusout change"></textarea></td>
+                    </tr>
+                </tbody>
+	        </table>
+	    </div>
+	</div>
+
+</div>
+
+
+
+
+
+
+
+<!-- the extra page -->
+<div class="part extra">
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table>
+                <tbody>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Did you make a late decision to consider higher education?</td>
+                		<td><select name="late_decision_to_apply" data-required="true">
+                		    <option></option>
+                		    <option>No</option>
+                		    <option>Yes</option>
+                		</select></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Have you had a careers interview in the last 3 months?</td>
+                		<td><select name="had_recent_careers_interview" data-required="true">
+                		    <option></option>
+                		    <option>No</option>
+                		    <option>Yes</option>
+                		</select></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">List any additional qualifications not already mentioned</td>
+                        <td><textarea class="bigfield" name="additional_qualifications"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">Describe any issues affecting academic performance</td>
+                        <td><textarea class="bigfield" name="issues_affecting_performance"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">Please describe any career plans you may have</td>
+                        <td><textarea class="bigfield" name="career_plans"></textarea></td>
+                    </tr>
+                </tbody>
+	        </table>
+	    </div>
+	</div>
+
+</div>
+
+
+
+
+
+
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;"></td>
+            		<td>
+                       	<input class="btn btn-success" style="width:220px;" type="submit" name="submit" value="Save" />
+                        {% if record %}
+                           	<br><input class="btn btn-danger" style="width:220px;margin-top:10px;" type="submit" name="submit" value="Delete">
+                        {% endif %}
+
+            		</td>
+                </tr>
+
+<!-- the form submission button -->
+<div class="part submit">
+
+	<div class="row-fluid" style="margin-top:30px;">
+	    <div class="span6">
+          	<input class="btn btn-success span2" style="margin-left:100px;" type="submit" name="submit" value="Save" />
+	    </div>
+	    {% if record %}
+	    <div class="span6">
+    	    <input class="btn btn-warning span2" style="margin-left:100px;" value="Delete">
+	    </div>
+	    {% endif %}
+    </div>
+
+</div>
+
+
+
+
+</fieldset>
+</form>
+
 {% endblock %}
+
+
+    
+

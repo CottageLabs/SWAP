@@ -12,75 +12,314 @@ jQuery(document).ready(function($) {
 
 <div class="row-fluid" style="margin-bottom:10px;">
     <div class="span12">
-        <h1>Manage supporting data</h1>
+        <h1>Manage supporting data - {% if not record %} new {% endif %}{{ model }}</h1>
     </div>
 </div>
 
 <div class="row-fluid">
-    <div class="span12">
-    <form action="" method="POST">
-    {% if model == "school" %}
+    <div class="span12" id="formholder">
+    <form action="" id="datamodel" name="datamodel" method="POST" data-validate="parsley">
         <table>
             <tbody>
+
+
+            {% if model == "school" %}
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 0;">School name</td>
-            		<td><input type="text" name="name" data-required="true"></td>
+            		<td><input type="text" name="name" data-required="true"
+            		{% if record %} value="{{record.data.name}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Address</td>
-            		<td><input type="text" name="address"></td>
+            		<td><input type="text" name="address"
+            		{% if record %} value="{{record.data.address}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Address line 2</td>
-            		<td><input type="text" name="address_2"></td>
+            		<td><input type="text" name="address_2"
+            		{% if record %} value="{{record.data.address_2}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">City</td>
-            		<td><input type="text" name="city"></td>
+            		<td><input type="text" name="city"
+            		{% if record %} value="{{record.data.city}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Region</td>
-            		<td><input type="text" name="region"></td>
+            		<td><input type="text" name="region"
+            		{% if record %} value="{{record.data.region}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
-            		<td><input type="text" name="post_code"></td>
+            		<td><input type="text" name="post_code"
+            		{% if record %} value="{{record.data.post_code}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">LEAPS Manager</td>
-            		<td><input type="text" name="LEAPS_manager"></td>
+            		<td><input type="text" name="LEAPS_manager"
+            		{% if record %} value="{{record.data.leaps_manager}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Local authority</td>
-            		<td><input type="text" name="local_authority"></td>
+            		<td><input type="text" name="local_authority"
+            		{% if record %} value="{{record.data.local_authority}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">LEAPS category</td>
-            		<td><input type="text" name="LEAPS_category"></td>
+            		<td><input type="text" name="LEAPS_category"
+            		{% if record %} value="{{record.data.leaps_category}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">SHEP school</td>
-            		<td><input type="text" name="SHEP_school"></td>
+            		<td style="padding-top:5px;padding-bottom:10px;">
+            		    <input type="checkbox" name="SHEP_school" value="yes"> Yes 
+            		    <input type="checkbox" name="SHEP_school" value="no"> No
+            		    <!-- TODO: add values if present -->
+            		</td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Contact name</td>
-            		<td><input type="text" name="contact_name"></td>
+            		<td><input type="text" name="contact_name"
+            		{% if record %} value="{{record.data.contact_name}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Contact department</td>
-            		<td><input type="text" name="contact_dept"></td>
+            		<td><input type="text" name="contact_dept"
+            		{% if record %} value="{{record.data.contact_dept}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Contact email</td>
-            		<td><input type="text" name="contact_email"></td>
+            		<td><input type="text" name="contact_email"
+            		{% if record %} value="{{record.data.contact_email}}"{% endif %}
+            		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Contact phone</td>
-            		<td><input type="text" name="contact_phone"></td>
+            		<td><input type="text" name="contact_phone"
+            		{% if record %} value="{{record.data.contact_phone}}"{% endif %}
+            		></td>
+                </tr>
+
+            {% elif model == "institution" %}
+
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 0;">Name</td>
+            		<td><input type="text" name="name" data-required="true"
+            		{% if record %} value="{{record.data.name}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Address</td>
+            		<td><input type="text" name="address"
+            		{% if record %} value="{{record.data.address}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Address line 2</td>
+            		<td><input type="text" name="address_2"
+            		{% if record %} value="{{record.data.address_2}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">City</td>
+            		<td><input type="text" name="city"
+            		{% if record %} value="{{record.data.city}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Region</td>
+            		<td><input type="text" name="region"
+            		{% if record %} value="{{record.data.region}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
+            		<td><input type="text" name="post_code"
+            		{% if record %} value="{{record.data.post_code}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Contact name</td>
+            		<td><input type="text" name="contact_name"
+            		{% if record %} value="{{record.data.contact_name}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Contact email</td>
+            		<td><input type="text" name="contact_email"
+            		{% if record %} value="{{record.data.contact_email}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Contact department</td>
+            		<td><input type="text" name="contact_department"
+            		{% if record %} value="{{record.data.contact_department}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Second contact name</td>
+            		<td><input type="text" name="contact_name_2"
+            		{% if record %} value="{{record.data.contact_name_2}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Second contact email</td>
+            		<td><input type="text" name="contact_email_2"
+            		{% if record %} value="{{record.data.contact_email_2}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Second contact department</td>
+            		<td><input type="text" name="contact_department_2"
+            		{% if record %} value="{{record.data.contact_department_2}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Third contact name</td>
+            		<td><input type="text" name="contact_name_3"
+            		{% if record %} value="{{record.data.contact_name_3}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Third contact email</td>
+            		<td><input type="text" name="contact_email_3"
+            		{% if record %} value="{{record.data.contact_email_3}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Third contact department</td>
+            		<td><input type="text" name="contact_department_3"
+            		{% if record %} value="{{record.data.contact_department_3}}"{% endif %}
+            		></td>
+                </tr>
+
+            {% elif model == "simd" %}
+
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
+            		<td><input type="text" name="post_code"
+            		{% if record %} value="{{record.data.post_code}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">SIMD Rank</td>
+            		<td><input type="text" name="simd_rank"
+            		{% if record %} value="{{record.data.simd_rank}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">SIMD Quintile</td>
+            		<td><input type="text" name="simd_quintile"
+            		{% if record %} value="{{record.data.simd_quintile}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">SIMD Decile</td>
+            		<td><input type="text" name="simd_decile"
+            		{% if record %} value="{{record.data.simd_decile}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">SIMD Vigintile</td>
+            		<td><input type="text" name="simd_vigintile"
+            		{% if record %} value="{{record.data.simd_vigintile}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Intermediate zone code</td>
+            		<td><input type="text" name="intermediate_zone_code"
+            		{% if record %} value="{{record.data.intermediate_zone_code}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Intermediate zone name</td>
+            		<td><input type="text" name="intermediate_zone_name"
+            		{% if record %} value="{{record.data.intermediate_zone_name}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Local authority code</td>
+            		<td><input type="text" name="local_authority_code"
+            		{% if record %} value="{{record.data.local_authority_code}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Local authority name</td>
+            		<td><input type="text" name="local_authority_name"
+            		{% if record %} value="{{record.data.local_authority_name}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">CHP code</td>
+            		<td><input type="text" name="chp_code"
+            		{% if record %} value="{{record.data.chp_code}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">CHP name</td>
+            		<td><input type="text" name="chp_name"
+            		{% if record %} value="{{record.data.chp_name}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">HB code</td>
+            		<td><input type="text" name="hb_code"
+            		{% if record %} value="{{record.data.hb_code}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">HB name</td>
+            		<td><input type="text" name="hb_name"
+            		{% if record %} value="{{record.data.hb_name}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Urban rural classification code</td>
+            		<td><input type="text" name="urban_rural_classification_code"
+            		{% if record %} value="{{record.data.urban_rural_classification_code}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Urban rural classification name</td>
+            		<td><input type="text" name="urban_rural_classification_name"
+            		{% if record %} value="{{record.data.urban_rural_classification_name}}"{% endif %}
+            		></td>
+                </tr>
+
+            {% elif model in ["level","advancedlevel","grade","subject","year"] %}
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 0;">{{model}} name</td>
+            		<td><input type="text" name="name" data-required="true"
+            		{% if record %} value="{{record.data.name}}"{% endif %}
+            		></td>
+                </tr>
+            {% endif %}
+
+
+
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;"></td>
+            		<td>
+                       	<input class="btn btn-success" style="width:220px;" type="submit" name="submit" value="Save" />
+                        {% if record %}
+                           	<br><input class="btn btn-danger" style="width:220px;margin-top:10px;" type="submit" name="submit" value="Delete">
+                        {% endif %}
+
+            		</td>
                 </tr>
             </tbody>
         </table>
-    {% endif %}
     </form>
     
     </div>

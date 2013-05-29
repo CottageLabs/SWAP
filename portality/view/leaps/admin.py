@@ -1,15 +1,13 @@
 import json
 from copy import deepcopy
 
-from flask import Blueprint, request, flash, abort, make_response, render_template, redirect
+from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, url_for
 from flask.ext.login import current_user
 
 from portality.core import app
+from portality.view.leaps.forms import dropdowns
 import portality.models as models
 
-
-from portality.view.leaps.imports import blueprint as imports
-app.register_blueprint(imports, url_prefix='/import')
 
 
 blueprint = Blueprint('admin', __name__)
@@ -40,31 +38,55 @@ def surveys():
 @blueprint.route('/student/<uuid>')
 def student(uuid):
     if uuid == "new":
-        student = models.Student()
+        student = None
     else:
         student = models.Student.pull(uuid)
         if student is None: abort(404)
 
     if request.method == 'GET':
-        # TODO: this should obv render an editable template
-        return render_template('leaps/admin/student.html')
+        return render_template('leaps/admin/student.html', record=student, selections={
+            "schools": dropdowns('school'),
+            "years": dropdowns('year'),
+            "subjects": dropdowns('subject'),
+            "levels": dropdowns('level'),
+            "grades": dropdowns('grade'),
+            "institutions": dropdowns('institution'),
+            "advancedlevels": dropdowns('advancedlevel')
+        })
+    elif ( request.method == 'POST' and request.values.get('submit','') == "Delete" ) or request.method == 'DELETE':
+        if student is not None:
+            student.delete()
+            flash(Student + " " + str(student.id) + " deleted")
+            return redirect(url_for('.student'))
+        else:
+            abort(404)
     elif request.method == 'POST':
-        # TODO: save the posted changes
-        # do some validation / grabbing of other data if necessary
-        pass
+        newrec = {}
+        for val in request.values:
+            if val not in ["submit"]:
+                newrec[val] = request.values[val]
+        if student is not None:
+            newrec['id'] = student.id
+            student.data = newrec
+            student.save()
+            flash("Student record has been updated", "success")
+            return render_template('leaps/admin/student.html', record=student)
+        else:
+            student = models.Student(**newrec)
+            student.save()
+            flash("New student record has been created", "success")
+            return redirect(url_for('.student') + '/' + str(student.id))
     
     
 # do updating of schools / institutes / courses / pae answers / interview data
 @blueprint.route('/data')
-@blueprint.route('/data/<model>/<uuid>')
+@blueprint.route('/data/<model>/<uuid>', methods=['GET','POST','DELETE'])
 def data(model=None,uuid=None):
     if request.method == 'GET':
         if model is None:
             return render_template('leaps/admin/data.html')
         else:
-            # which model to pull?
             if uuid == "new" or uuid is None:
-                # TODO: render a new input form
                 return render_template('leaps/admin/datamodel.html', model=model, record=None)
             else:
                 klass = getattr(models, model[0].capitalize() + model[1:] )
@@ -74,15 +96,43 @@ def data(model=None,uuid=None):
                 else:
                     # TODO: this should render an editable copy of the datum
                     return render_template('leaps/admin/datamodel.html', model=model, record=rec)
-    elif request.method == 'POST':
+    elif ( request.method == 'POST' and request.values.get('submit','') == "Delete" ) or request.method == 'DELETE':
         if model is not None:
             klass = getattr(models, model[0].capitalize() + model[1:] )
             if uuid is not None:
                 rec = klass().pull(uuid)
-                rec.data = request.values
+                if rec is not None:
+                    rec.delete()
+                    flash(model + " " + str(rec.id) + " deleted")
+                    return redirect(url_for('.data'))
+                else:
+                    abort(404)
             else:
-                rec = klass(**request.values)
-            rec.save()
+                abort(404)
+        else:
+            abort(404)    
+    elif request.method == 'POST':
+        if model is not None:
+            klass = getattr(models, model[0].capitalize() + model[1:] )
+            newrec = {}
+            for val in request.values:
+                if val not in ["submit"]:
+                    newrec[val] = request.values[val]
+            if uuid is not None and uuid != "new":
+                rec = klass().pull(uuid)
+                if rec is None:
+                    abort(404)
+                else:
+                    newrec['id'] = rec.id
+                    rec.data = newrec
+                    rec.save()
+                    flash("Your " + model + " has been updated", "success")
+                    return render_template('leaps/admin/datamodel.html', model=model, record=rec)
+            else:
+                rec = klass(**newrec)
+                rec.save()
+                flash("Your new " + model + " has been created", "success")
+                return redirect(url_for('.data') + '/' + model + '/' + str(rec.id))
         else:
             abort(404)
 

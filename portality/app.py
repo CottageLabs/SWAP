@@ -1,10 +1,3 @@
-'''
-This is the default app controller for portality.
-For inclusion in your own project you should make your own version of this controller
-and include the views you require, as well as writing new ones. Of course, views must 
-also be backed up by models, so have a look at the example models and use them / write 
-new ones as required too.
-'''
 
 from flask import Flask, request, abort, render_template
 from flask.views import View
@@ -23,6 +16,7 @@ from portality.view.query import blueprint as query
 from portality.view.stream import blueprint as stream
 
 from portality.view.leaps.forms import blueprint as survey
+from portality.view.leaps.imports import blueprint as imports
 
 
 app.register_blueprint(account, url_prefix='/account')
@@ -35,6 +29,7 @@ app.register_blueprint(query, url_prefix='/query')
 app.register_blueprint(stream, url_prefix='/stream')
 
 app.register_blueprint(survey, url_prefix='/survey')
+app.register_blueprint(imports, url_prefix='/admin/import')
 
 @login_manager.user_loader
 def load_account_for_login_manager(userid):

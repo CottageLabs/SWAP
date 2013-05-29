@@ -12,22 +12,146 @@ jQuery(document).ready(function($) {
             resdisplay: [
                 [
                     {
-                        "pre": '',
+                        "pre": '<a href="data/school/',
                         "field": "id",
-                        "post": ""
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
                     }
                 ]
             ],
             facets: []
         }
     };
-    optsets.institution = optsets.school;
-    optsets.level = optsets.school;
-    optsets.advancedlevel = optsets.school;
-    optsets.subject = optsets.school;
-    optsets.grade = optsets.school;
-    optsets.year = optsets.school;
-    optsets.simd = optsets.school;
+    
+    optsets.institution = {
+        search_url: '/query/institution?',
+        datatype: 'JSON',
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/institution/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
+    optsets.level = {
+        search_url: '/query/level?',
+        datatype: 'JSON',
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/level/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
+    optsets.advancedlevel = {
+        search_url: '/query/advancedlevel?',
+        datatype: 'JSON',
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/advancedlevel/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
+    optsets.subject = {
+        search_url: '/query/subject?',
+        datatype: 'JSON',
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/subject/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
+    optsets.grade = {
+        search_url: '/query/grade?',
+        datatype: 'JSON',
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/grade/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
+    optsets.year = {
+        search_url: '/query/year?',
+        datatype: 'JSON',
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/year/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
+    optsets.simd = {
+        search_url: '/query/simd?',
+        datatype: 'JSON',
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/simd/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
 
     var opts = {
         search_url: optsets.school.search_url,
@@ -55,7 +179,7 @@ jQuery(document).ready(function($) {
         $('#facetview').remove();
         p.append('<div id="facetview"></div>');
         $('#facetview').facetview(opts);
-        $('#newtype').text(type);
+        $('.newtype').text(type);
     }
     $('.searchtype').bind('click',searchtype);
     
@@ -73,7 +197,7 @@ jQuery(document).ready(function($) {
 
 <div class="row-fluid" style="margin-bottom:10px;">
     <div class="span12">
-        <h1>Manage supporting data</h1>
+        <h1>Manage supporting data - <span class="newtype">school</span>s</h1>
     </div>
 </div>
 
@@ -88,7 +212,8 @@ jQuery(document).ready(function($) {
             <a class="btn searchtype" data-type="grade" href="#">Grades</a>
             <a class="btn searchtype" data-type="year" href="#">Year groups</a>
             <a class="btn searchtype" data-type="simd" href="#">SIMD</a>
-            <a class="btn btn-info addnew" href="#">add new <span id="newtype">school</span></a>
+            <a class="btn btn-info addnew" href="#">add new <span id="newtype" class="newtype">school</span></a>
+            <a class="btn btn-warning" href="/admin/import">bulk import</a>
         </p>
     </div>
 </div>

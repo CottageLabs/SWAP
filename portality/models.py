@@ -37,7 +37,7 @@ class Student(DomainObject):
             self.data['status'] = 'new'
 
         if 'SIMD_decile' not in self.data:
-            s = models.Simd.pull(self.data['post_code'])
+            s = Simd.pull(self.data['post_code'])
             if s is not None:
                 self.data['SIMD_decile'] = s.data.get('SIMD_decile','SIMD decile missing')
                 self.data['SIMD_quintile'] = s.data.get('SIMD_quintile','SIMD quintile missing')
@@ -46,7 +46,7 @@ class Student(DomainObject):
                 self.data['SIMD_quintile'] = 'SIMD data for post code missing'
 
         if 'LEAPS_category' not in self.data:
-            s = models.School.query(q={'query':{'term':{'name.exact':self.data['school']}}})
+            s = School.query(q={'query':{'term':{'name.exact':self.data['school']}}})
             if s.get('hits',{}).get('total',0) == 0:
                 self.data['LEAPS_category'] = "unknown"
                 self.data['SHEP_school'] = "unknown"
