@@ -54,6 +54,10 @@ class Student(DomainObject):
                 self.data['LEAPS_category'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('LEAPS_category','unknown')
                 self.data['SHEP_school'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('SHEP_school','unknown')
 
+        if 'local_authority' not in self.data:
+            # TODO: find out where to get local authority stuff from
+            pass
+
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
 
     

@@ -42,11 +42,12 @@ jQuery(document).ready(function() {
           from: 0,
           size: 50
         },
+        sort: ["created_date.exact"],
         pager_on_top: true,
         sharesave_link: false,
         default_operator: 'AND',
         default_freetext_fuzzify: true,
-        searchwrap_start: '<table class="tablesorter table table-striped table-bordered"><thead><tr><th><input type="checkbox" name="selectall" class="filter-false"></th><th>Submitted</th><th>Last name</th><th>First name</th><th>D.O.B</th><th>Post code</th><th>SIMD decile</th><th>school</th><th>SHEP school</th><th>Status</th><th>Archive</th></tr></thead><tbody id="facetview_results">',
+        searchwrap_start: '<table class="tablesorter table table-striped table-bordered"><thead><tr><th><input type="checkbox" name="selectall" class="filter-false"></th><th>Last name</th><th>First name</th><th>D.O.B</th><th>Post code</th><th>SIMD decile</th><th>school</th><th>SHEP school</th><th>Status</th><th>Archive</th></tr></thead><tbody id="facetview_results">',
         resultwrap_start: '<tr>',
         resultwrap_end: '</tr>',
         searchwrap_end: '</tbody></table>',
@@ -58,18 +59,13 @@ jQuery(document).ready(function() {
                     "post": '"></td>'
                 },
                 {
-                    "pre": "<td>",
-                    "field": "created_date",
-                    "post": "</td>"
-                },
-                {
-                    "pre": '<td><a alt="click to view student record" title="click to view student record" href="/admin/student/',
+                    "pre": '<td><b><a alt="click to view student record" title="click to view student record" href="/admin/student/',
                     "field": "id",
                     "post": '">'
                 },
                 {
                     "field": "last_name",
-                    "post": '</a></td>'
+                    "post": '</a></b></td>'
                 },
                 {
                     "pre": "<td>",
@@ -125,19 +121,13 @@ jQuery(document).ready(function() {
 </div>
 
 <div class="row-fluid">
-    <div class="span6">
+    <div class="span12">
         <div class="well">
-            <p>Preset queries</p>
-            <a class="btn" href="#">awaiting PAE responses</a>
-            <a class="btn" href="#">something something</a>
-        </div>
-    </div>
-    <div class="span6">
-        <div class="well">
-            <p>Bulk actions for selected</p>
-            <a class="btn" href="#">send PAEs</a>
-            <a class="btn" href="#">export records</a>
-            <a class="btn btn-danger" href="#">delete records</a>
+            <a class="btn btn-info" href="/admin/student/new">add new student survey</a>
+<!--            <a class="btn" href="#">show records awaiting PAE responses</a>
+            <a class="btn" href="#">send PAEs for selected</a>
+            <a class="btn" href="#">export selected records</a>
+            <a class="btn btn-danger" href="#">delete selected records</a>-->
         </div>
     </div>    
 </div>

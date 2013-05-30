@@ -231,10 +231,9 @@ input.bigfield{
 	                        I agree to the <br>
                             <a target="_blank" href="/policy">LEAPS data policy</a>
 	                    </td>
-                		<td><select name="data_policy_agreement" data-required="true" data-inlist="Yes" data-inlist-message="You must agree in order to continue">
+                		<td><select name="data_policy_agreement" data-required="true">
                 		    <option></option>
                 		    <option>Yes</option>
-                		    <option>No</option>
                 		</select></td>
                     
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
@@ -336,7 +335,7 @@ input.bigfield{
                 </thead>
                 <tbody>
                     <tr>
-                		<td><select name="application_institute">
+                		<td><select name="application_institution">
                 		    <option></option>
                 		    {% for opt in selections.institutions %}
                 		        <option>{{ opt }}</option>

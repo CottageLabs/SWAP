@@ -1,4 +1,4 @@
-import json
+import json, time
 from copy import deepcopy
 
 from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, url_for
@@ -35,28 +35,36 @@ def surveys():
 
 
 # show a particular student record for editing
-@blueprint.route('/student/<uuid>')
-def student(uuid):
+@blueprint.route('/student')
+@blueprint.route('/student/<uuid>', methods=['GET','POST','DELETE'])
+def student(uuid=None):
+    if uuid is None:
+        return redirect(url_for('.surveys'))
     if uuid == "new":
         student = None
     else:
         student = models.Student.pull(uuid)
         if student is None: abort(404)
 
+    selections={
+        "schools": dropdowns('school'),
+        "years": dropdowns('year'),
+        "subjects": dropdowns('subject'),
+        "levels": dropdowns('level'),
+        "grades": dropdowns('grade'),
+        "institutions": dropdowns('institution'),
+        "advancedlevels": dropdowns('advancedlevel'),
+        "occupations": [],
+        "languages": dropdowns('student','main_language_at_home')
+    }
+
     if request.method == 'GET':
-        return render_template('leaps/admin/student.html', record=student, selections={
-            "schools": dropdowns('school'),
-            "years": dropdowns('year'),
-            "subjects": dropdowns('subject'),
-            "levels": dropdowns('level'),
-            "grades": dropdowns('grade'),
-            "institutions": dropdowns('institution'),
-            "advancedlevels": dropdowns('advancedlevel')
-        })
+        return render_template('leaps/admin/student.html', record=student, selections=selections)
     elif ( request.method == 'POST' and request.values.get('submit','') == "Delete" ) or request.method == 'DELETE':
         if student is not None:
             student.delete()
-            flash(Student + " " + str(student.id) + " deleted")
+            time.sleep(1)
+            flash("Student " + str(student.id) + " deleted")
             return redirect(url_for('.student'))
         else:
             abort(404)
@@ -70,7 +78,7 @@ def student(uuid):
             student.data = newrec
             student.save()
             flash("Student record has been updated", "success")
-            return render_template('leaps/admin/student.html', record=student)
+            return render_template('leaps/admin/student.html', record=student, selections=selections)
         else:
             student = models.Student(**newrec)
             student.save()
