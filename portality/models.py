@@ -32,33 +32,89 @@ class Student(DomainObject):
         if 'created_date' not in self.data:
             self.data['created_date'] = datetime.now().strftime("%Y-%m-%d %H%M")
         
-        if 'status' not in self.data:
+        if 'status' not in self.data or self.data['status'] == "":
             # TODO: ensure this sets first status to the correct one
             self.data['status'] = 'new'
 
-        if 'SIMD_decile' not in self.data:
-            s = Simd.pull(self.data['post_code'])
+        if 'simd_decile' not in self.data or self.data['simd_decile'] == "":
+            s = Simd.pull_by_post_code(self.data['post_code'])
             if s is not None:
-                self.data['SIMD_decile'] = s.data.get('SIMD_decile','SIMD decile missing')
-                self.data['SIMD_quintile'] = s.data.get('SIMD_quintile','SIMD quintile missing')
+                self.data['simd_decile'] = s.data.get('simd_decile','SIMD decile missing')
+                self.data['simd_quintile'] = s.data.get('simd_quintile','SIMD quintile missing')
             else:
-                self.data['SIMD_decile'] = 'SIMD data for post code missing'
-                self.data['SIMD_quintile'] = 'SIMD data for post code missing'
+                self.data['simd_decile'] = 'unknown'
+                self.data['simd_quintile'] = 'unknown'
 
-        if 'LEAPS_category' not in self.data:
+        if 'leaps_category' not in self.data or self.data['leaps_category'] == "":
             s = School.query(q={'query':{'term':{'name.exact':self.data['school']}}})
             if s.get('hits',{}).get('total',0) == 0:
-                self.data['LEAPS_category'] = "unknown"
-                self.data['SHEP_school'] = "unknown"
+                self.data['leaps_category'] = "unknown"
+                self.data['shep_school'] = "unknown"
+                self.data['local_authority'] = "unknown"
             else:
-                self.data['LEAPS_category'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('LEAPS_category','unknown')
-                self.data['SHEP_school'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('SHEP_school','unknown')
-
-        if 'local_authority' not in self.data:
-            # TODO: find out where to get local authority stuff from
-            pass
+                self.data['leaps_category'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('leaps_category','unknown')
+                self.data['shep_school'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('shep_school','unknown')
+                self.data['local_authority'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('local_authority','unknown')
 
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
+
+    def save_from_form(self, request):
+        rec = {
+            "qualifications": [],
+            "interests": [],
+            "applications": [],
+            "experience": []
+        }
+        
+        for k,v in enumerate(request.form.getlist('qualification_subject')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    rec["qualifications"].append({
+                        "subject": v,
+                        "year": request.form.getlist('qualification_year')[k],
+                        "level": request.form.getlist('qualification_level')[k],
+                        "grade": request.form.getlist('qualification_grade')[k]
+                    })
+                except:
+                    pass
+        for k,v in enumerate(request.form.getlist('interest_title')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    rec["interests"].append({
+                        "title": v,
+                        "brief_description": request.form.getlist('interest_brief_description')[k]
+                    })
+                except:
+                    pass
+        for k,v in enumerate(request.form.getlist('application_subject')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    rec["applications"].append({
+                        "subject": v,
+                        "institution": request.form.getlist('application_institution')[k],
+                        "level": request.form.getlist('application_level')[k]
+                    })
+                except:
+                    pass
+        for k,v in enumerate(request.form.getlist('experience_title')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    rec["experience"].append({
+                        "title": v,
+                        "brief_description": request.form.getlist('experience_brief_description')[k],
+                        "date_from": request.form.getlist('experience_date_from')[k],
+                        "date_to": request.form.getlist('experience_date_to')[k]
+                    })
+                except:
+                    pass
+
+        for key in request.form.keys():
+            if not key.startswith("qualification_") and not key.startswith("interest_") and not key.startswith("application_") and not key.startswith("experience_") and key not in ['submit']:
+                rec[key] = request.form[key]
+
+        if self.id is not None: rec['id'] = self.id
+        self.data = rec
+        self.save()
 
     
 class School(DomainObject):
@@ -84,9 +140,49 @@ class Advancedlevel(DomainObject):
 
 class Simd(DomainObject):
     __type__ = 'simd'
+
+    @classmethod
+    def makeid(cls):
+        if 'post_code' in cls.data:
+            return cls.data['post_code'].lower().replace(" ","")
+        else:
+            return uuid.uuid4().hex
+
+    @classmethod
+    def pull_by_post_code(cls, post_code):
+        return cls.pull(post_code.lower().replace(" ",""))
+
+
+class Archive(DomainObject):
+    __type__ = 'archive'
+
+    def __len__(self):
+        res = Student.query(terms={"archive"+app.config['FACET_FIELD']:self.data["name"]})
+        return res['hits']['total']
     
-    # note SIMD should have their ID as the post code with all blank spaces removed
-    # or else need a method to retrieve by post code and change the calls in the student save model
+    def delete(self):
+        for kid in self.children(justids=True):
+            k = Student.pull(kid)
+            k.delete()
+        r = requests.delete(self.target() + self.id)
+    
+    def children(self,justids=False):
+        kids = []
+        res = Student.query(terms={"archive"+app.config['FACET_FIELD']:self.data["name"]}, size=100000)
+        if res['hits']['total'] != 0:
+            if justids:
+                kids = [i['_source']['id'] for i in res['hits']['hits']]
+            else:
+                kids = [i['_source'] for i in res['hits']['hits']]
+        return kids
+
+    @classmethod
+    def pull_by_name(cls, name):
+        r = cls.query(q={"query":{"term":{"name"+app.config['FACET_FIELD']:name}}})
+        try:
+            return cls.pull( r['hits']['hits'][0]['_source']['id'] )
+        except:
+            return None
 
 
 
@@ -124,6 +220,20 @@ class Account(DomainObject, UserMixin):
     @property
     def is_school(self):
         return auth.user.is_school(self)
+        
+    @property
+    def school(self):
+        if self.is_school:
+            return "Dalkeith" # TODO: this should perhaps be tied more robustly or add a check to school re-names
+        else:
+            return None
+        
+    @property
+    def institution(self):
+        if self.is_institution:
+            return "Edinburgh" # TODO as above
+        else:
+            return None
     
     
 # a special object that allows a search onto all index types - FAILS TO CREATE INSTANCES

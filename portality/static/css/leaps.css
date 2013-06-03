@@ -19,7 +19,14 @@ ul.parsley-error-list li {
     width:200px;
 }
 
-
+.navopts{
+    margin-top:10px;
+}
+.navopts a{
+    font-size:14px;
+    width:180px;
+    margin:0 0 5px 0;
+}
 
 
 

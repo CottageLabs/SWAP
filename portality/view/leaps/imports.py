@@ -24,7 +24,7 @@ def restrict():
 @blueprint.route('/<model>')
 def index(model=None):
     if request.method == 'GET':
-        return render_template('leaps/admin/import.html')
+        return render_template('leaps/admin/import.html', model=model)
     elif request.method == 'POST':
         try:
             records = []
@@ -48,11 +48,11 @@ def index(model=None):
             klass().bulk(records)
             
             flash(str(len(records)) + " records have been imported.")
-            return render_template('leaps/admin/import.html')
+            return render_template('leaps/admin/import.html', model=model)
 
         except:
             flash("There was an error importing your records. Please try again.")
-            return render_template('leaps/admin/import.html')
+            return render_template('leaps/admin/import.html', model=model)
 
 
 

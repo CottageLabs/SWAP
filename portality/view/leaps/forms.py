@@ -63,58 +63,8 @@ def student():
         return response
 
     if request.method == 'POST':
-
-        rec = {
-            "qualifications": [],
-            "interests": [],
-            "applications": [],
-            "experience": []
-        }
-        
-        for k,v in enumerate(request.form.getlist('qualification_subject')):
-            try:
-                rec["qualifications"].append({
-                    "subject": v,
-                    "year": request.form.getlist('qualification_year')[k],
-                    "level": request.form.getlist('qualification_level')[k],
-                    "grade": request.form.getlist('qualification_grade')[k]
-                })
-            except:
-                pass
-        for k,v in enumerate(request.form.getlist('interest_title')):
-            try:
-                rec["interests"].append({
-                    "title": v,
-                    "brief_description": request.form.getlist('interest_brief_description')[k]
-                })
-            except:
-                pass
-        for k,v in enumerate(request.form.getlist('application_subject')):
-            try:
-                rec["applications"].append({
-                    "subject": v,
-                    "institute": request.form.getlist('application_institute')[k],
-                    "level": request.form.getlist('application_level')[k]
-                })
-            except:
-                pass
-        for k,v in enumerate(request.form.getlist('experience_title')):
-            try:
-                rec["experience"].append({
-                    "title": v,
-                    "brief_description": request.form.getlist('experience_brief_description')[k],
-                    "brief_description": request.form.getlist('experience_date_from')[k],
-                    "brief_description": request.form.getlist('experience_date_to')[k]
-                })
-            except:
-                pass
-
-        for key in request.form.keys():
-            if not key.startswith("qualification_") and not key.startswith("interest_") and not key.startswith("application_") and not key.startswith("experience_") :
-                rec[key] = request.form[key]
-
-        f = models.Student(**rec)
-        f.save()
+        student = models.Student()
+        student.save_from_form(request)
         
         return redirect(url_for('.complete'))
 
@@ -125,7 +75,7 @@ def dropdowns(model,key='name'):
         'size': 0,
         'facets':{}
     }
-    qry['facets'][key] = {"terms":{"field":key+app.config['FACET_FIELD'],"order":'term', "size":10000}}
+    qry['facets'][key] = {"terms":{"field":key+app.config['FACET_FIELD'],"order":'term', "size":100000}}
     klass = getattr(models, model[0].capitalize() + model[1:] )
     r = klass().query(q=qry)
     return [i.get('term','') for i in r.get('facets',{}).get(key,{}).get("terms",[])]

@@ -23,14 +23,12 @@ def restrict():
 # build an admin page where things can be done
 @blueprint.route('/')
 def index():
-    institute = "Edinburgh"#current_user.school
-    # q = models.Student().query(q={}) # requires a query that finds every student that intends to apply to the given institute
-    students = [
-        {"first_name":"mark","last_name":"macgillivray","date_of_birth":"10/07/1979","school_house":"farraline"},
-        {"first_name":"misti","last_name":"jones","date_of_birth":"10/07/1986","school_house":"other"}
-    ]
+    institution = current_user.institution
+
+    q = models.Student().query(q={'query':{'bool':{'must':[{'term':{'applications.institution.exact':institution}},{'term':{'archive.exact':'current'}}]}},'size':10000})
+    students = [i['_source'] for i in q.get('hits',{}).get('hits',[])]
     
-    return render_template('leaps/universities/index.html', students=students, institute=institute)
+    return render_template('leaps/universities/index.html', students=students, institution=institution)
 
 # view students that intend to apply to the university of the logged-in person
 

@@ -16,40 +16,27 @@ jQuery(document).ready(function() {
 <div class="row-fluid">
     <div class="span12">
 
-
+        {% if not model %}
         <p>Which type of data do you want to import?</p>
         <ul>
-        <li><a href="/import/Grades">grades</a></li>
-        <li><a href="/import/Institutes">institutes</a></li>
-        <li><a href="/import/Schools">schools</a></li>
-        <li><a href="/import/Advanced study levels">advanced study levels</a></li>
-        <li><a href="/import/School study levels">school study levels</a></li>
-        <li><a href="/import/Year groups">year groups</a></li>
+        <li><a href="grade">grades</a></li>
+        <li><a href="institution">institutes</a></li>
+        <li><a href="school">schools</a></li>
+        <li><a href="level">school study levels</a></li>
+        <li><a href="advancedlevel">advanced study levels</a></li>
+        <li><a href="year">year groups</a></li>
         </ul>
+        
+        {% else %}
 
-        <p>You have chosen to upload some records into the {{ model_name }} dataset.</p>
-        <p>Your upload file must be a comma separated value list (.csv) &mdash; software such as MS Excel can save spreadsheets as this type.</li>
-
-        <p>The first row must contain column headers that identify the data in that column. The headers must 
-        match the fields available in the data type you are uploading to. The only exemption is if you are uploading a list 
-        of values to a dataset that only contains one data type (for example a list of grades to the Grade dataset) &mdash; 
-        in which case a csv file with just one value per line and no headers will also be accepted.</p>
+        <p>You have chosen to upload some records into the {{ model }} dataset.</p>
+        <p>Your upload file must be a comma separated value list (.csv) &mdash; software such as MS Excel can save spreadsheets as this type &mdash; or a JSON file.</p>
 
         <form action="" method="post" enctype="multipart/form-data">
-        <p>
-			{% for field in form %}
-				{{ field.label_tag }}: {{ field }}
-				{% if field.errors %}
-					{% for error in field.errors %}
-					<span class="error">{{ error|escape }}</span>
-					{% endfor %}
-				{% else %}
-					<span class="help">{{ field.help_text }}</span>
-				{% endif %}
-	        {% endfor %}
-		</p>
-		<p><input class="navButton" type="submit" name="submit" value="Import" /></p>
+        <p><input type="file" name="upfile"></p>
+        <p><input class="btn" type="submit" name="submit" value="Import" /></p>
         </form>
+        {% endif %}
 
 
     </div>

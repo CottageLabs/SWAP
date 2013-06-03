@@ -25,6 +25,10 @@ def query(path='Record'):
     subpath = pathparts[0]
     if subpath.lower() in app.config.get('NO_QUERY_VIA_API',[]):
         abort(401)
+    
+    if subpath.lower() in ["student"]:
+        pass # TODO: add a bit here for leaps to only allow search of student records when user is allowed
+        
     klass = getattr(models, subpath[0].capitalize() + subpath[1:] )
     
     if len(pathparts) > 1 and pathparts[1] == '_mapping':

@@ -27,19 +27,13 @@ def index():
     return render_template('leaps/admin/index.html')
 
 
-# search and view student records
-# bulk change status of student records
-@blueprint.route('/surveys')
-def surveys():
-    return render_template('leaps/admin/surveys.html')
-
-
 # show a particular student record for editing
 @blueprint.route('/student')
 @blueprint.route('/student/<uuid>', methods=['GET','POST','DELETE'])
 def student(uuid=None):
     if uuid is None:
-        return redirect(url_for('.surveys'))
+        return render_template('leaps/admin/students.html')
+
     if uuid == "new":
         student = None
     else:
@@ -55,7 +49,12 @@ def student(uuid=None):
         "institutions": dropdowns('institution'),
         "advancedlevels": dropdowns('advancedlevel'),
         "occupations": [],
-        "languages": dropdowns('student','main_language_at_home')
+        "languages": dropdowns('student','main_language_at_home'),
+        "local_authorities": dropdowns('school','local_authority'),
+        "leaps_categories": dropdowns('school','leaps_category'),
+        "simd_deciles": dropdowns('simd','simd_decile'),
+        "simd_quintiles": dropdowns('simd','simd_quintile'),
+        "archives": dropdowns('archive','name')
     }
 
     if request.method == 'GET':
@@ -69,21 +68,19 @@ def student(uuid=None):
         else:
             abort(404)
     elif request.method == 'POST':
-        newrec = {}
-        for val in request.values:
-            if val not in ["submit"]:
-                newrec[val] = request.values[val]
-        if student is not None:
-            newrec['id'] = student.id
-            student.data = newrec
-            student.save()
-            flash("Student record has been updated", "success")
-            return render_template('leaps/admin/student.html', record=student, selections=selections)
-        else:
-            student = models.Student(**newrec)
-            student.save()
+        new = False
+        if student is None:
+            new = True
+            student = models.Student()
+        
+        student.save_from_form(request)
+
+        if new:
             flash("New student record has been created", "success")
             return redirect(url_for('.student') + '/' + str(student.id))
+        else:
+            flash("Student record has been updated", "success")
+            return render_template('leaps/admin/student.html', record=student, selections=selections)
     
     
 # do updating of schools / institutes / courses / pae answers / interview data
@@ -146,13 +143,42 @@ def data(model=None,uuid=None):
 
 
 # do archiving
-@blueprint.route('/archives')
+@blueprint.route('/archive', methods=['GET','POST'])
 def archives():
-    # get a list of all the archives in use and show them
-    # allow for creating a new archive
-    # allow for deleting an archive (and all its contents)
-    # allow to move content of one archive to another (particularly "current archive" to others)
-    return render_template('leaps/admin/archives.html')
+    if request.method == "POST":
+        action = request.values['submit']
+        if action == "Create":
+            a = models.Archive( name=request.values['archive'] )
+            a.save()
+            flash('New archive named ' + a.data["name"] + ' created')
+        elif action == "Move":
+            a = models.Archive.pull_by_name(request.values['move_from'])
+            b = models.Archive.pull_by_name(request.values['move_to'])
+            if a is None or b is None:
+                print b.id
+                print a.id
+                flash('Sorry. One of the archives you specified could not be identified...')
+            else:
+                lena = len(a)
+                for i in a.children(justids=True):
+                    ir = models.Student.pull(i)
+                    ir.data["archive"] = b.data["name"]
+                    ir.save()
+                time.sleep(1)
+                flash(str(lena) + ' records moved from archive ' + a.data["name"] + ' to archive ' + b.data["name"] + ', which now contains ' + str(len(b)) + ' records. Archive ' + a.data["name"] + ' still exists, but is now empty. Feel free to delete it if you wish, or use it to put more records in.')
+        elif action == "Delete":
+            a = models.Archive.pull_by_name(request.values['delete'])
+            length = len(a)
+            a.delete()
+            flash('Archive ' + a.data["name"] + ' deleted, along with all ' + str(length) + ' records it contained.')
+
+        time.sleep(1)
+
+    return render_template(
+        'leaps/admin/archive.html', 
+        currentcount=models.Student.query().get('hits',{}).get('total',0),
+        archives=dropdowns('archive','name')
+    )
 
 
 # view / print pae forms

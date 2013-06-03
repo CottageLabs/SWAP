@@ -24,12 +24,9 @@ def restrict():
 # view students of the school of the logged-in person that have submitted forms
 @blueprint.route('/')
 def index():
-    school = "Fettes"#current_user.school
-    q = models.Student().query(q={'query':{'bool':{'must':[{'term':{'school.exact':school}},{'term':{'archive.exact':'current'}}]}},'size':1000})
-    students = [
-        {"first_name":"mark","last_name":"macgillivray","date_of_birth":"10/07/1979","school_house":"farraline"},
-        {"first_name":"misti","last_name":"jones","date_of_birth":"10/07/1986","school_house":"other"}
-    ]
+    school = current_user.school
+    q = models.Student().query(q={'query':{'bool':{'must':[{'term':{'school.exact':school}},{'term':{'archive.exact':'current'}}]}},'size':10000})
+    students = [i['_source'] for i in q.get('hits',{}).get('hits',[])]
     
     return render_template('leaps/schools/index.html', students=students, school=school)
 

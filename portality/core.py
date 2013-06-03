@@ -34,6 +34,12 @@ def initialise_index(app):
             ri = requests.post(i)
             r = requests.put(im, json.dumps(mapping))
             print key, r.status_code
+            if key == "archive":
+                a = requests.post(i + '/archive/current', data=json.dumps({
+                    'name':'current',
+                    'id': 'current'
+                }))
+                print 'default archive named "current" has been created'
     if len(app.config.get('SUPER_USER',[])) != 0:
         un = app.config['SUPER_USER'][0]
         ia = i + '/account/' + un

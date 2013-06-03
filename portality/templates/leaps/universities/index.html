@@ -11,9 +11,9 @@ jQuery(document).ready(function() {
     <div class="row-fluid">
         <div class="span12">
             <div class="hero-unit">
-                <h1>{{ institute }}</h1>
-                <p>Below are listed all the students that have so far submitted a survey form to LEAPS that has included an intention to apply to {{ institute }}.</p>
-                <p>Note that a particular student may well intend to apply to more than one subject at a given institute; in such cases, Pre-Application Enquiries will exist for each subject that the student intends to apply to, and each PAE should be completed by the most relevant person at the institute in question.</p>
+                <h1>{{ institution }}</h1>
+                <p>Below are listed all the students that have so far submitted a survey form to LEAPS that has included an intention to apply to {{ institution }}, for which a Pre-Application Enquiry has been deemed necessary.</p>
+                <p>Note that a particular student may well intend to apply to more than one subject at a given institution; in such cases, Pre-Application Enquiries will exist for each subject that the student intends to apply to, and each PAE should be completed by the most relevant person at the institution in question.</p>
             </div>
         </div>
     </div>
@@ -34,14 +34,16 @@ jQuery(document).ready(function() {
                 </thead>
                 <tbody>
                     {% for student in students %}
-                    <tr>
-                        <td>{{ student.first_name }}</td>
-                        <td>{{ student.last_name }}</td>
-                        <td>{{ student.date_of_birth }}</td>
-                        <td>Subj here</td>
-                        <td>Lvl here</td>
-                        <td><a class="btn" href="#">View PAE</a></td>
-                    </tr>
+                        {% for app in student.applications %}
+                        <tr>
+                            <td>{{ student.first_name }}</td>
+                            <td>{{ student.last_name }}</td>
+                            <td>{{ student.date_of_birth }}</td>
+                            <td>{{ app.subject }}</td>
+                            <td>{{ app.level }}</td>
+                            <td><a class="btn" href="#">View PAE</a></td>
+                        </tr>
+                        {% endfor %}
                     {% endfor %}
                 </tbody>
             </table>
