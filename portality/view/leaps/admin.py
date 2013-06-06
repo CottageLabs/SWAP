@@ -42,14 +42,11 @@ def student(uuid=None):
 
     selections={
         "schools": dropdowns('school'),
-        "years": dropdowns('year'),
         "subjects": dropdowns('subject'),
         "levels": dropdowns('level'),
         "grades": dropdowns('grade'),
         "institutions": dropdowns('institution'),
         "advancedlevels": dropdowns('advancedlevel'),
-        "occupations": [],
-        "languages": dropdowns('student','main_language_at_home'),
         "local_authorities": dropdowns('school','local_authority'),
         "leaps_categories": dropdowns('school','leaps_category'),
         "simd_deciles": dropdowns('simd','simd_decile'),

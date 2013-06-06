@@ -56,7 +56,17 @@ class Student(DomainObject):
                 self.data['shep_school'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('shep_school','unknown')
                 self.data['local_authority'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('local_authority','unknown')
 
+        if self.data.get('shep_school',False) == "on":
+            self.data['shep_school'] = True
+        if self.data.get('shep_school',False) == "off":
+            self.data['shep_school'] = False                
+        if self.data.get('shep_school',False) == 1:
+            self.data['shep_school'] = True
+        if self.data.get('shep_school',False) == 0:
+            self.data['shep_school'] = False          
+
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
+
 
     def save_from_form(self, request):
         rec = {
@@ -120,6 +130,35 @@ class Student(DomainObject):
 class School(DomainObject):
     __type__ = 'school'
 
+    @classmethod
+    def prep(cls, rec):
+        if 'id' in rec:
+            id_ = rec['id'].strip()
+        else:
+            id_ = cls.makeid()
+            rec['id'] = id_
+        
+        rec['last_updated'] = datetime.now().strftime("%Y-%m-%d %H%M")
+
+        if 'created_date' not in rec:
+            rec['created_date'] = datetime.now().strftime("%Y-%m-%d %H%M")
+            
+        if 'author' not in rec:
+            try:
+                rec['author'] = current_user.id
+            except:
+                rec['author'] = "anonymous"
+
+        if rec.get('shep_school',False) == "on":
+            rec['shep_school'] = True
+        if rec.get('shep_school',False) == "off":
+            rec['shep_school'] = False                
+        if rec.get('shep_school',False) == 1:
+            rec['shep_school'] = True
+        if rec.get('shep_school',False) == 0:
+            rec['shep_school'] = False          
+        return rec
+
 class Year(DomainObject):
     __type__ = 'year'
 
@@ -142,11 +181,25 @@ class Simd(DomainObject):
     __type__ = 'simd'
 
     @classmethod
-    def makeid(cls):
-        if 'post_code' in cls.data:
-            return cls.data['post_code'].lower().replace(" ","")
-        else:
-            return uuid.uuid4().hex
+    def prep(cls, rec):
+        if 'id' not in rec:
+            if 'post_code' in rec:
+                rec['id'] = rec['post_code'].lower().replace(" ","")
+            else:
+                rec['id'] = cls.makeid()
+        
+        rec['last_updated'] = datetime.now().strftime("%Y-%m-%d %H%M")
+
+        if 'created_date' not in rec:
+            rec['created_date'] = datetime.now().strftime("%Y-%m-%d %H%M")
+            
+        if 'author' not in rec:
+            try:
+                rec['author'] = current_user.id
+            except:
+                rec['author'] = "anonymous"
+                
+        return rec
 
     @classmethod
     def pull_by_post_code(cls, post_code):

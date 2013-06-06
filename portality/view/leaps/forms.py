@@ -41,14 +41,11 @@ def student():
     
     if request.method == 'GET':
         # TODO: if people are logged in it may be necessary to render a form with previously submitted data
-        # selections should be named lists of available dropdown values
-        # define which form to render
         response = make_response(
             render_template(
                 'leaps/survey/survey.html', 
                 selections={
                     "schools": dropdowns('school'),
-                    "years": dropdowns('year'),
                     "subjects": dropdowns('subject'),
                     "levels": dropdowns('level'),
                     "grades": dropdowns('grade'),

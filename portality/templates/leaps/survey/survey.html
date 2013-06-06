@@ -8,17 +8,17 @@ jQuery(document).ready(function() {
     $("[data-required]").attr('data-required-message',"");
 
     // add a datepicker to all datepicker classes
-    // need to amend when is a recent date
     var opts = {
-        yearRange: "-22:+0",
         inline: true,
         dateFormat: 'dd/mm/yy',
-        defaultDate: '-17y',
-        minDate: '-22y',
-        maxDate: '-12y',
         changeYear: true
     }
     $('.datepicker').datepicker(opts);
+    opts.yearRange = "-22:+0";
+    opts.defaultDate = '-17y';
+    opts.minDate = '-22y';
+    opts.maxDate = '-12y';
+    $('.dobdatepicker').datepicker(opts);
     
     // hide survey sections and add prev/next nav-throughs
     var doprevnext = function(event) {
@@ -40,7 +40,9 @@ jQuery(document).ready(function() {
     // review button show all
     var showall = function(event) {
         event.preventDefault();
+        $('#activealert').hide();
         $('.part').show();
+        $("html, body").animate({ scrollTop: 0 }, "fast");
     }
     $('.review').bind('click',showall);
 
@@ -69,6 +71,14 @@ jQuery(document).ready(function() {
     }
     $('.add-row').bind('click',addrow);
     $('.delete-row').bind('click',deleterow);
+
+    var triggersave = function(event) {
+        if ( !$('#survey').parsley('validate') ) {
+            event.preventDefault();
+            $('#activealert').show();
+        }
+    };
+    $('#triggersave').bind('click',triggersave);
 
 });
 </script>
@@ -165,7 +175,7 @@ input.bigfield{
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Date of birth</td>
-                		<td><input type="text" class="datepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout"></td>
+                		<td><input type="text" class="dobdatepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout"></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">UCAS number</td>
                 		<td><input type="text" name="ucas_number"></td>
@@ -186,9 +196,11 @@ input.bigfield{
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Year group</td>
                 		<td><select name="year" data-required="true">
                 		    <option></option>
-                		    {% for opt in selections.years %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
+                		    <option>Third year</option>
+                		    <option>Fourth year</option>
+                		    <option>Fifth year</option>
+                		    <option>Sixth year</option>
+                		    <option>Other</option>
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Gender</td>
@@ -281,9 +293,11 @@ input.bigfield{
                 		</select></td>
                 		<td><select name="qualification_year">
                 		    <option></option>
-                		    {% for opt in selections.years %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
+                		    <option>Third year</option>
+                		    <option>Fourth year</option>
+                		    <option>Fifth year</option>
+                		    <option>Sixth year</option>
+                		    <option>Other</option>
                 		</select></td>
                 		<td><select name="qualification_level">
                 		    <option></option>
@@ -524,10 +538,13 @@ input.bigfield{
 	<div class="row-fluid" style="margin-top:30px;">
 	    <div class="span6">
 	        <div class="alert alert-success">
-            	<input class="btn btn-success span2" style="margin-left:100px;" type="submit" name="submit" value="Submit your survey" />
+            	<input id="triggersave" class="btn btn-success span2" style="margin-left:100px;" type="submit" name="submit" value="Submit your survey" />
 	        </div>
 	    </div>
 	    <div class="span6">
+	        <div id="activealert" class="alert alert-warning clearfix" style="display:none;">
+	            <p>There are errors with your responses. Please click below to review your responses, then you can scroll through or use the previous / next buttons to check them. Any errors will be highlighted in red. Once there are no errors, please try to submit once again.</p>
+	        </div>
 	        <div class="alert alert-warning clearfix">
         	    <p><button class="btn btn-warning span2 review" style="margin-left:100px;">Review your responses</button></p>
 	        </div>

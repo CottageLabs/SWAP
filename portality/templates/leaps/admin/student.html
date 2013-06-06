@@ -12,16 +12,22 @@
 <script>
 jQuery(document).ready(function() {    
 
+    $("[data-required]").attr('data-required-message',"");
+
     $('#survey').parsley('validate');
 
     // add a datepicker to all datepicker classes
-    // need to amend when is a recent date
     var opts = {
         inline: true,
         dateFormat: 'dd/mm/yy',
         changeYear: true
     }
     $('.datepicker').datepicker(opts);
+    opts.yearRange = "-22:+0";
+    opts.defaultDate = '-17y';
+    opts.minDate = '-22y';
+    opts.maxDate = '-12y';
+    $('.dobdatepicker').datepicker(opts);
     
     // add / remove rows to list items
     var first = true;
@@ -75,7 +81,7 @@ jQuery(document).ready(function() {
 .part .hero-unit{
     margin-top:50px;
 }
-.narrow{
+.narrow, .needselect2{
     width:180px;
 }
 .narrow.datepicker{
@@ -92,7 +98,7 @@ select {
 }
 textarea.bigfield{
     width:400px;
-    height:150px;
+    height:135px;
 }
 input.bigfield{
     width:360px;
@@ -143,7 +149,7 @@ fieldset{
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Date of birth</td>
-                		<td><input type="text" class="datepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout"
+                		<td><input type="text" class="dobdatepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout"
                 		{% if record %} value="{{record.data.date_of_birth}}"{% endif %}
                 		></td>
 
@@ -172,11 +178,21 @@ fieldset{
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Year group</td>
                 		<td><select name="year" data-required="true">
                 		    <option></option>
-                		    {% for opt in selections.years %}
-                		        <option
-                		        {% if record %}{% if record.data.year == opt %} selected="selected"{% endif %}{% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
+                		    <option
+                		    {% if record %}{% if record.data.year == "Third year" %} selected="selected"{% endif %}{% endif %}
+                		    >Third year</option>
+                		    <option
+                		    {% if record %}{% if record.data.year == "Fourth year" %} selected="selected"{% endif %}{% endif %}
+                		    >Fourth year</option>
+                		    <option                		    
+                		    {% if record %}{% if record.data.year == "Fifth year" %} selected="selected"{% endif %}{% endif %}
+                            >Fifth year</option>
+                		    <option
+                		    {% if record %}{% if record.data.year == "Sixth year" %} selected="selected"{% endif %}{% endif %}
+                		    >Sixth year</option>
+                		    <option
+                		    {% if record %}{% if record.data.year == "Other" %} selected="selected"{% endif %}{% endif %}
+                		    >Other</option>
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Gender</td>
@@ -385,7 +401,7 @@ fieldset{
                     {% if record %}
                         {% for qual in record.data.qualifications %}
                     <tr>
-                		<td><select name="qualification_subject">
+                		<td><select name="qualification_subject" class="needselect2">
                 		    <option></option>
                 		    {% for opt in selections.subjects %}
                 		        <option
@@ -395,11 +411,21 @@ fieldset{
                 		</select></td>
                 		<td><select name="qualification_year">
                 		    <option></option>
-                		    {% for opt in selections.years %}
-                		        <option
-                		        {% if opt == qual.year %} selected="selected"{% endif %}                		        
-                		        >{{ opt }}</option>
-                		    {% endfor %}
+                		    <option
+                		    {% if record.data.year == "Third year" %} selected="selected"{% endif %}
+                		    >Third year</option>
+                		    <option
+                		    {% if record.data.year == "Fourth year" %} selected="selected"{% endif %}
+                		    >Fourth year</option>
+                		    <option                		    
+                		    {% if record.data.year == "Fifth year" %} selected="selected"{% endif %}
+                            >Fifth year</option>
+                		    <option
+                		    {% if record.data.year == "Sixth year" %} selected="selected"{% endif %}
+                		    >Sixth year</option>
+                		    <option
+                		    {% if record.data.year == "Other" %} selected="selected"{% endif %}
+                		    >Other</option>
                 		</select></td>
                 		<td><select name="qualification_level">
                 		    <option></option>
@@ -423,7 +449,7 @@ fieldset{
                     {% endif %}
                     
                     <tr>
-                		<td><select name="qualification_subject">
+                		<td><select name="qualification_subject" class="needselect2">
                 		    <option></option>
                 		    {% for opt in selections.subjects %}
                 		        <option>{{ opt }}</option>
@@ -431,9 +457,11 @@ fieldset{
                 		</select></td>
                 		<td><select name="qualification_year">
                 		    <option></option>
-                		    {% for opt in selections.years %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
+                		    <option>Third year</option>
+                		    <option>Fourth year</option>
+                		    <option>Fifth year</option>
+                		    <option>Sixth year</option>
+                		    <option>Other</option>
                 		</select></td>
                 		<td><select name="qualification_level">
                 		    <option></option>
@@ -489,7 +517,7 @@ fieldset{
                     {% if record %}
                         {% for app in record.data.applications %}
                     <tr>
-                		<td><select name="application_institution">
+                		<td><select name="application_institution" class="needselect2">
                 		    <option></option>
                 		    {% for opt in selections.institutions %}
                 		        <option
@@ -497,7 +525,7 @@ fieldset{
                 		        >{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><select name="application_subject">
+                		<td><select name="application_subject" class="needselect2">
                 		    <option></option>
                 		    {% for opt in selections.subjects %}
                 		        <option
@@ -518,13 +546,13 @@ fieldset{
                     {% endif %}
 
                     <tr>
-                		<td><select name="application_institution">
+                		<td><select name="application_institution" class="needselect2">
                 		    <option></option>
                 		    {% for opt in selections.institutions %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><select name="application_subject">
+                		<td><select name="application_subject" class="needselect2">
                 		    <option></option>
                 		    {% for opt in selections.subjects %}
                 		        <option>{{ opt }}</option>
@@ -766,14 +794,8 @@ fieldset{
 
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Mothers occupation</td>
-                		<td><select name="mothers_occupation">
-                		    <option></option>
-                		    {% for opt in selections.occupations %}
-                		        <option
-                		        {% if record %}{% if record.data.mothers_occupation == opt %} selected="selected"{% endif %}{% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
+	                    <td><input name="mothers_occupation"{% if record %} value="{{ record.data.mothers_occupation }}"{% endif %}></td>
+
                 		<td rowspan="2"><input type="checkbox" name="hn_only_candidate"
                 		{% if record %}{% if record.data.hn_only_candidate %} checked="checked"{% endif %}{% endif %}
                 		> HN only candidate
@@ -786,14 +808,8 @@ fieldset{
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Fathers occupation</td>
-                		<td><select name="fathers_occupation">
-                		    <option></option>
-                		    {% for opt in selections.occupations %}
-                		        <option
-                		        {% if record %}{% if record.data.fathers_occupation == opt %} selected="selected"{% endif %}{% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
+	                    <td><input name="fathers_occupation"{% if record %} value="{{ record.data.fathers_occupation }}"{% endif %}></td>
+
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Number of siblings</td>
@@ -801,8 +817,7 @@ fieldset{
                 		{% if record %}{{record.data.number_of_siblings}}{% endif %}
                 		></td>
                 		<td rowspan="4">
-                		Additional comments<br>
-                		<textarea class="bigfield" name="additional_comments">{% if record %}{{record.data.additional_comments}}{% endif %}</textarea>
+                		<textarea class="bigfield" name="additional_comments" placeholder="additional comments">{% if record %}{{record.data.additional_comments}}{% endif %}</textarea>
                 		</td>
                     </tr>
         	        <tr>
@@ -819,14 +834,8 @@ fieldset{
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Main language at home</td>
-                		<td><select name="main_language_at_home">
-                		    <option></option>
-                		    {% for opt in selections.languages %}
-                		        <option
-                		        {% if record %}{% if record.data.main_language_at_home == opt %} selected="selected"{% endif %}{% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
+	                    <td><input name="main_language_at_home"{% if record %} value="{{ record.data.main_language_at_home }}"{% endif %}></td>
+
                     </tr>
                 </tbody>
             </table>

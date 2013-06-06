@@ -45,24 +45,30 @@ class DomainObject(UserDict.IterableUserDict):
     def json(self):
         return json.dumps(self.data)
 
-    def save(self):
-        if 'id' in self.data:
-            id_ = self.data['id'].strip()
+    @classmethod
+    def prep(cls, rec):
+        if 'id' in rec:
+            id_ = rec['id'].strip()
         else:
-            id_ = self.makeid()
-            self.data['id'] = id_
+            id_ = cls.makeid()
+            rec['id'] = id_
         
-        self.data['last_updated'] = datetime.now().strftime("%Y-%m-%d %H%M")
+        rec['last_updated'] = datetime.now().strftime("%Y-%m-%d %H%M")
 
-        if 'created_date' not in self.data:
-            self.data['created_date'] = datetime.now().strftime("%Y-%m-%d %H%M")
+        if 'created_date' not in rec:
+            rec['created_date'] = datetime.now().strftime("%Y-%m-%d %H%M")
             
-        if 'author' not in self.data:
+        if 'author' not in rec:
             try:
-                self.data['author'] = current_user.id
+                rec['author'] = current_user.id
             except:
-                self.data['author'] = "anonymous"
+                rec['author'] = "anonymous"
+                
+        return rec
 
+
+    def save(self):
+        self.data = self.prep(self.data)
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
 
 
@@ -70,6 +76,7 @@ class DomainObject(UserDict.IterableUserDict):
     def bulk(cls, bibjson_list, idkey='id'):
         data = ''
         for r in bibjson_list:
+            r = cls.prep(r)
             data += json.dumps( {'index':{'_id':r[idkey]}} ) + '\n'
             data += json.dumps( r ) + '\n'
         r = requests.post(cls.target() + '_bulk', data=data)
