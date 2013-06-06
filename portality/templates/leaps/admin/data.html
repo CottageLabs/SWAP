@@ -167,7 +167,10 @@ jQuery(document).ready(function($) {
         sharesave_link: false,
         paging: {
             size: 50
-        }
+        },
+        pushstate: false,
+        default_operator: "AND",
+        default_freetext_fuzzify: "*"
     };
     $('#facetview').facetview(opts);
 
