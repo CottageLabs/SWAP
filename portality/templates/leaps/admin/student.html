@@ -1,8 +1,10 @@
 {% extends "leaps/admin/admin-base.html" %}
 
 {% block options %}
+{% if current_user.do_admin %}
 <a id="triggersave" class="btn btn-success" href="#">Save</a>
 {% if record %}<a id="triggerdelete" class="btn btn-danger" href="#">Delete</a>{% endif %}
+{% endif %}
 {% endblock %}
 
 
@@ -12,6 +14,7 @@
 <script>
 jQuery(document).ready(function() {    
 
+{% if current_user.do_admin %}
     $("[data-required]").attr('data-required-message',"");
 
     $('#survey').parsley('validate');
@@ -28,7 +31,7 @@ jQuery(document).ready(function() {
     opts.minDate = '-22y';
     opts.maxDate = '-12y';
     $('.dobdatepicker').datepicker(opts);
-    
+
     // add / remove rows to list items
     var first = true;
     $('table.multi').find('tbody').children('tr').each(function() {
@@ -70,6 +73,8 @@ jQuery(document).ready(function() {
     };
     $('#triggerdelete').bind('click',triggerdelete);
     $('input, textarea, select').bind('change',promptsave);
+
+{% endif %}
 
 });
 </script>
@@ -277,7 +282,7 @@ fieldset{
 	    <div class="span12">		
 	        <table>
 	            <tbody>
-	                <tr>
+	                <tr style="display:none;">
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Local authority</td>
                 		<td><select name="local_authority">
                 		    <option></option>
@@ -304,7 +309,7 @@ fieldset{
                 		</td>
                     </tr>
                     
-                    <tr>
+                    <tr style="display:none;">
 	                    <td style="text-align:right;padding:6px 10px 0 0;">SIMD decile</td>
                 		<td><select name="simd_decile">
                 		    <option></option>
@@ -324,6 +329,7 @@ fieldset{
                 		    {% endfor %}
                 		</select></td>
                     </tr>
+                    
 
                     <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Status</td>
@@ -533,14 +539,19 @@ fieldset{
                 		        >{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><select name="application_level">
-                		    <option></option>
-                		    {% for opt in selections.advancedlevels %}
-                		        <option                		        
-                		        {% if opt == app.level %} selected="selected"{% endif %}
-                                >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
+                		<td>
+                		    <select name="application_level">
+                    		    <option></option>
+                    		    {% for opt in selections.advancedlevels %}
+                    		        <option                		        
+                    		        {% if opt == app.level %} selected="selected"{% endif %}
+                                    >{{ opt }}</option>
+                    		    {% endfor %}
+                    		</select>
+                		</td>
+                		<td>
+                    		<a target="_blank" class="btn" href="/universities/pae/{{app.appid}}">PAE &raquo;</a>
+                		</td>
                     </tr>
                         {% endfor %}
                     {% endif %}
@@ -847,6 +858,7 @@ fieldset{
 
 
 <!-- the form submission button -->
+{% if current_user.do_admin %}
 <div class="part submit">
 
     <hr></hr>
@@ -863,7 +875,7 @@ fieldset{
     </div>
 
 </div>
-
+{% endif %}
 
 
 

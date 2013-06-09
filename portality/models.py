@@ -23,6 +23,16 @@ class Student(DomainObject):
         else:
             id_ = self.makeid()
             self.data['id'] = id_
+
+        # check for school changes
+        old = Student.pull(self.id)
+        if old is not None:
+            if old.data.get('school',False) != self.data.get('school',False):
+                self.data['simd_decile'] = ""
+                self.data['simd_quintile'] = ""
+                self.data['shep_school'] = ""
+                self.data['leaps_category'] = ""
+                self.data['local_authority'] = ""
         
         self.data['last_updated'] = datetime.now().strftime("%Y-%m-%d %H%M")
 
@@ -99,10 +109,16 @@ class Student(DomainObject):
         for k,v in enumerate(request.form.getlist('application_subject')):
             if v is not None and len(v) > 0 and v != " ":
                 try:
+                    try:
+                        appid = request.form.getlist('application_appid')[k]
+                        if appid == "": appid = Student.makeid()
+                    except:
+                        appid = Student.makeid()
                     rec["applications"].append({
                         "subject": v,
                         "institution": request.form.getlist('application_institution')[k],
-                        "level": request.form.getlist('application_level')[k]
+                        "level": request.form.getlist('application_level')[k],
+                        "appid":appid
                     })
                 except:
                     pass
@@ -159,8 +175,60 @@ class School(DomainObject):
             rec['shep_school'] = False          
         return rec
 
-class Year(DomainObject):
-    __type__ = 'year'
+    def save(self):
+        self.data = self.prep(self.data)
+        
+        old = self.pull(self.id)
+
+        if old is not None:
+            # remove any old accounts
+            for oc in old.data.get('contacts',[]):
+                if oc.get('email',"") not in [o.get('email',False) for o in self.data.get('contacts',[])]:
+                    oldaccount = Account.pull(oc.get('email',""))
+                    if oldaccount is not None: oldaccount.delete()
+            
+            # change school name on related accounts if any            
+            if old.data.get('name',False) != self.data.get('name',False):
+                res = Account.query(q={"query":{"term":{self.__type__+app.config['FACET_FIELD']:old.data['name']}}})
+                for aid in [i['_source']['id'] for i in res.get('hits',{}).get('hits',[])]:
+                    ua = Account.pull(aid)
+                    if ua is not None and self.data.get('name',False):
+                        ua.data[self.__type__] = self.data['name']
+                        ua.save()
+
+        for c in self.data.get('contacts',[]):
+            # create any new accounts
+            if c.get('email',"") != "" and ( old is None or c.get('email',"") not in [o.get('email',False) for o in old.data.get('contacts',[])] ):
+                account = Account.pull(c['email'])
+                if account is None:
+                    account = Account(
+                        id=c['email'], 
+                        email=c['email']
+                    )
+                    account.data[self.__type__] = self.data.get('name',"")
+                    account.set_password(c.get('password',"password"))
+                    account.save()
+            # change any passwords
+            elif c.get('email',"") != "" and c.get('password',"") != "":
+                account = Account.pull(c['email'])
+                account.set_password(self.data['password'])
+                account.save()
+                c['password'] = ""
+
+        r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
+
+    def delete(self):
+        # delete contact accounts
+        for c in self.data.get('contacts',[]):
+            if c['email'] != "":
+                exists = Account.pull(c['email'])
+                if exists is not None:
+                    exists.delete()
+        r = requests.delete(self.target() + self.id)
+
+
+class Institution(School):
+    __type__ = 'institution'
 
 class Subject(DomainObject):
     __type__ = 'subject'
@@ -170,9 +238,6 @@ class Level(DomainObject):
 
 class Grade(DomainObject):
     __type__ = 'grade'
-
-class Institution(DomainObject):
-    __type__ = 'institution'
 
 class Advancedlevel(DomainObject):
     __type__ = 'advancedlevel'
@@ -239,8 +304,7 @@ class Archive(DomainObject):
 
 
 
-# an example account object, which requires the further additional imports
-# There is a more complex example below that also requires these imports
+# The account object, which requires the further additional imports
 import portality.auth as auth
 from werkzeug import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin
@@ -259,12 +323,12 @@ class Account(DomainObject, UserMixin):
         return auth.user.is_super(self)
 
     @property
-    def is_admin(self):
-        return auth.user.is_admin(self)
+    def do_admin(self):
+        return auth.user.do_admin(self)
 
     @property
-    def view_only(self):
-        return auth.user.view_only(self)
+    def view_admin(self):
+        return auth.user.view_admin(self)
 
     @property
     def is_institution(self):
@@ -273,21 +337,14 @@ class Account(DomainObject, UserMixin):
     @property
     def is_school(self):
         return auth.user.is_school(self)
-        
+            
     @property
-    def school(self):
-        if self.is_school:
-            return "Dalkeith" # TODO: this should perhaps be tied more robustly or add a check to school re-names
+    def agreed_policy(self):
+        if not isinstance(self.is_school,bool) or not isinstance(self.is_institution,bool):
+            return self.data.get('agreed_policy',False)
         else:
-            return None
-        
-    @property
-    def institution(self):
-        if self.is_institution:
-            return "Edinburgh" # TODO as above
-        else:
-            return None
-    
+            return True
+
     
 # a special object that allows a search onto all index types - FAILS TO CREATE INSTANCES
 class Everything(DomainObject):

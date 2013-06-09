@@ -1,46 +1,40 @@
-{% extends "base.html" %}
+{% extends "leaps/admin/admin-base.html" %}
 
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-    //$('#m').hide()
-    $('#m').css({
-        "border":"none",
-        "background":"none",
-        "cursor":"default",
-        "-moz-box-shadow":"none",
-        "-webkit-box-shadow":"none",
-        "box-shadow":"none"
-    })
-    var signup = function(event) {
-        event.preventDefault()
-        if ( $('#m').val() == "" ) {
-            $('#signupform').submit()
-        } else {
-            alert("Are you human? If so, don't put anything in that last box...")
-        }
-    }
-    $('#signup').bind('click',signup)
 });
 </script>
 
 <div class="hero-unit">
-    <div class="row">
-        <div class="span5">
+    <div class="row-fluid">
+        <div class="span6">
             <form id="signupform" method="post" action="{{url_for('account.register')}}">
                 {{ render_field(form.w) }}
                 {{ render_field(form.n) }}
                 {{ render_field(form.s, placeholder="********") }}
                 {{ render_field(form.c, placeholder="********") }}
+                {{ render_field(form.school) }}
+                {{ render_field(form.institution) }}
+                {{ render_field(form.view_admin) }}
+                {{ render_field(form.do_admin) }}
                 <div class="actions">
-                    <input id="signup" type="submit" value="Signup" class="btn btn-primary" />
-                    <br /><br /><br /><br /><br /><br /><input id="m" type="text" name="m" />
+                    <input type="submit" value="Create user" class="btn btn-primary" />
                 </div>
             </form>
         </div>
-        <div class="span5">
+        <div class="span6">
+            <p style="font-size:14px;">Create users for LEAPS admin, or users that can access the schools / universities pages.</p>
+            <p style="font-size:14px;">NOTE that schools / universities users are also created and can be updated from the related schools 
+            / universities supporting data.</p>
+            <p style="font-size:14px;">Schools / universities users should have a username that matches their email address, and must be associated with a school or university. NOTE THESE USERS SHOULD NOT BE GIVEN VIEW_ADMIN OR DO_ADMIN PRIVILEGES.</p>
+            <p style="font-size:14px;">For LEAPS admin users, create a user with your preferred username, and select if the user should have DO_ADMIN or 
+            VIEW_ADMIN privileges. Although you can tick both, a user with DO_ADMIN privileges also automatically has the ability to 
+            view admin features anyway.</p>
+            <p style="font-size:14px;">VIEW_ADMIN allows a user to access the LEAPS /admin area and to view any information there, but NOT to edit anything. DO_ADMIN allows a user to access the LEAPS /admin area and to edit / delete / add to anything there.</p>
+            <p style="font-size:14px;">Some functions, such as creating new users (beyond those that can be created via the schools / universities supporting data), or turning surveys and schools / universities pages on and off, are only available to the super user. Super user privileges cannot be bestowed upon any new users via this interface - super users can only be created via the application settings on the server.</p>
         </div>
     </div>
 </div>

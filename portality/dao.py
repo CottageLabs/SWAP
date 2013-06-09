@@ -179,8 +179,8 @@ class DomainObject(UserDict.IterableUserDict):
         r = requests.delete(self.target() + self.id)
 
     # this was added for LEAPS, not in portality
-    #@classmethod
-    #def delete(cls):
-    #    r = requests.delete(cls.target())
-    #    r = requests.put(cls.target() + '_mapping', json.dumps(app.config['MAPPINGS'][cls.__type__]))
+    @classmethod
+    def delete_all(cls):
+        r = requests.delete(cls.target())
+        r = requests.put(cls.target() + '_mapping', json.dumps(app.config['MAPPINGS'][cls.__type__]))
 

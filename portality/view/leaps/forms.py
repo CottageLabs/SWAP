@@ -21,7 +21,8 @@ blueprint = Blueprint('forms', __name__)
 @blueprint.route('/')
 def intro():
     # make this an actual decision on whether or not survey is open or closed
-    if True:
+    adminsettings = models.Account.pull(app.config['SUPER_USER'][0]).data.get('settings',{})
+    if adminsettings.get('survey',False):
         return redirect(url_for('.student'))
     else:
         return render_template('leaps/survey/closed.html')

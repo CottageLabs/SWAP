@@ -1,13 +1,14 @@
-import uuid, json
+import uuid, json, time
 from copy import deepcopy
 
 from flask import Blueprint, request, url_for, flash, redirect, abort
 from flask import render_template
 from flask.ext.login import login_user, logout_user, current_user
-from flask.ext.wtf import Form, TextField, TextAreaField, SelectField, PasswordField, HiddenField, validators, ValidationError
+from flask.ext.wtf import Form, TextField, TextAreaField, SelectField, BooleanField, PasswordField, HiddenField, validators, ValidationError
 
 from urlparse import urlparse, urljoin
 
+from portality.view.leaps.forms import dropdowns
 from portality import auth
 from portality.core import app
 import portality.models as models
@@ -15,21 +16,32 @@ import portality.util as util
 
 blueprint = Blueprint('account', __name__)
 
-jsite_config = deepcopy(app.config['JSITE_OPTIONS'])
-jsite_config['data'] = False
-jsite_config['editable'] = False
-jsite_config['facetview']['initialsearch'] = False
 
 @blueprint.route('/')
 def index():
     if current_user.is_anonymous():
         abort(401)
-    users = models.Account.query() #{"sort":{'id':{'order':'asc'}}},size=1000000
+    if not current_user.is_super:
+        return redirect('/account/' + current_user.id)
+    users = models.Account.query(q={"query":{"match_all":{}},"sort":{'id.exact':{'order':'asc'}}, "size":100000})
+    userstats = {
+        "super_user": 0,
+        "do_admin": 0,
+        "view_admin": 0,
+        "school_users": 0,
+        "institution_users": 0
+    }
     if users['hits']['total'] != 0:
         accs = [models.Account.pull(i['_source']['id']) for i in users['hits']['hits']]
         # explicitly mapped to ensure no leakage of sensitive data. augment as necessary
         users = []
         for acc in accs:
+            if acc.id in app.config['SUPER_USER']: userstats['super_user'] += 1
+            elif acc.data.get('do_admin',"") != "": userstats["do_admin"] += 1
+            elif acc.data.get('view_admin',"") != "": userstats["view_admin"] += 1
+            if acc.data.get('school',"") != "": userstats["school_users"] += 1
+            if acc.data.get('institution',"") != "": userstats["institution_users"] += 1
+
             user = {'id':acc.id}
             if 'created_date' in acc.data:
                 user['created_date'] = acc.data['created_date']
@@ -39,7 +51,7 @@ def index():
         resp.mimetype = "application/json"
         return resp
     else:
-        return render_template('account/all.html', users=users, superuser=current_user.is_super, jsite_options=json.dumps(jsite_config))
+        return render_template('account/all.html', users=users, userstats=userstats)
 
 
 @blueprint.route('/<username>', methods=['GET','POST', 'DELETE'])
@@ -77,15 +89,7 @@ def username(username):
             resp.mimetype = "application/json"
             return resp
         else:
-            admin = True if auth.user.update(acc,current_user) else False
-            return render_template('account/view.html', 
-                current_user=current_user, 
-                record=acc.json, 
-                admin=admin,
-                account=acc,
-                superuser=auth.user.is_super(current_user), 
-                jsite_options=json.dumps(jsite_config)
-            )
+            return render_template('account/view.html', account=acc)
 
 
 def is_safe_url(target):
@@ -134,7 +138,21 @@ def login():
             flash('Incorrect username/password', 'error')
     if request.method == 'POST' and not form.validate():
         flash('Invalid form', 'error')
-    return render_template('account/login.html', form=form, jsite_options=json.dumps(jsite_config))
+    return render_template('account/login.html', form=form)
+
+@blueprint.route('/policy', methods=['GET', 'POST'])
+def policy():
+    if request.method == 'GET':
+        return render_template('account/policy.html')
+    elif request.method == 'POST':
+        user = models.Account.pull(current_user.id)
+        if user:
+            user.data['agreed_policy'] = True
+            user.save()
+            flash('Thank you for agreeing to our policy. Please continue.', 'success')
+            return redirect(get_redirect_target())
+        else:
+            flash('There was an error. Please try again.', 'error')
 
 
 @blueprint.route('/logout')
@@ -150,17 +168,21 @@ def existscheck(form, field):
         raise ValidationError('Taken! Please try another.')
 
 class RegisterForm(Form):
-    w = TextField('Username', [validators.Length(min=3, max=25),existscheck])
+    w = TextField('Username', [validators.Length(min=3, max=25),existscheck], description="usernames")
     n = TextField('Email Address', [validators.Length(min=3, max=35), validators.Email(message='Must be a valid email address')])
     s = PasswordField('Password', [
         validators.Required(),
         validators.EqualTo('c', message='Passwords must match')
     ])
     c = PasswordField('Repeat Password')
+    school = SelectField('School', choices=[(i,i) for i in [""]+dropdowns('school')])
+    institution = SelectField('Institution', choices=[(i,i) for i in [""]+dropdowns('institution')])
+    view_admin = BooleanField('View admin')
+    do_admin = BooleanField('Do admin')
 
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
-    if not app.config.get('PUBLIC_REGISTER',False) and not auth.user.is_super(current_user):
+    if not app.config.get('PUBLIC_REGISTER',False) and not current_user.is_super:
         abort(401)
     form = RegisterForm(request.form, csrf_enabled=False)
     if request.method == 'POST' and form.validate():
@@ -168,13 +190,18 @@ def register():
         account = models.Account(
             id=form.w.data, 
             email=form.n.data,
-            api_key=api_key
+            api_key=api_key,
+            school = form.school.data,
+            institution = form.institution.data,
+            view_admin = form.view_admin.data,
+            do_admin = form.do_admin.data
         )
         account.set_password(form.s.data)
         account.save()
-        flash('Account created for ' + account.id + '. If not listed below, refresh the page to catch up.', 'success')
+        time.sleep(1)
+        flash('Account created for ' + account.id, 'success')
         return redirect('/account')
     if request.method == 'POST' and not form.validate():
         flash('Please correct the errors', 'error')
-    return render_template('account/register.html', form=form, jsite_options=json.dumps(jsite_config))
+    return render_template('account/register.html', form=form)
 

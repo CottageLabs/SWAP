@@ -6,30 +6,32 @@ from flask.ext.login import login_user, current_user
 import portality.models as models
 from portality.core import app, login_manager
 
-from portality.view.account import blueprint as account
+from portality.view.leaps.account import blueprint as account
 from portality.view.leaps.admin import blueprint as admin
 from portality.view.leaps.universities import blueprint as universities
 from portality.view.leaps.schools import blueprint as schools
-from portality.view.leaps.reports import blueprint as reports
+from portality.view.leaps.forms import blueprint as forms
+from portality.view.leaps.imports import blueprint as imports
+from portality.view.leaps.exports import blueprint as exports
+
 from portality.view.graph import blueprint as graph
 from portality.view.query import blueprint as query
 from portality.view.stream import blueprint as stream
-
-from portality.view.leaps.forms import blueprint as survey
-from portality.view.leaps.imports import blueprint as imports
 
 
 app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(universities, url_prefix='/universities')
 app.register_blueprint(schools, url_prefix='/schools')
-app.register_blueprint(reports, url_prefix='/reports')
+app.register_blueprint(forms, url_prefix='/survey')
+app.register_blueprint(imports, url_prefix='/admin/import')
+app.register_blueprint(exports, url_prefix='/admin/export')
+
 app.register_blueprint(graph, url_prefix='/graph')
 app.register_blueprint(query, url_prefix='/query')
 app.register_blueprint(stream, url_prefix='/stream')
 
-app.register_blueprint(survey, url_prefix='/survey')
-app.register_blueprint(imports, url_prefix='/admin/import')
+
 
 @login_manager.user_loader
 def load_account_for_login_manager(userid):
@@ -39,7 +41,8 @@ def load_account_for_login_manager(userid):
 @app.context_processor
 def set_current_context():
     """ Set some template context globals. """
-    return dict(current_user=current_user, app=app)
+    return dict(current_user=current_user, app=app, adminsettings=models.Account.pull(app.config['SUPER_USER'][0]).data.get('settings',{}))
+
 
 @app.before_request
 def standard_authentication():
