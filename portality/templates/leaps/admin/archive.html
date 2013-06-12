@@ -1,0 +1,92 @@
+{% extends "leaps/admin/admin-base.html" %}
+
+{% block content %}
+
+<script>
+jQuery(document).ready(function() {
+});
+</script>
+
+<div class="row-fluid" style="margin-bottom:10px;">
+    <div class="span12">
+        <h1>Archive management</h1>
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span6">
+        <p>All current records are automatically stored in the archive called "current".</p>
+        <p>There are presently {{ currentcount }} records in the current archive.</p>
+        
+        {% if archives %}
+        <p>The existing archives at present are:</p>
+        <ul>
+        {% for a in archives %}
+            <li>{{ a }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        <p>To view the records in an archive, go to the <a href="student">student survey management page</a> and remove the default "current" archive selection, then choose the archive you wish to browse from the archive dropdown selector.</p>
+    </div>
+    
+    <div class="span6">
+{% if current_user.do_admin %}
+        <form id="archive" action="" method="POST">
+        <table>
+            <tbody>
+                <tr>
+                    <td style="text-align:right;padding:6px 10px 0 0;">Create a new archive called</td>
+                    <td><input type="text" name="archive"></td>
+                    <td><input class="btn" style="width:80px;" type="submit" name="submit" action="submit" value="Create"></td>
+                </tr>
+                {% if archives %}
+                <tr><td><p>&nbsp;</p></td></tr>
+                <tr>
+                    <td style="text-align:right;padding:6px 10px 0 0;">Move all records in archive</td>
+                    <td>
+                        <select name="move_from">
+                            <option></option>
+                        {% for a in archives %}
+                            <option>{{a}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td></td>
+                <tr>
+                    <td style="text-align:right;padding:6px 10px 0 0;">to archive</td>
+                    <td>
+                        <select name="move_to">
+                            <option></option>
+                        {% for a in archives %}
+                            <option>{{a}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td><input class="btn" style="width:80px;" type="submit" name="submit" action="submit" value="Move"></td>
+                </tr>
+                {% endif %}
+                {% if archives %}
+                <tr><td><p>&nbsp;</p></td></tr>
+                <tr>
+                    <td style="text-align:right;padding:7px 5px 0 0;">Delete the archive named<br>(and all records in it)</td>
+                    <td>
+                        <select name="delete">
+                            <option></option>
+                        {% for a in archives %}
+                            <option>{{a}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td><input class="btn btn-danger" style="width:80px;" type="submit" name="submit" action="submit" value="Delete"></td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        </form>
+{% endif %}
+
+    </div>    
+</div>
+
+
+{% endblock %}

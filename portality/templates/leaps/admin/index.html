@@ -1,0 +1,67 @@
+{% extends "leaps/admin/admin-base.html" %}
+
+{% block content %}
+
+<div class="row-fluid">
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.total_submitted}}</span> students<br> have submitted surveys <br>(not including archives).</p>
+        </div>
+    </div>
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.awaiting_interview}}XX</span> students<br> are awaiting interview.</p>
+        </div>
+    </div>
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.interviewed}}XX</span> students<br> have been interviewed.</p>
+        </div>
+    </div>
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.paes_forwarded}}XX</span> students<br> have had their PAE responses sent to them.</p>
+        </div>
+    </div>
+</div>    
+    
+<div class="row-fluid">
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.no_pae_requested}}XX</span> student records<br> are not getting PAEs requested.</p>
+        </div>
+    </div>
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.awaiting_all_pae}}XX</span> student records<br> are awaiting <strong>all</strong> their PAE responses.</p>
+        </div>
+    </div>
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.awaiting_some_pae}}XX</span> student records<br> are awaiting <strong>some</strong> PAE responses.</p>
+        </div>
+    </div>
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.all_pae_received}}XX</span> student records<br> have had all PAE responses submitted.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.schools_with_students_submitted}}XX</span> of the 
+            <span style="font-size:24px;">{{stats.total_schools}}XX</span> 
+            <br>registered schools have had students submit surveys.</p>
+        </div>
+    </div>
+    <div class="span3">
+        <div class="alert alert-info" style="min-height:100px;">
+            <p><span style="font-size:24px;">{{stats.universities_pae_outstanding}}XX</span> universities<br> have PAE requests outstanding.</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

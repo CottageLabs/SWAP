@@ -1,0 +1,54 @@
+{% if current_user.view_admin %}
+{% extends "leaps/admin/admin-base.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+
+{% if current_user.id == account.id or current_user.is_super %}
+
+    <script type="text/javascript">
+    jQuery(document).ready(function() {
+    });
+    </script>
+
+    <div class="hero-unit">
+        <div class="row-fluid">
+            <div class="span6">
+                {% if current_user.id != account.id %}
+                    <h2 style="color:red;">Because you are the superuser you can edit
+                    account: <span style="color:#333">{{ account.id }}</span></h2>
+                {% else %}
+                    <h2>Hi {{ current_user.id }}</h2>
+                {% endif %}
+            </div>
+            <div class="span6">
+                <p>New password: <input type="text" style="margin-bottom:0px;" data-path="password"> <input class="btn" type="submit" value="save"></p>
+                {% if account.data.school %}
+                    <p><input name="school" type="text" value="{{account.data.school}}" disabled="disabled"></p>
+                {% endif %}
+                {% if account.data.institution %}
+                    <p><input name="institution" type="text" value="{{account.data.institution}}" disabled="disabled"></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% else %}
+
+    <div class="hero-unit">
+        <div class="row-fluid">
+            <div class="span6">
+                <h2>{{ account.id }}</h2>
+            </div>
+            <div class="span6">
+                <p>You are not logged in as this user. Use the <a href="/account/login">login page</a> if you want to change this</p>
+            </div>
+        </div>
+    </div>
+    
+{% endif %}
+
+{% endblock %}
+

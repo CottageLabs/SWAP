@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+jQuery(document).ready(function() { 
+    $(".tablesorter").tablesorter({
+        "headers":{6:{"sorter":false}}
+    }); 
+}); 
+</script>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <p style="text-align:right;">
+                <a class="btn btn-primary" href="/universities/export/{{institution}}">Export</a>
+                <a class="btn" href="/account/logout">Logout</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="hero-unit">
+                {% if institution == True %}
+                    <h1>Hello, {{ current_user.id }}</h1>
+                    <p>As you are LEAPS staff, you can see all the PAE requests for every institution.</p>
+                {% else %}
+                    <h1>{{ institution }}</h1>
+                 {% endif %}
+
+                <p>Below are listed all the students that have so far submitted a survey form to LEAPS {% if institution != True %}that has included an intention to apply to {{ institution }},{% endif %} for which a Pre-Application Enquiry has been deemed necessary.</p>
+                <p>Note that a particular student may intend to apply to more than one course at a given institution, therefore Pre-Application Enquiries will exist for each course that the student intends to apply to.</p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+
+            <table class="tablesorter table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date of Birth</th>
+                        <th>Subject</th>
+                        <th>Level</th>
+                        <th>Status</th>
+                        <th>Respond / received</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        {% for appn in student.applications %}
+                        <tr>
+                            <td>{{ student.first_name }}</td>
+                            <td>{{ student.last_name }}</td>
+                            <td>{{ student.date_of_birth }}</td>
+                            <td>{{ appn.subject }}</td>
+                            <td>{{ appn.level }}</td>
+                            <td>{{ student.status }}</td>
+                            <td style="width:120px;">
+                            {% if appn.pae_reply_received %}
+                                {{ appn.pae_reply_received }}
+                            {% else %}
+                                <a class="btn btn-info" href="/universities/pae/{{appn.appid}}" style="width:100px;">Respond to PAE</a>
+                            {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+        </div>
+
+    </div>
+
+{% endblock %}

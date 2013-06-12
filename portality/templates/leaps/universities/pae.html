@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+jQuery(document).ready(function() { 
+    var verify = function(event) {
+        var considerations = false;
+        $('.considerations').each(function() {
+            if ( $(this).val() ) {
+                considerations = true;
+            }
+        })
+        if ( $('#submitter_name').val() == '' || !considerations ) {
+            event.preventDefault();
+            alert('You must provide a response and your name before submitting');
+        }
+    }
+    $('#submit').bind('click',verify);
+    
+{% if application.pae_reply_received %}
+    $('input, select, textarea').attr("disabled","disabled");
+{% endif %}
+
+    
+})
+</script>
+
+<style>
+.title{
+    font-weight:bold;
+}
+</style>
+
+<div class="row-fluid">
+    <div class="span12">
+
+        <h1>Lothians Equal Access Programme for Schools</h1>
+        <h2>Pre-Application Enquiry Form</h2>
+
+        {% if not application.pae_reply_received %}
+            <p style="padding-top:20px;">Please use this form to provide your response to this Pre-Application Enquiry,
+            using the information displayed to assist in making your decision.
+            No information will be saved until you click the submit button at the bottom of this page.</p>
+
+            <p style="padding-bottom:20px;">If the applicant applies through UCAS for the course below, 
+            please indicate under what academic conditions you would consider making an offer.</p>
+        {% else %}
+            <p style="padding-top:20px;padding-bottom:20px;">At {{ application.pae_reply_received }} you submitted that you would 
+            {% if application.consider == "No" %} not {% endif %} consider making an offer to the following student
+            {% if application.conditions %} under the academic conditions described{% endif %}.</p>
+        {% endif %}
+    
+
+        <form id="paeform" method="POST">
+
+        <div class="well">
+            <h1>{{ student.first_name }} {{ student.last_name }}</h1>
+
+            <table class="table table-bordered">
+                <tr>
+                    <td class="title">Date of birth</td> <td>{{ student.date_of_birth }}</td>
+                    <td class="title">Post code</td> <td>{{ student.post_code }}</td>
+                </tr>
+                <tr>
+                    <td class="title">School</td> <td>{{ student.school }}</td>
+                    <td class="title">School category</td> <td>{{ student.leaps_category }}</td>
+                </tr>
+            </table>
+
+            <h2>Qualifications</h2>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Year</th>
+                    <th>Level</th>
+                    <th>Subject</th>
+                    <th>Grade</th>
+                </tr>
+                {% for object in student.qualifications %}
+                    {% if object.year|lower == "third year" %}
+                        <tr><td>{{ object.year }}</td><td>{{ object.level }}</td><td>{{ object.subject }}</td><td>{{ object.grade }}</td></tr>
+                    {% endif %}
+                {% endfor %}
+                {% for object in student.qualifications %}
+                    {% if object.year|lower == "fourth year" %}
+                        <tr><td>{{ object.year }}</td><td>{{ object.level }}</td><td>{{ object.subject }}</td><td>{{ object.grade }}</td></tr>
+                    {% endif %}
+                {% endfor %}
+                {% for object in student.qualifications %}
+                    {% if object.year|lower == "fifth year" %}
+                        <tr><td>{{ object.year }}</td><td>{{ object.level }}</td><td>{{ object.subject }}</td><td>{{ object.grade }}</td></tr>
+                    {% endif %}
+                {% endfor %}
+                {% for object in student.qualifications %}
+                    {% if object.year|lower == "sixth year" %}
+                        <tr><td>{{ object.year }}</td><td>{{ object.level }}</td><td>{{ object.subject }}</td><td>{{ object.grade }}</td></tr>
+                    {% endif %}
+                {% endfor %}
+                {% for object in student.qualifications %}
+                    {% if object.year|lower != "third year" and object.year|lower != "fourth year" and object.year|lower != "fifth year" and object.year|lower != "sixth year" %}
+                        <tr><td>{{ object.year }}</td><td>{{ object.level }}</td><td>{{ object.subject }}</td><td>{{ object.grade }}</td></tr>
+                    {% endif %}
+                {% endfor %}
+            </table> 
+
+            <h2>Further information</h2>
+            <p>
+            {% if student.first_attending_university == "True" %}
+                This student is the first from their family attending university<br />
+            {% endif %}
+            {% if student.looked_after_child == "True" %}
+                This student was a looked after child<br />
+            {% endif %}
+            {% if student.low_income_family == "True" %}
+                This student is from a low income family<br />
+            {% endif %}
+            {% if student.young_carer == "True" %}
+                This student is a young carer<br />
+            {% endif %}
+            {% if student.law_application == "True" %}
+                This student is making a law application<br />
+            {% endif %}
+            {% if student.early_application == "True" %}
+                This student is making an early application<br />
+            {% endif %}
+            {% if student.main_language_at_home %}
+                Main language at home is {{ student.main_language_at_home }}<br>
+            {% endif %}
+            {% if student.additional_comments != "" %}
+                {{ student.additional_comments|safe }}
+            {% endif %}
+            </p>
+
+
+        </div>
+
+        <div class="well">
+            <h2>{{ application.subject }} {{ application.level }} at {{ application.institution }}</h2>
+        </div>
+
+        <div class="well">
+            <table>
+                <tr>
+                    <td style="text-align:right;padding:5px 10px 0 0;">Would you consider this student?</td>
+                    <td>
+                        <select name="consider">
+                            <option></option>
+                            <option value="Yes"
+                            {% if application.consider == "Yes" %} selected="selected"{% endif %}
+                            >Yes</option>
+                            <option value="No"
+                            {% if application.consider == "No" %} selected="selected"{% endif %}
+                            >No</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;padding:5px 10px 0 0;">
+                        Please indicate conditions of any likely offer, <br>
+                        or reasons for no offer.<br><br>
+                        <strong>Please note that the actual wording <br>
+                        you enter here will appear on the response <br>
+                        forwarded to the student.</strong>
+                    </td>
+                    <td><textarea name="conditions" style="width:400px;min-height:200px;">
+                    {{application.conditions}}
+                    </textarea></td>
+                </tr>
+            </table>
+        </div>
+        
+        <p style="font-weight:bold;">Please confirm some information about yourself and your institution.
+        Please note that your name and contact details will not appear on the information forwarded to the student.</p>
+        
+        <table class="table table-bordered">
+            <tr>
+                <td><input type="checkbox" name="identity_statement"
+                {% if application.pae_reply_received %} checked="checked"{% endif %}                
+                ></td>
+                <td>I, being identified by the email address / username 
+                <strong>{{ current_user.id }}</strong>, have the authority to provide 
+                this Pre-Aplication Enquiry response on behalf of 
+                <strong>{{ application.institution }}</strong>.</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="summer_school"
+                {% if application.summer_school %} checked="checked"{% endif %}                
+                ></td>
+                <td>Would you be willing to consider LEAPS Summer School reports as an indication of potential to succeed, should the student fail to meet the conditions set? (Please note that LEAPS partner institutions have pledged to take Summer School reports into account. If you are from a LEAPS partner institution you MUST tick this box.)</td>
+            </tr>
+        </table>
+
+        
+        {% if not application.pae_reply_received %}
+        <input style="margin:20px 0 0 30%;" class="btn btn-large btn-primary" type="submit" name="submit" value="submit your response" />
+        {% endif %}
+        
+        </form>
+
+
+	</div>
+</div>
+		
+        
+        
+{% endblock %}
+
