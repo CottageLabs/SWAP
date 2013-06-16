@@ -25,11 +25,11 @@
             </div>
             <div class="span6">
                 <p>New password: <input type="text" style="margin-bottom:0px;" data-path="password"> <input class="btn" type="submit" value="save"></p>
-                {% if account.data.school %}
-                    <p><input name="school" type="text" value="{{account.data.school}}" disabled="disabled"></p>
+                {% if account.data.college %}
+                    <p><input name="college" type="text" value="{{account.data.college}}" disabled="disabled"></p>
                 {% endif %}
-                {% if account.data.institution %}
-                    <p><input name="institution" type="text" value="{{account.data.institution}}" disabled="disabled"></p>
+                {% if account.data.university %}
+                    <p><input name="university" type="text" value="{{account.data.university}}" disabled="disabled"></p>
                 {% endif %}
             </div>
         </div>

@@ -122,17 +122,14 @@ fieldset{
 
 
 
+
 <!-- the student details page -->
 <div class="part student">
 
 	<div class="row-fluid">
 	    <div class="span12">
-	        <div class="well" style="margin-top:0;">
-	            {% if record %}
-                <h1>Student record for {{record.data.first_name}} {{record.data.last_name}}</h1>
-	            {% else %}
-	            <h1>New student</h1>
-	            {% endif %}
+	        <div class="well">
+	            <h2>Student details</h2>
 	        </div>
 	    </div>
 	</div>
@@ -143,550 +140,192 @@ fieldset{
 	            <tbody>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">First name</td>
-                		<td><input type="text" name="first_name" data-required="true"
-                		{% if record %} value="{{record.data.first_name}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="first_name" data-required="true"></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Last name</td>
-                		<td><input type="text" name="last_name" data-required="true"
-                		{% if record %} value="{{record.data.last_name}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="last_name" data-required="true"></td>
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Date of birth</td>
-                		<td><input type="text" class="dobdatepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout"
-                		{% if record %} value="{{record.data.date_of_birth}}"{% endif %}
-                		></td>
+                		<td><input type="text" class="dobdatepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout"></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">UCAS number</td>
-                		<td><input type="text" name="ucas_number"
-                		{% if record %} value="{{record.data.ucas_number}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="ucas_number"></td>
                     </tr>
         	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">School</td>
-                		<td><select name="school" data-required="true">
+	                    <td style="text-align:right;padding:6px 10px 0 0;">College</td>
+                		<td><select name="college" data-required="true">
                 		    <option></option>
-                		    {% for opt in selections.schools %}
-                		        <option
-                		        {% if record %}{% if record.data.school == opt %} selected="selected"{% endif %}{% endif %}
-                		        >{{ opt }}</option>
+                		    <option>TODO</option>
+                		    {% for opt in selections.colleges %}
+                		        <option>{{ opt }}</option>
                 		    {% endfor %}
-                		</select></td>
-
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">School house</td>
-                		<td><input type="text" name="school_house"
-                		{% if record %} value="{{record.data.school_house}}"{% endif %}
-                		></td>
-                    </tr>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Year group</td>
-                		<td><select name="year" data-required="true">
-                		    <option></option>
-                		    <option
-                		    {% if record %}{% if record.data.year == "Third year" %} selected="selected"{% endif %}{% endif %}
-                		    >Third year</option>
-                		    <option
-                		    {% if record %}{% if record.data.year == "Fourth year" %} selected="selected"{% endif %}{% endif %}
-                		    >Fourth year</option>
-                		    <option                		    
-                		    {% if record %}{% if record.data.year == "Fifth year" %} selected="selected"{% endif %}{% endif %}
-                            >Fifth year</option>
-                		    <option
-                		    {% if record %}{% if record.data.year == "Sixth year" %} selected="selected"{% endif %}{% endif %}
-                		    >Sixth year</option>
-                		    <option
-                		    {% if record %}{% if record.data.year == "Other" %} selected="selected"{% endif %}{% endif %}
-                		    >Other</option>
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Gender</td>
                 		<td><select name="gender">
                 		    <option></option>
-                		    <option
-                		    {% if record %}{% if record.data.gender == "Male" %} selected="selected"{% endif %}{% endif %}
-                		    >Male</option>
-                		    <option
-                		    {% if record %}{% if record.data.gender == "Female" %} selected="selected"{% endif %}{% endif %}
-                		    >Female</option>
+                		    <option>Male</option>
+                		    <option>Female</option>
                 		</select></td>
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Email address</td>
-                		<td><input type="text" name="email"
-                		{% if record %} value="{{record.data.email}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="email" data-type="email" data-required="true" data-trigger="keyup focusout"></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Address</td>
-                		<td><input type="text" name="address_line_1"
-                		{% if record %} value="{{record.data.address_line_1}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="address_line_1"></td>
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Home phone</td>
-                		<td><input type="text" name="home_phone"
-                		{% if record %} value="{{record.data.home_phone}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="home_phone"></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">...</td>
-                		<td><input type="text" name="address_line_2"
-                		{% if record %} value="{{record.data.address_line_2}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="address_line_2"></td>
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Mobile phone</td>
-                		<td><input type="text" name="mobile_phone"
-                		{% if record %} value="{{record.data.mobile_phone}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="mobile_phone"></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">City</td>
-                		<td><input type="text" name="city"
-                		{% if record %} value="{{record.data.city}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="city"></td>
                     </tr>
         	        <tr>
         	            <td></td>
         	            <td></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Region</td>
-                		<td colspan="3"><input type="text" name="region"
-                		{% if record %} value="{{record.data.region}}"{% endif %}
-                		></td>
+                		<td colspan="3"><input type="text" name="region"></td>
                     </tr>
         	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">
-	                        Agree to <br>
-                            <a target="_blank" href="/policy">data policy</a>
-	                    </td>
-                		<td><select name="data_policy_agreement">
-                		    <option></option>
-                		    <option
-                		    {% if record %}{% if record.data.data_policy_agreement == "Yes" %} selected="selected"{% endif %}{% endif %}
-                		    >Yes</option>
-                		</select></td>
+        	            <td style="text-align:right;padding:6px 10px 0 0;">
+	                        <p>How many miles do you travel to
+	                        <br>college? Please provide an estimate<br>
+	                        of the distance in <strong>one</strong> direction</p>
+        	            </td>
+        	            <td>
+                	        <input type="text" name="travel">
+        	            </td>
                     
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
-                		<td><input type="text" name="post_code" data-required="true"
-                		{% if record %} value="{{record.data.post_code}}"{% endif %}
-                		></td>
+                		<td><input type="text" name="post_code" data-required="true"></td>
+                    </tr>
+                    <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">
+	                        I agree to the <br>
+                            <a target="_blank" href="/policy">SWAP data policy</a>
+	                    </td>
+                		<td><select name="data_policy_agreement" data-required="true">
+                		    <option></option>
+                		    <option>Yes</option>
+                		</select></td>
+        	            
+        	            <td colspan="2" style="padding:6px 0 0 10px;">You must 
+        	            agree before submitting. 
+        	            <a target="_blank" href="/policy">Read more &raquo;</a></td>
                     </tr>
                 </tbody>
 	        </table>
 	    </div>
 	</div>
 
-    <hr></hr>
+</div>
 
-    {% if record %}
+
+
+        
+
+
+
+<!-- the education page -->
+<div class="part education">
+
+	<div class="row-fluid">
+	    <div class="span12">
+	        <div class="well">
+	            <h2>Student qualifications</h2>
+	        </div>
+	    </div>
+	</div>
+
 	<div class="row-fluid">
 	    <div class="span12">		
+            <p><strong>Does any member of your family have any of the following qualifications?</strong></p>
+	        <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Qualification</th>
+                        <th>Parents / guardians</th>
+                        <th>Siblings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>HNC</td>
+                        <td><input type="checkbox" name="parents_with_hnc"></td>
+                        <td><input type="checkbox" name="siblings_with_hnc"></td>
+                    </tr>
+                    <tr>
+                        <td>HND</td>
+                        <td><input type="checkbox" name="parents_with_hnd"></td>
+                        <td><input type="checkbox" name="siblings_with_hnd"></td>
+                    </tr>
+                    <tr>
+                        <td>Degree</td>
+                        <td><input type="checkbox" name="parents_with_degree"></td>
+                        <td><input type="checkbox" name="siblings_with_degree"></td>
+                    </tr>
+                </tbody>
+	        </table>
+	        	        
+	        <p><strong>Do you have any of the following qualifications from SCHOOL? 
+	        If so, please enter how many (ie number) you have of each.</strong></p>
 	        <table>
 	            <tbody>
-	                <tr style="display:none;">
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Local authority</td>
-                		<td><select name="local_authority">
-                		    <option></option>
-                		    {% for opt in selections.local_authorities %}
-                		        <option
-                		        {% if record %}{% if record.data.local_authority == opt %} selected="selected"{% endif %}{% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">LEAPS category</td>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">O grade / Standard grade / GCSE<br>(grades A-C / 1-3)</td>
+                		<td><input type="text" name="o_standard_gcse"></td>
+                    </tr>
+                    <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Intermediate 2</td>
+                		<td><input type="text" name="intermediate_2"></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Highers / A levels<br>(grades A-C)</td>
+                		<td><input type="text" name="highers_alevels"></td>
+                    </tr>
+                    <tr style="height:20px;">
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">If you have any other sorts of <br>qualification, please list them</td>
                 		<td>
-                		    <select name="leaps_category">
-                		    <option></option>
-                		    {% for opt in selections.leaps_categories %}
-                		        <option
-                		        {% if record %}{% if record.data.leaps_category == opt %} selected="selected"{% endif %}{% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		    </select>
-                    		<p style="display:inline;margin-left:5px;"><input type="checkbox" name="shep_school"
-                    		{% if record %}{% if record.data.shep_school %} checked="checked"{% endif %}{% endif %}
-                    		> SHEP school</p>
+                		    <textarea name="other_school_qualifications" class="bigfield"></textarea>
                 		</td>
                     </tr>
-                    
-                    <tr style="display:none;">
-	                    <td style="text-align:right;padding:6px 10px 0 0;">SIMD decile</td>
-                		<td><select name="simd_decile">
-                		    <option></option>
-                		    {% for opt in selections.simd_deciles %}
-                		        <option
-                		        {% if record %}{% if record.data.simd_decile == opt %} selected="selected"{% endif %}{% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">SIMD quintile</td>
-                		<td><select name="simd_quintile">
-                		    <option></option>
-                		    {% for opt in selections.simd_quintiles %}
-                		        <option
-                		        {% if record %}{% if record.data.simd_quintile == opt %} selected="selected"{% endif %}{% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                    </tr>
-                    
-
                     <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Status</td>
-                		<td><select name="status">
-                		    <option>new</option>
-              		        <option{% if record %}{% if record.data.status == "TODO" %} selected="selected"{% endif %}{% endif %}>TODO</option>
-              		        <option{% if record %}{% if record.data.status == "TODO" %} selected="selected"{% endif %}{% endif %}>TODO</option>
-              		        <option{% if record %}{% if record.data.status == "TODO" %} selected="selected"{% endif %}{% endif %}>TODO</option>
-              		        <option{% if record %}{% if record.data.status == "TODO" %} selected="selected"{% endif %}{% endif %}>TODO</option>
-              		        <option{% if record %}{% if record.data.status == "TODO" %} selected="selected"{% endif %}{% endif %}>TODO</option>
-                		</select></td>
-
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Archive</td>
-                		<td><select name="archive">
-                		    {% for opt in selections.archives %}
-                		        <option
-                		        {% if record %}
-                		            {% if record.data.archive == opt %} selected="selected"{% endif %}
-                		        {% else %}
-                		            {% if opt == "current" %} selected="selected"{% endif %}
-                		        {% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
+                        <td style="text-align:right;padding:6px 10px 0 0;">
+                            <p>Have you attended any educational programmes <br>or courses SINCE YOU LEFT SCHOOL, 
+                            <br>e.g. in the community, college or through work? <br>If so, please list them</p>
+                        </td>
+                        <td style="text-align:right;padding:6px 10px 0 0;">
+                            <textarea name="qualifications_after_school" class="bigfield"></textarea>
+                        </td>
                     </tr>
-
-                    {% if record %}
-                    <tr style="height:30px;">
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Created date</td>
-                		<td>
-                		    <input type="hidden" name="created_date" value="{{record.data.created_date}}">
-                		    <p style="padding-top:5px;">{{record.data.created_date}}</p>
-                		</td>
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">Last updated</td>
-                		<td><p style="padding-top:5px;">{{record.data.last_updated}}</p></td>
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">
+                            <p>Do you have any previous qualifications at grade 3/grade C 
+                            <br>or above in Maths and English? If so please list 
+                            <br>qualifications and grades. (Examined qualifications only, 
+                            <br>no need to mention individual modules.)</p>
+                        </td>
+                        <td>
+                            <textarea name="other_maths_english" class="bigfield"></textarea>
+                        </td>
                     </tr>
-                    {% endif %}
-
+                        
                 </tbody>
-	        </table>
-	    </div>
-	</div>
-	{% endif %}
-
-</div>
-
-
-
-
-<!-- the qualifications page -->
-<!-- TODO: need to show existing data including lists of values available below -->
-<div class="part qualifications">
-
-	<div class="row-fluid">
-	    <div class="span12">
-	        <div class="well">
-	            <h1>Qualifications</h1>
-	        </div>
-	    </div>
-	</div>
-
-	<div class="row-fluid">
-	    <div class="span12">		
-	        <table class="multi">
-                <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>School year taken</th>
-                        <th>Level of qualification</th>
-                        <th>Grade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                
-                    {% if record %}
-                        {% for qual in record.data.qualifications %}
-                    <tr>
-                		<td><select name="qualification_subject" class="needselect2">
-                		    <option></option>
-                		    {% for opt in selections.subjects %}
-                		        <option
-                		        {% if opt == qual.subject %} selected="selected"{% endif %}
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                		<td><select name="qualification_year">
-                		    <option></option>
-                		    <option
-                		    {% if record.data.year == "Third year" %} selected="selected"{% endif %}
-                		    >Third year</option>
-                		    <option
-                		    {% if record.data.year == "Fourth year" %} selected="selected"{% endif %}
-                		    >Fourth year</option>
-                		    <option                		    
-                		    {% if record.data.year == "Fifth year" %} selected="selected"{% endif %}
-                            >Fifth year</option>
-                		    <option
-                		    {% if record.data.year == "Sixth year" %} selected="selected"{% endif %}
-                		    >Sixth year</option>
-                		    <option
-                		    {% if record.data.year == "Other" %} selected="selected"{% endif %}
-                		    >Other</option>
-                		</select></td>
-                		<td><select name="qualification_level">
-                		    <option></option>
-                		    {% for opt in selections.levels %}
-                		        <option
-                		        {% if opt == qual.level %} selected="selected"{% endif %}                		        
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                		<td><select name="qualification_grade">
-                		    <option></option>
-                		    {% for opt in selections.grades %}
-                		        <option
-                		        {% if opt == qual.grade %} selected="selected"{% endif %}                		        
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                    </tr>
-
-                        {% endfor %}
-                    {% endif %}
-                    
-                    <tr>
-                		<td><select name="qualification_subject" class="needselect2">
-                		    <option></option>
-                		    {% for opt in selections.subjects %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                		<td><select name="qualification_year">
-                		    <option></option>
-                		    <option>Third year</option>
-                		    <option>Fourth year</option>
-                		    <option>Fifth year</option>
-                		    <option>Sixth year</option>
-                		    <option>Other</option>
-                		</select></td>
-                		<td><select name="qualification_level">
-                		    <option></option>
-                		    {% for opt in selections.levels %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                		<td><select name="qualification_grade">
-                		    <option></option>
-                		    {% for opt in selections.grades %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                    </tr>
-                </tbody>
-	        </table>
-	    </div>
-	</div>
-
-</div>
-
-
-
-        
-
-
-
-<!-- the applications page -->
-<div class="part applications">
-
-    
-	<div class="row-fluid">
-	    <div class="span12">
-	        <div class="well">
-	            <h1>Applications</h1>
-	        </div>
-	    </div>
-	</div>
-
-
-	<div class="row-fluid">
-	    <div class="span12">		
-	        <table class="multi">
-                <thead>
-                    <tr>
-                        <th>College / University</th>
-                        <th>Subject</th>
-                        <th>Level of study</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    {% if record %}
-                        {% for app in record.data.applications %}
-                    <tr>
-                		<td><select name="application_institution" class="needselect2">
-                		    <option></option>
-                		    {% for opt in selections.institutions %}
-                		        <option
-                		        {% if opt == app.institution %} selected="selected"{% endif %}                		        
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                		<td><select name="application_subject" class="needselect2">
-                		    <option></option>
-                		    {% for opt in selections.subjects %}
-                		        <option
-                		        {% if opt == app.subject %} selected="selected"{% endif %}                		        
-                		        >{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                		<td>
-                		    <select name="application_level">
-                    		    <option></option>
-                    		    {% for opt in selections.advancedlevels %}
-                    		        <option                		        
-                    		        {% if opt == app.level %} selected="selected"{% endif %}
-                                    >{{ opt }}</option>
-                    		    {% endfor %}
-                    		</select>
-                		</td>
-                		<td>
-                    		<a target="_blank" class="btn" href="/universities/pae/{{app.appid}}">PAE &raquo;</a>
-                		</td>
-                    </tr>
-                        {% endfor %}
-                    {% endif %}
-
-                    <tr>
-                		<td><select name="application_institution" class="needselect2">
-                		    <option></option>
-                		    {% for opt in selections.institutions %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                		<td><select name="application_subject" class="needselect2">
-                		    <option></option>
-                		    {% for opt in selections.subjects %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                		<td><select name="application_level">
-                		    <option></option>
-                		    {% for opt in selections.advancedlevels %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                    </tr>
-                </tbody>
-	        </table>
-	    </div>
-	</div>
-
-</div>
-
-
-
-
-
-
-        
-
-<!-- the interests page -->
-<div class="part interests">
-
-    
-	<div class="row-fluid">
-	    <div class="span12">
-	        <div class="well">
-	            <h1>Interests</h1>
-	        </div>
-	    </div>
-	</div>
-
-	<div class="row-fluid">
-	    <div class="span12">		
-	        <table class="multi">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Brief Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    {% if record %}
-                        {% for int in record.data.interests %}
-                    <tr>
-                		<td><input type="text" name="interest_title" value="{{int.title}}"></td>
-                		<td><textarea class="bigfield" name="interest_brief_description">{{int.brief_description}}</textarea></td>
-                    </tr>
-
-                        {% endfor %}
-                    {% endif %}
-
-                    <tr>
-                		<td><input type="text" name="interest_title"></td>
-                		<td><textarea class="bigfield" name="interest_brief_description"></textarea></td>
-                    </tr>
-                </tbody>
-	        </table>
-	    </div>
-	</div>
-
-</div>
-
-
-
-
-
-
-        
-
-
-<!-- the experience page -->
-<div class="part experience">
-
-    
-	<div class="row-fluid">
-	    <div class="span12">
-	        <div class="well">
-	            <h1>Experience</h1>
-	        </div>
-	    </div>
-	</div>
-
-	<div class="row-fluid">
-	    <div class="span12">		
-	        <table class="multi">
-                <thead>
-                    <tr>
-                        <th>Date from</th>
-                        <th>Date to</th>
-                        <th>Job title</th>
-                        <th>Brief Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    {% if record %}
-                        {% for exp in record.data.experience %}
-                    <tr>
-                		<td><input type="text" class="datepicker narrow" name="experience_date_from" value="{{exp.date_from}}"></td>
-                		<td><input type="text" class="datepicker narrow" name="experience_date_to" value="{{exp.date_to}}"></td>
-                		<td><input type="text" class="narrow" name="experience_title" value="{{exp.title}}"></td>
-                		<td><textarea class="bigfield" name="experience_brief_description">{{exp.brief_description}}</textarea></td>
-                    </tr>
-
-                        {% endfor %}
-                    {% endif %}
-
-                    <tr>
-                		<td><input type="text" class="datepicker narrow" name="experience_date_from"></td>
-                		<td><input type="text" class="datepicker narrow" name="experience_date_to"></td>
-                		<td><input type="text" class="narrow" name="experience_title"></td>
-                		<td><textarea class="bigfield" name="experience_brief_description"></textarea></td>
-                    </tr>
-                </tbody>
-	        </table>
+            </table>
+            
 	    </div>
 	</div>
 
@@ -698,64 +337,259 @@ fieldset{
 
 
 
-<!-- the extra page -->
-<div class="part extra">
+<!-- the situation page -->
+<div class="part situation">
 
-    
 	<div class="row-fluid">
 	    <div class="span12">
 	        <div class="well">
-	            <h1>Extra academic information</h1>
+	            <h2>Student situation</h2>
 	        </div>
 	    </div>
 	</div>
 
 	<div class="row-fluid">
 	    <div class="span12">		
+	        <p><strong>Do you have dependent children or adults? If so, enter the number of each below.</strong></p>
 	        <table>
+	            <tbody>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Pre-school aged children</td>
+                		<td><input type="text" name="dependents_pre_school_children"></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Secondary school aged children</td>
+                		<td><input type="text" name="dependents_secondary_school_children"></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Primary school aged children</td>
+                		<td><input type="text" name="dependents_primary_school_children"></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Dependent adults (relatives/friends)</td>
+                		<td><input type="text" name="dependents_adults"></td>
+                    </tr>
+                </tbody>
+            </table>
+	    </div>
+	</div>
+
+
+        
+<hr></hr>
+
+
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <p><strong>Which of these best describes your situation immediately
+	        prior to starting your access programme? Please tick all that apply.</strong></p>
+	        <table class="table table-bordered">
                 <tbody>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Did you make a late decision to consider higher education?</td>
-                		<td><select name="late_decision_to_apply">
-                		    <option></option>
-                		    <option
-                		    {% if record %}{% if record.data.late_decision_to_apply == "No" %} selected="selected"{% endif %}{% endif %}
-                		    >No</option>
-                		    <option
-                		    {% if record %}{% if record.data.late_decision_to_apply == "Yes" %} selected="selected"{% endif %}{% endif %}                		    
-                		    >Yes</option>
-                		</select></td>
-                    </tr>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Have you had a careers interview in the last 3 months?</td>
-                		<td><select name="had_recent_careers_interview">
-                		    <option></option>
-                		    <option
-                		    {% if record %}{% if record.data.had_recent_careers_interview == "No" %} selected="selected"{% endif %}{% endif %}
-                		    >No</option>
-                		    <option
-                		    {% if record %}{% if record.data.had_recent_careers_interview == "Yes" %} selected="selected"{% endif %}{% endif %}
-                		    >Yes</option>
-                		</select></td>
+                    <tr>
+                        <td><input type="checkbox" name="employed_full_time"> Employed full time</td>
+                        <td><input type="checkbox" name="employed_part_time"> Employed part time</td>
+                        <td><input type="checkbox" name="student_full_time"> Student full time</td>
+                        <td><input type="checkbox" name="student_part_time"> Student part time</td>
                     </tr>
                     <tr>
-                        <td style="text-align:right;padding:6px 10px 0 0;">List any additional qualifications not already mentioned</td>
-                        <td><textarea class="bigfield" name="additional_qualifications">{% if record %}{{record.data.additional_qualifications}}{% endif %}</textarea></td>
+                        <td><input type="checkbox" name="caring_for_family"> Caring for family</td>
+                        <td><input type="checkbox" name="caring_other"> Caring (other)</td>
+                        <td><input type="checkbox" name="unemployed"> Unemployed</td>
+                        <td><textarea name="employment_other" placeholder="other (describe here)"></textarea></td>
                     </tr>
                     <tr>
-                        <td style="text-align:right;padding:6px 10px 0 0;">Describe any issues affecting academic performance</td>
-                        <td><textarea class="bigfield" name="issues_affecting_performance">{% if record %}{{record.data.issues_affecting_performance}}{% endif %}</textarea></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:right;padding:6px 10px 0 0;">Please describe any career plans you may have</td>
-                        <td><textarea class="bigfield" name="career_plans">{% if record %}{{record.data.career_plans}}{% endif %}</textarea></td>
+                        <td colspan="3" style="text-align:right;padding:6px 10px 0 0;">What was your <strong>main</strong> occupation over the last two years? (if applicable)</td>
+                        <td><input type="text" name="main_occupation"></td>
                     </tr>
                 </tbody>
 	        </table>
 	    </div>
 	</div>
 
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table class="table">
+                <tr>
+                    <td>
+                        <p><strong>What financial support will you receive while you 
+                        are on a SWAP Programme?</strong> <br>Please select all that 
+                        apply.</p>
+                    </td>
+                    <td>
+                        <select name="funding">
+                            <option></option>
+                            <option>College bursary</option>
+                            <option>College (other)</option>
+                            <option>Benefits</option>
+                            <option>Full-time job</option>
+                            <option>Part-time job</option>
+                            <option>Family</option>
+                            <option>Bank loan</option>
+                            <option>None</option>
+                            <option>Other</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p><strong>Please tell us about your ethnic background.
+                        </strong><br>This information is collected in accordance 
+                        with the code of practice issued by the Commission for 
+                        Racial Equality. Please select all that apply.</p>
+                    </td>
+                    <td>
+                        <select name="ethnicity">
+                            <option></option>
+                            
+                            <optgroup label="White">
+                                <option>Scottish</option>
+                                <option>Other British</option>
+                                <option>European Union</option>
+                                <option>Any other White background</option>
+                            </optgroup>
+
+                            <optgroup label="Asian, Asian Scottish, Asian British">
+                                <option>Indian</option>
+                                <option>Pakistani</option>
+                                <option>Bangladeshi</option>
+                                <option>Chinese</option>
+                                <option>Any other Asian background</option>
+                            </optgroup>
+
+                            <optgroup label="Black, Black Scottish, Black British">
+                                <option>Caribbean</option>
+                                <option>African</option>
+                                <option>Any other Black background</option>
+                            </optgroup>
+
+                            <optgroup label="Other ethnic background">
+                                <option>Any other background</option>
+                                <option>Any mixed background</option>                            
+                            </optgroup>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p><strong>Please tell us about any disabilities you 
+                        have.</strong><br>This information is collected in 
+                        accordance with the code of practice issued by the 
+                        Disability Discrimination Act. Please select all that 
+                        apply.</p>
+                    </td>
+                    <td>
+                        <select name="disability">
+                            <option></option>
+                            <option>No known disability</option>
+                            <option>Multiple disabilities</option>
+                            <option>Dyslexia</option>
+                            <option>Autistic Spectrum</option>
+                            <option>Mental Health</option>
+                            <option>Personal care support</option>
+                            <option>Unseen disability e.g. asthma</option>
+                            <option>Wheelchair user/mobility difficulties</option>
+                            <option>Deaf/hearing impairment</option>
+                            <option>Blind/partially sighted</option>
+                            <option>Other (please specify)</option>
+                        </select>
+                        <br><input type="checkbox" name="registered_disabled">
+                        Tick if registered disabled
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p><strong>If you were in Local Authority care when you 
+                        were aged fifteen or sixteen, please indicate for how 
+                        long</strong><br>
+                        This information will be used for research purposes 
+                        only and, if released, will not be in an identifiable 
+                        form.</p>
+                    </td>
+                    <td>
+                        <select name="local_authority_care">
+                            <option></option>
+                            <option>Less than 1 week</option>
+                            <option>1 week to 3 months</option>
+                            <option>3 months to 1 year</option>
+                            <option>1 year to 3 years</option>
+                            <option>3 years or more</option>
+                        </select>
+                    </td>
+                </tr>
+
+	        </table>
+	    </div>
+	</div>
 </div>
+
+
+
+
+
+<!-- the marketing page -->
+<div class="part marketing">
+
+	<div class="row-fluid">
+	    <div class="span12">
+	        <div class="well">
+	            <h2>How student heard about SWAP</h2>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table class="table">
+                <tr>
+                    <td>
+                        <p><strong>Why did you enrol on a SWAP Access course?
+                        </strong></p>
+                    </td>
+                    <td>
+                        <select name="why_on_swap">
+                            <option></option>
+                            <option>To get back into learning</option>
+                            <option>To do a specific qualification (e.g. Nursing)</option>
+                            <option>Improve / change career / job prospects</option>
+                            <option>To go further in college</option>
+                            <option>To go to University</option>
+                            <option>Other</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p><strong>Where did you first hear about the programme?
+                        </strong></p>
+                    </td>
+                    <td>
+                        <select name="where_heard_about">
+                            <option></option>
+                            <option>Newspaper / advert</option>
+                            <option>Leaflet</option>
+                            <option>Internet / website</option>
+                            <option>Community group</option>
+                            <option>Friend / family</option>
+                            <option>Careers adviser</option>
+                            <option>SWAP</option>
+                            <option>College</option>
+                            <option>University</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<hr></hr>
 
 
 
@@ -767,7 +601,7 @@ fieldset{
 	<div class="row-fluid">
 	    <div class="span12">
 	        <div class="well">
-	            <h1>LEAPS Interview</h1>
+	            <h1>TODO - additional SWAP-admin controlled data</h1>
 	        </div>
 	    </div>
 	</div>
@@ -776,78 +610,6 @@ fieldset{
 	    <div class="span12">		
 	        <table>
 	            <tbody>
-        	        <tr>
-                		<td style="width:230px;"><input type="checkbox" name="first_attending_university"
-                		{% if record %}{% if record.data.first_attending_university %} checked="checked"{% endif %}{% endif %}
-                		> First attending university</td>
-
-                		<td style="width:250px;"><input type="checkbox" name="law_application"
-                		{% if record %}{% if record.data.law_application %} checked="checked"{% endif %}{% endif %}
-                		> Law application</td>
-
-                		<td><input type="checkbox" name="early_application"
-                		{% if record %}{% if record.data.early_application %} checked="checked"{% endif %}{% endif %}
-                		> Early application</td>
-                    </tr>
-        	        <tr style="height:40px;">
-                		<td><input type="checkbox" name="looked_after_child"
-                		{% if record %}{% if record.data.looked_after_child %} checked="checked"{% endif %}{% endif %}
-                		> Looked after child</td>
-
-                		<td><input type="checkbox" name="low_income_family"
-                		{% if record %}{% if record.data.low_income_family %} checked="checked"{% endif %}{% endif %}
-                		> Low income family</td>
-
-                		<td><input type="checkbox" name="young_carer"
-                		{% if record %}{% if record.data.young_carer %} checked="checked"{% endif %}{% endif %}
-                		> Young carer</td>
-                    </tr>
-
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Mothers occupation</td>
-	                    <td><input name="mothers_occupation"{% if record %} value="{{ record.data.mothers_occupation }}"{% endif %}></td>
-
-                		<td rowspan="2"><input type="checkbox" name="hn_only_candidate"
-                		{% if record %}{% if record.data.hn_only_candidate %} checked="checked"{% endif %}{% endif %}
-                		> HN only candidate
-                		<br><input type="checkbox" name="previous_interview"
-                		{% if record %}{% if record.data.previous_interview %} checked="checked"{% endif %}{% endif %}
-                		> Previous interview
-                        <br><input type="checkbox" name="pae_action"
-                		{% if record %}{% if record.data.pae_action %} checked="checked"{% endif %}{% endif %}
-                		> PAE action</td>
-                    </tr>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Fathers occupation</td>
-	                    <td><input name="fathers_occupation"{% if record %} value="{{ record.data.fathers_occupation }}"{% endif %}></td>
-
-                    </tr>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Number of siblings</td>
-                		<td><input type="text" name="number_of_siblings"
-                		{% if record %}{{record.data.number_of_siblings}}{% endif %}
-                		></td>
-                		<td rowspan="4">
-                		<textarea class="bigfield" name="additional_comments" placeholder="additional comments">{% if record %}{{record.data.additional_comments}}{% endif %}</textarea>
-                		</td>
-                    </tr>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Place in siblings</td>
-                		<td><input type="text" name="place_in_siblings"
-                		{% if record %}{{record.data.place_in_siblings}}{% endif %}
-                		></td>
-                    </tr>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Household composition</td>
-                		<td><input type="text" name="household_composition"
-                		{% if record %}{{record.data.household_composition}}{% endif %}
-                		></td>
-                    </tr>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Main language at home</td>
-	                    <td><input name="main_language_at_home"{% if record %} value="{{ record.data.main_language_at_home }}"{% endif %}></td>
-
-                    </tr>
                 </tbody>
             </table>
         </div>

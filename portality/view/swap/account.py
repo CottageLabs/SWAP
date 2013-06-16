@@ -175,8 +175,6 @@ class RegisterForm(Form):
         validators.EqualTo('c', message='Passwords must match')
     ])
     c = PasswordField('Repeat Password')
-    school = SelectField('School', choices=[(i,i) for i in [""]+dropdowns('school')])
-    institution = SelectField('Institution', choices=[(i,i) for i in [""]+dropdowns('institution')])
     view_admin = BooleanField('View admin')
     do_admin = BooleanField('Do admin')
 
