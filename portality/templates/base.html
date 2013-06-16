@@ -18,7 +18,20 @@
     </div>
 
     <div class="content">
-      {% block content %}{% endblock %}
+        <div class="row-fluid" style="margin-top:-10px;margin-bottom:20px;">
+            <div class="span2">
+            	<a href="/">
+                	<img src="/static/banner.png" alt="Scottish Wider Access Programme" title="Scottish Wider Access Programme" />
+                </a>
+            </div>
+            <div class="span10">
+                <a href="/">
+                    <h1 style="color:blue;font-size:40px;margin:37px 0 -5px 0;">Scottish Wider</h1>
+                    <h2 style="color:#333;font-size:30px;">Access Programme</h2>
+                </a>
+            </div>
+        </div>
+        {% block content %}{% endblock %}
     </div> <!-- /content -->
 
 {% include "footer.html" %}

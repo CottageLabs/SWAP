@@ -33,18 +33,18 @@ def view_admin(user):
         return is_super(user)
 
 
-# a user associated to an institution, who can see relevant students and submit PAEs
-def is_institution(user):
-    if user.data.get('institution',False):
-        return user.data['institution']
+# a user associated to a university, who can see relevant students and submit updates
+def is_university(user):
+    if user.data.get('university',False):
+        return user.data['university']
     else:
         return view_admin(user)
 
 
-# a user associated to a school, who can see students of that school in the schools list
-def is_school(user):
-    if user.data.get('school',False):
-        return user.data['school']
+# a user associated to a college
+def is_college(user):
+    if user.data.get('college',False):
+        return user.data['college']
     else:
         return view_admin(user)
 

@@ -1,0 +1,147 @@
+{% extends "swap/admin/admin-base.html" %}
+
+
+{% block options %}
+            <a class="btn btn-success searchtype" data-type="college" href="/admin/data/college">Colleges</a>
+            <a class="btn searchtype" data-type="university" href="/admin/data/university">Universities</a>
+            <a class="btn searchtype" data-type="simd" href="/admin/data/simd">SIMD</a>
+            <a class="btn btn-primary addnew" href="#">Add new <span id="newtype" class="newtype">college</span></a>
+            <!--<a class="btn btn-warning bulkload" href="/admin/import">Bulk import <span class="newtype">college</span></a>-->
+
+{% endblock %}
+
+
+{% block content %}
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+
+    var optsets = {
+        "college": {
+            search_url: '/query/college?',
+            datatype: 'JSON',
+            sort: ["name.exact"],
+            resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/college/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+            facets: []
+        }
+    };
+    
+    optsets.university = {
+        search_url: '/query/university?',
+        datatype: 'JSON',
+        sort: ['name.exact'],
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/university/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
+    optsets.simd = {
+        search_url: '/query/simd?',
+        datatype: 'JSON',
+        sort: ['post_code.exact'],
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="data/simd/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "post_code",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
+
+    var opts = {
+        search_url: optsets.college.search_url,
+        datatype: optsets.college.datatype,
+        facets: optsets.college.facets,
+        searchbox_shade: "#fff",
+        sort: optsets.college.sort,
+        result_display: optsets.college.resdisplay,
+        sharesave_link: false,
+        paging: {
+            size: 50
+        },
+        pushstate: false,
+        default_operator: "AND",
+        default_freetext_fuzzify: "*"
+    };
+    $('#facetview').facetview(opts);
+
+    var searchtype = function(event) {
+        event ? event.preventDefault() : false;
+        $('.searchtype').removeClass('btn-success');
+        $(this).addClass('btn-success');
+        var type = $(this).attr('data-type');
+        opts.search_url = optsets[type]['search_url'];
+        opts.datatype = optsets[type]['datatype'];
+        opts.facets = optsets[type]['facets'];
+        opts.sort = optsets[type]['sort'];
+        opts.result_display = optsets[type]['resdisplay'];
+        var p = $('#facetview').parent();
+        $('#facetview').remove();
+        p.append('<div id="facetview"></div>');
+        $('#facetview').facetview(opts);
+        $('.newtype').text(type);
+    }
+    $('.searchtype').bind('click',searchtype);
+    
+    var addnew = function(event) {
+        event.preventDefault();
+        var newtype = $('#newtype').text();
+        window.location = '/admin/data/' + newtype + '/new';
+    }
+    $('.addnew').bind('click',addnew);
+    
+    var bulkload = function(event) {
+        event.preventDefault();
+        var newtype = $('#newtype').text();
+        window.location = $(this).attr('href') + '/' + newtype
+    }
+    $('.bulkload').bind('click',bulkload);
+});
+
+</script>
+
+
+
+<div class="row-fluid" style="margin-bottom:10px;">
+    <div class="span12">
+        <h1>Manage supporting data - <span class="newtype">college</span>s</h1>
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span12">
+        <div id="facetview"></div>
+    </div>
+</div>
+
+
+{% endblock %}

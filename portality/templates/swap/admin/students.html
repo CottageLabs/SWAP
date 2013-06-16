@@ -1,0 +1,143 @@
+{% extends "swap/admin/admin-base.html" %}
+
+{% block options %}
+            <a class="btn btn-primary" href="/admin/student/new">add new student survey</a>
+            <a class="btn" href="/admin/forms">Print selected</a>
+            <a class="btn" href="/admin/export">Export selected</a>
+
+{% endblock %}
+
+
+{% block content %}
+
+<script>
+jQuery(document).ready(function() {
+    var post = function() {
+        if ( $('#default_current').length == 0 ) {
+            $('body').append('<div id="default_current" style="display:none;"></div>');
+            $('.facetview_filterchoice[href="current"]').trigger('click');
+        } else {
+            $(".tablesorter").tablesorter({
+                "headers":{0:{"sorter":false}}
+            });
+        }
+        $('#selectall').change(function() {
+            $('.selectthis').attr('checked', $(this).is(':checked'));
+            if ( $(this).is(':checked') ) {
+                if ( $.fn.facetview.options.paging.size < $.fn.facetview.options.rawdata.hits.total ) {
+                    $('#currenttotal').text($.fn.facetview.options.rawdata.hits.total);
+                    $('#selecttotal_option').show();
+                }
+            } else {
+                $('#selecttotal_option').hide();
+                $('#selecttotal').attr('checked',false);
+            }
+        });
+    }
+    
+    $('.facetview').facetview({
+        search_url: '/query/student?',
+        facets: [
+            {'field':'archive.exact', 'display': 'archive'}, 
+            {'field':'college.exact', 'display': 'college'},
+            {'field':'simd_decile.exact', 'display': 'SIMD decile'},
+            {'field':'status.exact', 'display': 'status'}
+        ],
+        paging: {
+            from: 0,
+            size: 50
+        },
+        sort: ["created_date.exact"],
+        pager_on_top: true,
+        sharesave_link: false,
+        default_operator: 'AND',
+        default_freetext_fuzzify: "*",
+        pushstate: false,
+        searchwrap_start: '<table id="facetview_table" class="tablesorter table table-striped table-bordered"><thead><tr><th><input type="checkbox" name="selectall" id="selectall" alt="check / uncheck this to select / deselect all" title="check / uncheck this to select / deselect all" class="filter-false"></th><th>Last name</th><th>First name</th><th>D.O.B</th><th>Post code</th><th>SIMD decile</th><th>College</th><th>Status</th><th>Archive</th></tr></thead><tbody id="facetview_results">',
+        resultwrap_start: '<tr>',
+        resultwrap_end: '</tr>',
+        searchwrap_end: '</tbody></table>',
+        result_display: [
+            [
+                {
+                    "pre": '<td><input type="checkbox" class="selectthis" name="select_',
+                    "field": "id",
+                    "post": '"></td>'
+                },
+                {
+                    "pre": '<td><b><a alt="click to view student record" title="click to view student record" href="/admin/student/',
+                    "field": "id",
+                    "post": '">'
+                },
+                {
+                    "field": "last_name",
+                    "post": '</a></b></td>'
+                },
+                {
+                    "pre": "<td>",
+                    "field": "first_name",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "date_of_birth",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "post_code",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "simd_decile",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "college",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "status",
+                    "post": "</td>"
+                },
+                {
+                    "pre": "<td>",
+                    "field": "archive",
+                    "post": "</td>"
+                }
+            ]
+        ],
+        post_search_callback: post
+    });
+});
+</script>
+
+<div class="row-fluid" style="margin-bottom:10px;">
+    <div class="span12">
+        <h1>Manage student surveys</h1>
+    </div>
+</div>
+
+<div class="row-fluid" id="selecttotal_option" style="display:none;">
+    <div class="span3">
+        <p></p>
+    </div>
+    <div class="span9">
+        <div class="alert">
+            <p style="margin-bottom:0;"><input type="checkbox" name="selecttotal" id="selecttotal"> Select all <span id="currenttotal"></span> records, instead of just the ones on this page.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span12">
+        <div class="facetview">
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

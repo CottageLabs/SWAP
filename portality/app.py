@@ -6,13 +6,13 @@ from flask.ext.login import login_user, current_user
 import portality.models as models
 from portality.core import app, login_manager
 
-from portality.view.leaps.account import blueprint as account
-from portality.view.leaps.admin import blueprint as admin
-from portality.view.leaps.universities import blueprint as universities
-from portality.view.leaps.schools import blueprint as schools
-from portality.view.leaps.forms import blueprint as forms
-from portality.view.leaps.imports import blueprint as imports
-from portality.view.leaps.exports import blueprint as exports
+from portality.view.swap.account import blueprint as account
+from portality.view.swap.admin import blueprint as admin
+from portality.view.swap.universities import blueprint as universities
+from portality.view.swap.schools import blueprint as schools
+from portality.view.swap.forms import blueprint as forms
+from portality.view.swap.imports import blueprint as imports
+from portality.view.swap.exports import blueprint as exports
 
 from portality.view.graph import blueprint as graph
 from portality.view.query import blueprint as query
@@ -72,12 +72,12 @@ def page_not_found(e):
         
 @app.route('/')
 def default():
-    return render_template('leaps/index.html')
+    return render_template('swap/index.html')
 
 
 @app.route('/policy')
 def policy():
-    return render_template('leaps/policy.html')
+    return render_template('swap/policy.html')
 
 
 if __name__ == "__main__":

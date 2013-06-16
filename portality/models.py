@@ -8,9 +8,8 @@ from portality.dao import DomainObject as DomainObject
 import requests, json
 
 '''
-Define models in here. They should all inherit from the DomainObject.
+Define models in here. They should all inherit from the DomainObject, or an object that does.
 Look in the dao.py to learn more about the default methods available to the Domain Object.
-When using portality in your own flask app, perhaps better to make your own models file somewhere and copy these examples
 '''
 
 
@@ -23,16 +22,6 @@ class Student(DomainObject):
         else:
             id_ = self.makeid()
             self.data['id'] = id_
-
-        # check for school changes
-        old = Student.pull(self.id)
-        if old is not None:
-            if old.data.get('school',False) != self.data.get('school',False):
-                self.data['simd_decile'] = ""
-                self.data['simd_quintile'] = ""
-                self.data['shep_school'] = ""
-                self.data['leaps_category'] = ""
-                self.data['local_authority'] = ""
         
         self.data['last_updated'] = datetime.now().strftime("%Y-%m-%d %H%M")
 
@@ -55,87 +44,14 @@ class Student(DomainObject):
                 self.data['simd_decile'] = 'unknown'
                 self.data['simd_quintile'] = 'unknown'
 
-        if 'leaps_category' not in self.data or self.data['leaps_category'] == "":
-            s = School.query(q={'query':{'term':{'name.exact':self.data['school']}}})
-            if s.get('hits',{}).get('total',0) == 0:
-                self.data['leaps_category'] = "unknown"
-                self.data['shep_school'] = "unknown"
-                self.data['local_authority'] = "unknown"
-            else:
-                self.data['leaps_category'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('leaps_category','unknown')
-                self.data['shep_school'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('shep_school','unknown')
-                self.data['local_authority'] = s.get('hits',{}).get('hits',[])[0]['_source'].get('local_authority','unknown')
-
-        if self.data.get('shep_school',False) == "on":
-            self.data['shep_school'] = True
-        if self.data.get('shep_school',False) == "off":
-            self.data['shep_school'] = False                
-        if self.data.get('shep_school',False) == 1:
-            self.data['shep_school'] = True
-        if self.data.get('shep_school',False) == 0:
-            self.data['shep_school'] = False          
-
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
 
 
     def save_from_form(self, request):
-        rec = {
-            "qualifications": [],
-            "interests": [],
-            "applications": [],
-            "experience": []
-        }
+        rec = {}
         
-        for k,v in enumerate(request.form.getlist('qualification_subject')):
-            if v is not None and len(v) > 0 and v != " ":
-                try:
-                    rec["qualifications"].append({
-                        "subject": v,
-                        "year": request.form.getlist('qualification_year')[k],
-                        "level": request.form.getlist('qualification_level')[k],
-                        "grade": request.form.getlist('qualification_grade')[k]
-                    })
-                except:
-                    pass
-        for k,v in enumerate(request.form.getlist('interest_title')):
-            if v is not None and len(v) > 0 and v != " ":
-                try:
-                    rec["interests"].append({
-                        "title": v,
-                        "brief_description": request.form.getlist('interest_brief_description')[k]
-                    })
-                except:
-                    pass
-        for k,v in enumerate(request.form.getlist('application_subject')):
-            if v is not None and len(v) > 0 and v != " ":
-                try:
-                    try:
-                        appid = request.form.getlist('application_appid')[k]
-                        if appid == "": appid = Student.makeid()
-                    except:
-                        appid = Student.makeid()
-                    rec["applications"].append({
-                        "subject": v,
-                        "institution": request.form.getlist('application_institution')[k],
-                        "level": request.form.getlist('application_level')[k],
-                        "appid":appid
-                    })
-                except:
-                    pass
-        for k,v in enumerate(request.form.getlist('experience_title')):
-            if v is not None and len(v) > 0 and v != " ":
-                try:
-                    rec["experience"].append({
-                        "title": v,
-                        "brief_description": request.form.getlist('experience_brief_description')[k],
-                        "date_from": request.form.getlist('experience_date_from')[k],
-                        "date_to": request.form.getlist('experience_date_to')[k]
-                    })
-                except:
-                    pass
-
         for key in request.form.keys():
-            if not key.startswith("qualification_") and not key.startswith("interest_") and not key.startswith("application_") and not key.startswith("experience_") and key not in ['submit']:
+            if key not in ['submit']:
                 rec[key] = request.form[key]
 
         if self.id is not None: rec['id'] = self.id
@@ -143,8 +59,8 @@ class Student(DomainObject):
         self.save()
 
     
-class School(DomainObject):
-    __type__ = 'school'
+class College(DomainObject):
+    __type__ = 'college'
 
     @classmethod
     def prep(cls, rec):
@@ -165,14 +81,6 @@ class School(DomainObject):
             except:
                 rec['author'] = "anonymous"
 
-        if rec.get('shep_school',False) == "on":
-            rec['shep_school'] = True
-        if rec.get('shep_school',False) == "off":
-            rec['shep_school'] = False                
-        if rec.get('shep_school',False) == 1:
-            rec['shep_school'] = True
-        if rec.get('shep_school',False) == 0:
-            rec['shep_school'] = False          
         return rec
 
     def save(self):
@@ -227,20 +135,9 @@ class School(DomainObject):
         r = requests.delete(self.target() + self.id)
 
 
-class Institution(School):
-    __type__ = 'institution'
+class University(College):
+    __type__ = 'university'
 
-class Subject(DomainObject):
-    __type__ = 'subject'
-
-class Level(DomainObject):
-    __type__ = 'level'
-
-class Grade(DomainObject):
-    __type__ = 'grade'
-
-class Advancedlevel(DomainObject):
-    __type__ = 'advancedlevel'
 
 class Simd(DomainObject):
     __type__ = 'simd'
@@ -331,16 +228,16 @@ class Account(DomainObject, UserMixin):
         return auth.user.view_admin(self)
 
     @property
-    def is_institution(self):
-        return auth.user.is_institution(self)
+    def is_university(self):
+        return auth.user.is_university(self)
 
     @property
-    def is_school(self):
-        return auth.user.is_school(self)
+    def is_college(self):
+        return auth.user.is_college(self)
             
     @property
     def agreed_policy(self):
-        if not isinstance(self.is_school,bool) or not isinstance(self.is_institution,bool):
+        if not isinstance(self.is_college,bool) or not isinstance(self.is_university,bool):
             return self.data.get('agreed_policy',False)
         else:
             return True

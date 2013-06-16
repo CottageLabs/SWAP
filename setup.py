@@ -1,20 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = 'leaps',
-    version = '1.0.1',
+    name = 'swap',
+    version = '0.0.1',
     packages = find_packages(),
     install_requires = [
         "Flask==0.8",
-        "Flask-Login",
+        "Flask-Login==0.1.3",
         "Flask-WTF",
-        "requests==1.1.0",
-        "markdown",
-        "topia.termextract",
-        "html2text",
-        "pisa",
-        "reportlab",
-        "html5lib"
+        "requests==1.1.0"
     ],
     url = 'http://cottagelabs.com/',
     author = 'Cottage Labs',
