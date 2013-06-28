@@ -1,9 +1,9 @@
 {% extends "swap/admin/admin-base.html" %}
 
 {% block options %}
-            <a class="btn btn-primary" href="/admin/student/new">add new student survey</a>
-            <!--<a class="btn" href="/admin/forms">Print selected</a>
-            <a class="btn" href="/admin/export">Export selected</a>-->
+            <a class="btn btn-primary" href="/admin/student/new">add new registration</a>
+            <!--<a class="btn" href="/admin/forms">Print selected</a>-->
+            <a class="btn" href="/admin/export">Export selected</a>
 
 {% endblock %}
 
@@ -65,7 +65,7 @@ jQuery(document).ready(function() {
                     "post": '"></td>'
                 },
                 {
-                    "pre": '<td><b><a alt="click to view student record" title="click to view student record" href="/admin/student/',
+                    "pre": '<td><b><a alt="click to view registration" title="click to view student registration" href="/admin/student/',
                     "field": "id",
                     "post": '">'
                 },
@@ -117,7 +117,7 @@ jQuery(document).ready(function() {
 
 <div class="row-fluid" style="margin-bottom:10px;">
     <div class="span12">
-        <h1>Manage student surveys</h1>
+        <h1>Manage student registrations</h1>
     </div>
 </div>
 

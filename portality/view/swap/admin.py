@@ -26,21 +26,7 @@ def restrict():
 # build an admin page where things can be done
 @blueprint.route('/')
 def index():
-    # TODO: complete these stats calcs
-    stats = {
-        "total_submitted": models.Student.query(q={"query":{"bool":{"must":[{"term":{"archive"+app.config['FACET_FIELD']:"current"}}]}}})['hits']['total'],
-        "awaiting_interview":"",
-        "interviewed":"",
-        "paes_forwarded":"",
-        "no_pae_requested":"",
-        "awaiting_all_pae":"",
-        "awaiting_some_pae":"",
-        "all_pae_received":"",
-        "schools_with_students_submitted":"",
-        "total_schools":"",
-        "universities_pae_outstanding":""
-    }
-    return render_template('swap/admin/index.html', stats=stats)
+    return render_template('swap/admin/index.html')
 
 
 # update admin settings
@@ -72,14 +58,12 @@ def student(uuid=None):
         if student is None: abort(404)
 
     selections={
-        "schools": dropdowns('school'),
-        "subjects": dropdowns('subject'),
-        "levels": dropdowns('level'),
-        "grades": dropdowns('grade'),
-        "institutions": dropdowns('institution'),
-        "advancedlevels": dropdowns('advancedlevel'),
-        "local_authorities": dropdowns('school','local_authority'),
-        "swap_categories": dropdowns('school','swap_category'),
+        #"colleges": dropdowns('college'),
+        #"campus": dropdowns('college','campus'),
+        #"courses": dropdowns('course'),
+        "colleges": ['TODO'],
+        "campus": ['TODO'],
+        "courses": ['TODO'],
         "simd_deciles": dropdowns('simd','simd_decile'),
         "simd_quintiles": dropdowns('simd','simd_quintile'),
         "archives": dropdowns('archive','name')

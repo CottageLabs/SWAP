@@ -14,10 +14,10 @@ jQuery(document).ready(function() {
         changeYear: true
     }
     $('.datepicker').datepicker(opts);
-    //opts.yearRange = "-22:+0";
+    opts.yearRange = "1940:+80";
     opts.defaultDate = '-23y';
-    //opts.minDate = '-22y';
-    //opts.maxDate = '-12y';
+    opts.minDate = '-80y';
+    opts.maxDate = '-12y';
     $('.dobdatepicker').datepicker(opts);
     
     // hide survey sections and add prev/next nav-throughs
@@ -195,7 +195,6 @@ input.bigfield{
 	                    <td style="text-align:right;padding:6px 10px 0 0;">College</td>
                 		<td><select name="college" data-required="true" tabindex=5>
                 		    <option></option>
-                		    <option>TODO</option>
                 		    {% for opt in selections.colleges %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
@@ -208,7 +207,6 @@ input.bigfield{
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Campus</td>
                 		<td><select name="campus" tabindex=6>
                 		    <option></option>
-                		    <option>TODO</option>
                 		    {% for opt in selections.campus %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
@@ -221,8 +219,7 @@ input.bigfield{
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Course</td>
                 		<td><select name="course" tabindex=7>
                 		    <option></option>
-                		    <option>TODO</option>
-                		    {% for opt in selections.course %}
+                		    {% for opt in selections.courses %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
@@ -241,7 +238,7 @@ input.bigfield{
         	            </td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Your nationality</td>
-                		<td colspan="3"><input type="text" name="nationality" tabindex=16></td>
+                		<td><input type="text" name="nationality" tabindex=16></td>
                     </tr>
                     <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">
@@ -502,6 +499,7 @@ input.bigfield{
                             <optgroup label="Arab">
                                 <option>Arab</option>
                             </optgroup>
+                            
                             <optgroup label="Other ethnic background">
                                 <option>Mixed White and Black Caribbean</option>
                                 <option>Mixed White and Black African</option>
