@@ -33,18 +33,20 @@ def stream(index='record',key='tags',size=100):
     keys = key.split(',')
 
     q = request.values.get('q','*')
-    if not q.endswith("*"): q += "*"
-    if not q.startswith("*"): q = "*" + q
+    if ':' not in q:
+        if not q.endswith("*"): q += "*"
+        if not q.startswith("*"): q = "*" + q
 
     qry = {
-        'query':{'match_all':{}},
+        'query':{'query_string':{'query':q}},
         'size': 0,
         'facets':{}
     }
     for ky in keys:
         qry['facets'][ky] = {"terms":{"field":ky+app.config['FACET_FIELD'],"order":request.values.get('order','term'), "size":request.values.get('size',size)}}
     
-    r = models.Everything.query(q=qry)
+    klass = getattr(models, index[0].capitalize() + index[1:] )
+    r = klass().query(q=qry)
 
     res = []
     if request.values.get('counts',False):

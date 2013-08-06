@@ -5,38 +5,14 @@
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 
-{% if current_user.do_admin %}
-    // add / remove rows to list items
-    var first = true;
-    $('table.multi').find('tbody').children('tr').each(function() {
-        $(this).children('td').first().prepend('<a class="btn btn-warning delete-row" style="margin:-10px 2px 0 0;" href="#">delete</a>').children('select, input').addClass('narrow');
-    });
-    $('table.multi').find('tbody').append('<tr><td><a class="btn btn-success add-row" href="#">add</a></td></tr>');
-
-    var addrow = function(event) {
-        event.preventDefault();
-        $(this).closest('tr').siblings().length == 5 ? $(this).hide() : false;
-        if ( $(this).closest('tr').siblings().length < 6 ) {
-            var row = $(this).closest('tr').prev().clone(true).get(0);
-            $(row).insertBefore($(this).closest('tr'));
-            $(row).find('.delete-row').bind('click',deleterow);
-        }
-    }
-    var deleterow = function(event) {
-        event.preventDefault();
-        var row = $(this).closest('tr').clone(true).get(0);
-        $(this).closest('tr').siblings().length == 6 ? $(this).closest('tr').siblings().find('.add-row').show() : false;
-        $(this).closest('tr').siblings().length == 1 ? $(row).insertBefore($(this).closest('tr')) : false;
-        $(this).closest('tr').remove();
-    }
-    $('.add-row').bind('click',addrow);
-    $('.delete-row').bind('click',deleterow);
-{% endif %}
-
 });
 </script>
 
-
+<style type="text/css">
+input{
+    width:400px;
+}
+</style>
 
 <div class="row-fluid" style="margin-bottom:10px;">
     <div class="span12">
@@ -51,108 +27,47 @@ jQuery(document).ready(function($) {
             <tbody>
 
 
-            {% if model == "school" %}
+            {% if model == "course" %}
     	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 0;width:160px;">School name</td>
-            		<td><input type="text" name="name" data-required="true"
-            		{% if record %} value="{{record.data.name}}"{% endif %}
+                    <td style="text-align:right;padding:6px 10px 0 0;width:250px;">course</td>
+            		<td><input type="text" name="course" data-required="true"
+            		{% if record %} value="{{record.data.course}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">Address</td>
-            		<td><input type="text" name="address"
-            		{% if record %} value="{{record.data.address_line_1}}"{% endif %}
+                    <td style="text-align:right;padding:6px 10px 0 100px;">at college</td>
+            		<td><input type="text" name="college"
+            		{% if record %} value="{{record.data.college}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">Address line 2</td>
-            		<td><input type="text" name="address_2"
-            		{% if record %} value="{{record.data.address_line_2}}"{% endif %}
+                    <td style="text-align:right;padding:6px 10px 0 100px;">on campus</td>
+            		<td><input type="text" name="campus"
+            		{% if record %} value="{{record.data.campus}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">City</td>
-            		<td><input type="text" name="city"
-            		{% if record %} value="{{record.data.city}}"{% endif %}
-            		></td>
-                </tr>
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">Region</td>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">college region</td>
             		<td><input type="text" name="region"
             		{% if record %} value="{{record.data.region}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
-            		<td><input type="text" name="post_code"
-            		{% if record %} value="{{record.data.post_code}}"{% endif %}
+                    <td style="text-align:right;padding:6px 10px 0 100px;">SWAP locale</td>
+            		<td><input type="text" name="locale"
+            		{% if record %} value="{{record.data.locale}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">LEAPS Manager</td>
-            		<td><input type="text" name="leaps_manager"
-            		{% if record %} value="{{record.data.leaps_manager}}"{% endif %}
+                    <td style="text-align:right;padding:6px 10px 0 100px;">course classification</td>
+            		<td><input type="text" name="classification"
+            		{% if record %} value="{{record.data.classification}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">Local authority</td>
-            		<td><input type="text" name="local_authority"
-            		{% if record %} value="{{record.data.local_authority}}"{% endif %}
-            		></td>
-                </tr>
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">LEAPS category</td>
-            		<td><input type="text" name="leaps_category"
-            		{% if record %} value="{{record.data.leaps_category}}"{% endif %}
-            		></td>
-                </tr>
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">SHEP school</td>
-            		<td style="padding-top:5px;padding-bottom:10px;">
-            		    <input type="checkbox" name="SHEP_school" value="yes"
-            		    {% if record %}{% if record.data.shep_school %} checked="checked"{% endif %}{% endif %}
-            		    >
-            		</td>
-                </tr>
-
-                <!-- Contacts defined below -->                
-
-            {% elif model == "institution" %}
-
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 0;width:160px;">Name</td>
-            		<td><input type="text" name="name" data-required="true"
-            		{% if record %} value="{{record.data.name}}"{% endif %}
-            		></td>
-                </tr>
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">Address</td>
-            		<td><input type="text" name="address_line_1"
-            		{% if record %} value="{{record.data.address_line_1}}"{% endif %}
-            		></td>
-                </tr>
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">Address line 2</td>
-            		<td><input type="text" name="address_line_2"
-            		{% if record %} value="{{record.data.address_line_2}}"{% endif %}
-            		></td>
-                </tr>
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">City</td>
-            		<td><input type="text" name="city"
-            		{% if record %} value="{{record.data.city}}"{% endif %}
-            		></td>
-                </tr>
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">Region</td>
-            		<td><input type="text" name="region"
-            		{% if record %} value="{{record.data.region}}"{% endif %}
-            		></td>
-                </tr>
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
-            		<td><input type="text" name="post_code"
-            		{% if record %} value="{{record.data.post_code}}"{% endif %}
+                    <td style="text-align:right;padding:6px 10px 0 100px;">college previous names</td>
+            		<td><input type="text" name="previous_name"
+            		{% if record %} value="{{','.join(record.data.previous_name)}}"{% endif %}
             		></td>
                 </tr>
 
@@ -225,74 +140,16 @@ jQuery(document).ready(function($) {
             		></td>
                 </tr>
 
-            {% elif model in ["level","advancedlevel","grade","subject","year"] %}
-    	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 0;">{{model}} name</td>
-            		<td><input type="text" name="name" data-required="true"
-            		{% if record %} value="{{record.data.name}}"{% endif %}
-            		></td>
-                </tr>
             {% endif %}
 
         </table>
 
-
-
-        {% if model in ["school","institution"] %}
-        <hr></hr>
-        <table class="multi">
-            <thead>
-                <tr>
-                    <th>Contact name</th>
-                    <th>Department</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for contact in record.data.contacts %}
-    	        <tr>
-            		<td><input style="width:160px;" type="text" name="contact_name" value="{{contact.name}}"></td>
-            		<td><input style="width:180px;" type="text" name="contact_department" value="{{contact.department}}"></td>
-            		<td><input style="width:120px;" type="text" name="contact_phone" value="{{contact.phone}}"></td>
-            		<td>
-            		    <input style="width:180px;" type="text" name="contact_email" value="{{contact.email}}">
-	                    {% if current_user.is_super and contact.email %}
-	                    <a class="btn" style="margin-top:-8px;" target="_blank" href="/account/{{contact.email}}" alt="Click to view the LEAPS login account associated with this contact" title="Click to view the LEAPS login account associated with this contact">view &raquo;</a>
-	                    {% endif %}
-            		</td>
-            		<td style="padding-left:10px;"><input type="text" name="password" placeholder="********"></td>
-                </tr>
-                {% endfor %}
-    	        <tr>
-            		<td><input style="width:160px;" type="text" name="contact_name"></td>
-            		<td><input style="width:180px;" type="text" name="contact_department"></td>
-            		<td><input style="width:120px;" type="text" name="contact_phone"></td>
-            		<td><input style="width:180px;" type="text" name="contact_email"></td>
-            		<td style="padding-left:10px;"><input type="text" name="password" placeholder="********"></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <hr></hr>
- 	    <p>Passwords are never displayed. Enter a new password and save to update the associated user account.
-        Deleting this record also deletes the associated user accounts.</p>
-        <p>Changing the contact email address changes the school login account.
-        If you change this, provide a new password below too - 
-        <span style="color:red;">otherwise the account may be unsafe</span>.</p>
-        <p>If there are multiple contacts, there will be multiple associated user accounts, corresponding to each contact email address.</p>
-
-        <hr></hr>
-
-        
-        {% endif %}
  
         {% if current_user.do_admin %}
         <table>
             <tbody>
     	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 0;width:160px;"></td>
+                    <td style="text-align:right;padding:6px 10px 0 0;width:250px;"></td>
             		<td>
                        	<input class="btn btn-success" style="width:220px;" type="submit" name="submit" value="Save" />
                         {% if record %}

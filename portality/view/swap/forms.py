@@ -46,12 +46,9 @@ def student():
             render_template(
                 'swap/survey/survey.html', 
                 selections={
-                    #"colleges": dropdowns('college'),
-                    #"campus": dropdowns('college','campus'),
-                    #"courses": dropdowns('course'),
-                    "colleges": ['TODO'],
-                    "campus": ['TODO'],
-                    "courses": ['TODO']
+                    "colleges": dropdowns('course','college'),
+                    "campus": dropdowns('course','campus'),
+                    "courses": dropdowns('course','course')
                 },
                 data={}
             )

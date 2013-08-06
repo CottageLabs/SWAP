@@ -2,8 +2,7 @@
 
 {% block options %}
             <a class="btn btn-primary" href="/admin/student/new">add new registration</a>
-            <!--<a class="btn" href="/admin/forms">Print selected</a>-->
-            <a class="btn" href="/admin/export">Export selected</a>
+            <a id="export" class="btn" href="/admin/export">Export selected</a>
 
 {% endblock %}
 
@@ -12,6 +11,25 @@
 
 <script>
 jQuery(document).ready(function() {
+    var getthese = function(event) {
+        event.preventDefault();
+        var selected = [];
+        var qry = $.parseJSON($.fn.facetview.options.querystring);
+        delete qry.fields;
+        if ( $('#selecttotal').is(':checked') ) {
+            qry.size = $.fn.facetview.options.rawdata.hits.total;
+        } else {
+            $('.selectthis').each(function() {
+                $(this).is(':checked') ? selected.push($(this).attr('name').replace("select_","")) : false;
+            });
+        }
+        var loc = $(this).attr('href') + '?q=' + JSON.stringify(qry);
+        selected.length > 0 ? loc += '&selected=' + JSON.stringify(selected) : false;
+        window.location = loc;
+    }
+    $('#export').bind('click',getthese);
+
+
     var post = function() {
         if ( $('#default_current').length == 0 ) {
             $('body').append('<div id="default_current" style="display:none;"></div>');
@@ -21,6 +39,18 @@ jQuery(document).ready(function() {
                 "headers":{0:{"sorter":false}}
             });
         }
+        
+        {% if current_user.swap_locale %}
+        if ( $('#default_swap').length == 0 ) {
+            $('body').append('<div id="default_swap" style="display:none;"></div>');
+            $('.facetview_filterchoice[href="{{current_user.swap_locale}}"]').trigger('click');
+        } else {
+            $(".tablesorter").tablesorter({
+                "headers":{0:{"sorter":false}}
+            });
+        }
+        {% endif %}
+
         $('#selectall').change(function() {
             $('.selectthis').attr('checked', $(this).is(':checked'));
             if ( $(this).is(':checked') ) {
@@ -40,6 +70,10 @@ jQuery(document).ready(function() {
         facets: [
             {'field':'archive.exact', 'display': 'archive'}, 
             {'field':'college.exact', 'display': 'college'},
+            {'field':'course.exact', 'display': 'course'},
+            {'field':'locale.exact', 'display': 'locale'},
+            {'field':'classification.exact', 'display': 'subject classification'},
+            {'field':'region.exact', 'display': 'college region'},
             {'field':'simd_decile.exact', 'display': 'SIMD decile'},
             {'field':'status.exact', 'display': 'status'}
         ],

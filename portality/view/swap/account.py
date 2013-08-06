@@ -175,6 +175,7 @@ class RegisterForm(Form):
         validators.EqualTo('c', message='Passwords must match')
     ])
     c = PasswordField('Repeat Password')
+    swap_locale = SelectField('SWAP locale', choices=[('east','east'),('west','west')])
     view_admin = BooleanField('View admin')
     do_admin = BooleanField('Do admin')
 

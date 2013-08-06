@@ -44,6 +44,14 @@ class Student(DomainObject):
                 self.data['simd_decile'] = 'unknown'
                 self.data['simd_quintile'] = 'unknown'
 
+        if 'college' in self.data and 'locale' not in self.data:
+            c = Course().pull_by_ccc(self.data['college'],self.data['campus'],self.data.get('course',False))
+            if c is not None:
+                self.data['locale'] = c.data.get('locale',"")
+                self.data['region'] = c.data.get('region',"")
+                self.data['classification'] = c.data.get('classification',"")
+                self.data['previous_name'] = c.data.get('previous_name',"")
+
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
 
 
@@ -59,84 +67,61 @@ class Student(DomainObject):
         self.save()
 
     
-class College(DomainObject):
-    __type__ = 'college'
+class Course(DomainObject):
+    __type__ = 'course'
 
     @classmethod
-    def prep(cls, rec):
-        if 'id' in rec:
-            id_ = rec['id'].strip()
+    def pull_by_ccc(cls, college, campus=False, course=False):
+        qry = {
+            "query": {
+                "bool": {
+                    "must":[
+                        {
+                            "term": {
+                                "college" + app.config['FACET_FIELD'] : college
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        if campus:
+            qry['query']['bool']['must'].append({"term":{"campus"+app.config['FACET_FIELD']:campus}})
+        if course:
+            qry['query']['bool']['must'].append({"term":{"course"+app.config['FACET_FIELD']:course}})
+        found = cls.query(q=qry)
+        if found.get('hits',{}).get('total',0) != 0:
+            return cls.pull(found['hits']['hits'][0]['_source']['id'])
         else:
-            id_ = cls.makeid()
-            rec['id'] = id_
-        
-        rec['last_updated'] = datetime.now().strftime("%Y-%m-%d %H%M")
-
-        if 'created_date' not in rec:
-            rec['created_date'] = datetime.now().strftime("%Y-%m-%d %H%M")
-            
-        if 'author' not in rec:
-            try:
-                rec['author'] = current_user.id
-            except:
-                rec['author'] = "anonymous"
-
-        return rec
+            return None
 
     def save(self):
-        self.data = self.prep(self.data)
+        if 'id' in self.data:
+            id_ = self.data['id'].strip()
+        else:
+            id_ = self.makeid()
+            self.data['id'] = id_
         
-        old = self.pull(self.id)
+        self.data['last_updated'] = datetime.now().strftime("%Y-%m-%d %H%M")
 
+        if 'created_date' not in self.data:
+            self.data['created_date'] = datetime.now().strftime("%Y-%m-%d %H%M")
+        
+        if 'previous_name' not in self.data:
+            self.data['previous_name'] = []
+        if 'region' not in self.data:
+            self.data['region'] = ""
+        if 'campus' not in self.data:
+            self.data['campus'] = ""
+        if 'classification' not in self.data:
+            self.data['classification'] = ""
+
+        old = Course.pull(self.id)
         if old is not None:
-            # remove any old accounts
-            for oc in old.data.get('contacts',[]):
-                if oc.get('email',"") not in [o.get('email',False) for o in self.data.get('contacts',[])]:
-                    oldaccount = Account.pull(oc.get('email',""))
-                    if oldaccount is not None: oldaccount.delete()
-            
-            # change school name on related accounts if any            
-            if old.data.get('name',False) != self.data.get('name',False):
-                res = Account.query(q={"query":{"term":{self.__type__+app.config['FACET_FIELD']:old.data['name']}}})
-                for aid in [i['_source']['id'] for i in res.get('hits',{}).get('hits',[])]:
-                    ua = Account.pull(aid)
-                    if ua is not None and self.data.get('name',False):
-                        ua.data[self.__type__] = self.data['name']
-                        ua.save()
-
-        for c in self.data.get('contacts',[]):
-            # create any new accounts
-            if c.get('email',"") != "" and ( old is None or c.get('email',"") not in [o.get('email',False) for o in old.data.get('contacts',[])] ):
-                account = Account.pull(c['email'])
-                if account is None:
-                    account = Account(
-                        id=c['email'], 
-                        email=c['email']
-                    )
-                    account.data[self.__type__] = self.data.get('name',"")
-                    account.set_password(c.get('password',"password"))
-                    account.save()
-            # change any passwords
-            elif c.get('email',"") != "" and c.get('password',"") != "":
-                account = Account.pull(c['email'])
-                account.set_password(self.data['password'])
-                account.save()
-                c['password'] = ""
+            if old.data['college'] != self.data['college']:
+                self.data['previous_name'].append(old.data['college'])
 
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
-
-    def delete(self):
-        # delete contact accounts
-        for c in self.data.get('contacts',[]):
-            if c['email'] != "":
-                exists = Account.pull(c['email'])
-                if exists is not None:
-                    exists.delete()
-        r = requests.delete(self.target() + self.id)
-
-
-class University(College):
-    __type__ = 'university'
 
 
 class Simd(DomainObject):

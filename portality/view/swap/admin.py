@@ -58,15 +58,13 @@ def student(uuid=None):
         if student is None: abort(404)
 
     selections={
-        #"colleges": dropdowns('college'),
-        #"campus": dropdowns('college','campus'),
-        #"courses": dropdowns('course'),
-        "colleges": ['TODO'],
-        "campus": ['TODO'],
-        "courses": ['TODO'],
+        "colleges": dropdowns('course','college'),
+        "campus": dropdowns('course','campus'),
+        "courses": dropdowns('course','course'),
         "simd_deciles": dropdowns('simd','simd_decile'),
         "simd_quintiles": dropdowns('simd','simd_quintile'),
-        "archives": dropdowns('archive','name')
+        "archives": dropdowns('archive','name'),
+        "studyskills": dropdowns('student','studyskills') + ['SE Humanities', 'East Science', 'Tayside Humanities', 'Tayside Nursing']
     }
 
     if request.method == 'GET':

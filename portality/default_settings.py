@@ -35,8 +35,8 @@ SEARCH_SORT_ORDER = ''
 # and identifier for how non-analyzed fields for faceting are differentiated in the mappings
 FACET_FIELD = ".exact"
 MAPPINGS = {
-    "record" : {
-        "record" : {
+    "student" : {
+        "student" : {
             "dynamic_templates" : [
                 {
                     "default" : {
@@ -55,4 +55,8 @@ MAPPINGS = {
         }
     }
 }
+MAPPINGS['account'] = {'account':MAPPINGS["student"]["student"]}
+MAPPINGS['course'] = {'course':MAPPINGS["student"]["student"]}
+MAPPINGS['simd'] = {'simd':MAPPINGS["student"]["student"]}
+MAPPINGS['archive'] = {'archive':MAPPINGS["student"]["student"]}
 

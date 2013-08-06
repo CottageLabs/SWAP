@@ -2,10 +2,9 @@
 
 
 {% block options %}
-            <a class="btn btn-success searchtype" data-type="college" href="/admin/data/college">Colleges</a>
-            <a class="btn searchtype" data-type="university" href="/admin/data/university">Universities</a>
+            <a class="btn btn-success searchtype" data-type="course" href="/admin/data/course">Courses</a>
             <a class="btn searchtype" data-type="simd" href="/admin/data/simd">SIMD</a>
-            <a class="btn btn-primary addnew" href="#">Add new <span id="newtype" class="newtype">college</span></a>
+            <a class="btn btn-primary addnew" href="#">Add new <span id="newtype" class="newtype">course</span></a>
             <!--<a class="btn btn-warning bulkload" href="/admin/import">Bulk import <span class="newtype">college</span></a>-->
 
 {% endblock %}
@@ -17,46 +16,37 @@
 jQuery(document).ready(function($) {
 
     var optsets = {
-        "college": {
-            search_url: '/query/college?',
+        "course": {
+            search_url: '/query/course?',
             datatype: 'JSON',
-            sort: ["name.exact"],
+            sort: ["course.exact"],
             resdisplay: [
                 [
                     {
-                        "pre": '<a href="data/college/',
+                        "pre": '<a href="data/course/',
                         "field": "id",
                         "post": '">'
                     },
                     {
-                        "field": "name",
+                        "field": "course",
                         "post": '</a>'
+                    },
+                    {
+                        "pre": " at ",
+                        "field": "college"
                     }
                 ]
             ],
-            facets: []
+            facets: [
+                {'field':'college.exact', 'display': 'college'}, 
+                //{'field':'region.exact', 'display': 'region'},
+                {'field':'campus.exact', 'display': 'campus'},
+                {'field':'locale.exact', 'display': 'locale'},
+                {'field':'classification.exact', 'display': 'classification'}
+            ]
         }
     };
     
-    optsets.university = {
-        search_url: '/query/university?',
-        datatype: 'JSON',
-        sort: ['name.exact'],
-        resdisplay: [
-                [
-                    {
-                        "pre": '<a href="data/university/',
-                        "field": "id",
-                        "post": '">'
-                    },
-                    {
-                        "field": "name",
-                        "post": '</a>'
-                    }
-                ]
-            ],
-        facets: []
-    };
     optsets.simd = {
         search_url: '/query/simd?',
         datatype: 'JSON',
@@ -78,12 +68,12 @@ jQuery(document).ready(function($) {
     };
 
     var opts = {
-        search_url: optsets.college.search_url,
-        datatype: optsets.college.datatype,
-        facets: optsets.college.facets,
+        search_url: optsets.course.search_url,
+        datatype: optsets.course.datatype,
+        facets: optsets.course.facets,
         searchbox_shade: "#fff",
-        sort: optsets.college.sort,
-        result_display: optsets.college.resdisplay,
+        sort: optsets.course.sort,
+        result_display: optsets.course.resdisplay,
         sharesave_link: false,
         paging: {
             size: 50
@@ -133,7 +123,7 @@ jQuery(document).ready(function($) {
 
 <div class="row-fluid" style="margin-bottom:10px;">
     <div class="span12">
-        <h1>Manage supporting data - <span class="newtype">college</span></h1>
+        <h1>Manage supporting data - <span class="newtype">course</span></h1>
     </div>
 </div>
 

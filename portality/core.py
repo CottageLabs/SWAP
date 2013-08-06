@@ -48,6 +48,7 @@ def initialise_index(app):
             su = {
                 "id":un, 
                 "email":"test@test.com",
+                "swap_locale":"east",
                 "api_key":str(uuid.uuid4()),
                 "password":generate_password_hash(un)
             }

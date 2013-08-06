@@ -24,7 +24,7 @@ def restrict():
 @blueprint.route('/<model>', methods=['GET','POST'])
 def index(model=None):
     if request.method == 'GET':
-        return render_template('leaps/admin/import.html', model=model)
+        return render_template('swap/admin/import.html', model=model)
     elif request.method == 'POST':
         try:
             records = []
@@ -41,74 +41,21 @@ def index(model=None):
                 model = request.form.get('model',None)
                 if model is None:
                     flash("You must specify what sort of records you are trying to upload.")
-                    return render_template('leaps/admin/import.html')
+                    return render_template('swap/admin/import.html')
 
             klass = getattr(models, model[0].capitalize() + model[1:] )
 
-            if model.lower() in ['school']:
+            klass().delete_all()
+
+            if model.lower() in ['course']:
                 for rec in records:
-                    if 'contacts' not in rec:
-                        rec['contacts'] = []
-                        c = {}
-                        if rec.get('contact_name',"") != "":
-                            c["name"] = rec['contact_name']
-                            del rec['contact_name']
-                        if rec.get('contact_email',"") != "":
-                            c["email"] = rec['contact_email']
-                            del rec['contact_email']
-                        if rec.get('contact_department',"") != "":
-                            c["department"] = rec['contact_department']
-                            del rec['contact_department']
-                        if rec.get('contact_phone',"") != "":
-                            c["phone"] = rec['contact_phone']
-                            del rec['contact_phone']
-                        if rec.get('password',"") != "":
-                            c["password"] = rec['password']
-                            del rec['password']
-                        if len(c.keys()) > 0: rec['contacts'].append(c)
-                    c = klass(**rec)
-                    c.save()
-
-            elif model.lower() in ['institution']:
-                for rec in records:
-                    if 'contacts' not in rec:
-                        rec['contacts'] = []
-                        c = {}
-                        if rec.get('contact_name',"") != "":
-                            c["name"] = rec['contact_name']
-                            del rec['contact_name']
-                        if rec.get('contact_email',"") != "":
-                            c["email"] = rec['contact_email']
-                            del rec['contact_email']
-                        if rec.get('contact_department',"") != "":
-                            c["department"] = rec['contact_department']
-                            del rec['contact_department']
-                        if rec.get('contact_phone',"") != "":
-                            c["phone"] = rec['contact_phone']
-                            del rec['contact_phone']
-                        if len(c.keys()) > 0:
-                            c['password'] = "m00shroom"
-                            rec['contacts'].append(c)
-
-                        c2 = {}
-                        if rec.get('contact_name_2',"") != "":
-                            c2["name"] = rec['contact_name_2']
-                            del rec['contact_name_2']
-                        if rec.get('contact_email_2',"") != "":
-                            c2["email"] = rec['contact_email_2']
-                            del rec['contact_email_2']
-                        if rec.get('contact_department_2',"") != "":
-                            c2["department"] = rec['contact_department_2']
-                            del rec['contact_department_2']
-                        if rec.get('contact_phone_2',"") != "" in rec:
-                            c2["phone"] = rec['contact_phone_2']
-                            del rec['contact_phone_2']
-                        if len(c2.keys()) > 0:
-                            c2['password'] = "m00shroom"
-                            rec['contacts'].append(c2)
-
-                    c = klass(**rec)
-                    c.save()
+                    r = klass()
+                    if rec.get('previous_name',"") != "":
+                        rec['previous_name'] = rec['previous_name'].split(',')
+                    else:
+                        rec['previous_name'] = []
+                    r.data = rec
+                    r.save()
 
             else:
                 klass().bulk(records)
@@ -117,11 +64,11 @@ def index(model=None):
             checklen = klass.query(q="*")['hits']['total']
             
             flash(str(len(records)) + " records have been imported, there are now " + str(checklen) + " records.")
-            return render_template('leaps/admin/import.html', model=model)
+            return render_template('swap/admin/import.html', model=model)
 
         except:
             flash("There was an error importing your records. Please try again.")
-            return render_template('leaps/admin/import.html', model=model)
+            return render_template('swap/admin/import.html', model=model)
 
 
 

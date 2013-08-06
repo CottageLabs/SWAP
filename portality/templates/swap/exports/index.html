@@ -2,6 +2,18 @@
 
 {% block content %}
 
+<script>
+jQuery(document).ready(function() {
+    $('.selectall').change(function() {
+        var column = $(this).attr('data-column');
+        var checked = $(this).is(':checked');
+        $('table > tbody > tr').each(function() {
+            $(this).find('td').eq(column).find(':checkbox').attr('checked',checked);
+        });
+    });
+});
+</script>
+
       <div class="row-fluid">
         <div class="span12">
             <h1>Export student registrations</h1>
@@ -22,10 +34,10 @@
 
 	        <table class="table table-bordered">
 	            <thead>
-	                <th>Student details</th>
-	                <th>Qualification details</th>
-	                <th>Situation details</th>
-	                <th>Marketing details / other</th>
+	                <th>Student details <span style="font-weight:normal;">( select all <input type="checkbox" data-column="0" class="selectall"> )</span></th>
+	                <th>Qualification details <span style="font-weight:normal;">( select all <input type="checkbox" data-column="1" class="selectall"> )</span></th>
+	                <th>Situation details <span style="font-weight:normal;">( select all <input type="checkbox" data-column="2" class="selectall"> )</span></th>
+	                <th>Marketing details / other <span style="font-weight:normal;">( select all <input type="checkbox" data-column="3" class="selectall"> )</span></th>
 	            </thead>
 	            <tbody>
         	        <tr>
@@ -105,24 +117,24 @@
                     </tr>
 
                     <tr>
-	                    <td><input type="checkbox" name="campus"> Campus</td>
+	                    <td><input type="checkbox" name="campus"> College campus</td>
 	                    <td></td>
-	                    <td></td>
-                        <td></td>
+	                    <td><input type="checkbox" name="region"> College region</td>
+                        <td><input type="checkbox" name="studyskills"> Study skills</td>
                     </tr>
 
                     <tr>
 	                    <td><input type="checkbox" name="course"> Course</td>
 	                    <td></td>
-	                    <td></td>
-                		<td></td>
+	                    <td><input type="checkbox" name="classification"> Course classification</td>
+                		<td><input type="checkbox" name="registered"> Registered</td>
                     </tr>
 
                     <tr>
 	                    <td><input type="checkbox" name="travel"> Miles travelled to college</td>
 	                    <td></td>
-	                    <td></td>
-	                    <td></td>
+	                    <td><input type="checkbox" name="locale"> SWAP locale</td>
+	                    <td><input type="checkbox" name="attended"> Attended</td>
                     </tr>
 
                 </tbody>
