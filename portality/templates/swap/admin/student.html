@@ -99,6 +99,43 @@ jQuery(document).ready(function() {
     $('.collegeselector').bind('change',limitcampus);
     $('.campusselector').bind('change',limitcourse);
 
+    // function of things to do whenever a row is appended
+    var preprow = function(row) {
+        $(row).find('.delete-row').bind('click',deleterow);
+        $(row).find('select').val("");
+        $(row).find('input').val("");
+        $(row).find('textarea').html("");
+    }
+
+    // add / remove rows to list items
+    $('table.multi').find('tbody').children('tr').each(function() {
+        $(this).children('td').first().prepend('<a class="btn btn-warning delete-row" style="margin:-10px 2px 0 0;" href="#">delete</a>').children('select, input').addClass('narrow');
+    });
+    $('table.multi').find('tbody').append('<tr><td><a class="btn btn-success add-row" href="#">add</a></td></tr>');
+    var addrow = function(event) {
+        event.preventDefault();
+        $(this).closest('tr').siblings().length == 5 ? $(this).hide() : false;
+        if ( $(this).closest('tr').siblings().length < 6 ) {
+            var row = $(this).closest('tr').prev().clone(true).get(0);
+            $(row).find('.noclone').remove();
+            $(row).insertBefore($(this).closest('tr'));
+            preprow(row);
+        }
+    }
+    $('.add-row').bind('click',addrow);
+    var deleterow = function(event) {
+        event.preventDefault();
+        var row = $(this).closest('tr').clone(true).get(0);
+        $(this).closest('tr').siblings().length == 6 ? $(this).closest('tr').siblings().find('.add-row').show() : false;
+        if ( $(this).closest('tr').siblings().length == 1 ) {
+            $(row).find('.noclone').remove();
+            $(row).insertBefore($(this).closest('tr'));
+            preprow(row);
+        }
+        $(this).closest('tr').remove();
+    }
+    $('.delete-row').bind('click',deleterow);
+
 {% endif %}
 
 });
@@ -903,24 +940,54 @@ fieldset{
 	<div class="row-fluid">
 	    <div class="span12">
 	        <div class="well">
-	            <h1>UCAS data</h1>
-	            <p>Where UCAS data about the student will be shown.
-	            SWAP staff receive a weekly spreadsheet from UCAS which they 
-	            must be able to upload in bulk to the system and it must match 
-	            students in the system. Data will be manually editable from here, 
-	            but bulk upload will happen in a specific UCAS bulk upload controller.</p>
+	            <h1>UCAS data <small>the universities and courses this student has applied to</small></h1>
+	            <p style="text-align:right;"><a class="btn" href="/admin/import/ucas">Go to the UCAS data importer</a></p>
 	        </div>
 	    </div>
 	</div>
 
 	<div class="row-fluid">
 	    <div class="span12">		
-	        <table>
-	            <tbody>
+	        <table class="multi">
+                <thead>
+                    <tr>
+                        <th>Institution code</th>
+                        <th>Institution shortname</th>
+                        <th>Course code</th>
+                        <th>Course name</th>
+                        <th>Starting year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if record %}
+                        {% for app in record.data.applications %}
+                    <tr>
+                		<td><input type="text" name="application_institution_code" value="{{app.institution_code}}" style="width:100px;"></td>
+                		<td><input type="text" name="application_institution_shortname" value="{{app.institution_shortname}}" style="width:150px;"></td>
+                		<td><input type="text" name="application_course_code" value="{{app.course_code}}" style="width:100px;"></td>
+                		<td><input type="text" name="application_course_name" value="{{app.course_name}}" style="width:200px;"></td>
+                		<td><input type="text" name="application_start_year" value="{{app.start_year}}" style="width:100px;"></td>
+                    </tr>
+                        {% endfor %}
+                    {% endif %}
+
+{% if current_user.do_admin and (not record or record.archive == 'current') %}
+                    <tr>
+                		<td><input type="text" name="application_institution_code" style="width:100px;"></td>
+                		<td><input type="text" name="application_institution_shortname" style="width:150px;"></td>
+                		<td><input type="text" name="application_course_code" style="width:100px;"></td>
+                		<td><input type="text" name="application_course_name" style="width:200px;"></td>
+                		<td><input type="text" name="application_start_year" style="width:100px;"></td>
+                    </tr>
+{% endif %}
+
                 </tbody>
             </table>
-        </div>
-    </div>
+	        
+	    </div>
+	</div>
+
+
 </div>
 
 
@@ -934,21 +1001,42 @@ fieldset{
 	<div class="row-fluid">
 	    <div class="span12">
 	        <div class="well">
-	            <h1>College data</h1>
-	            <p>Where lists of qualifications for the student will be displayed,
-	            and where date of student leaving college, if they leave, will be added - 
-	            these will be uploadable via the Colleges interface or manually editable
-	            by SWAP staff</p>
+	            <h1>College data <small>the qualifications this student gained at college</small></h1>
+	            <p style="text-align:right;"><a class="btn" href="/colleges">Go to the colleges interface</a></p>
 	        </div>
 	    </div>
 	</div>
 
 	<div class="row-fluid">
 	    <div class="span12">		
-	        <table>
-	            <tbody>
+	        <table class="multi" style="margin-top:20px;">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Year completed</th>
+                        <th>Level of qualification</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for qual in record.data.qualifications %}
+                    <tr>
+                		<td><input type="text" name="qualification_subject" style="width:150px;" value="{{qual.subject}}"></td>
+                		<td><input type="text" name="qualification_year" value="{{qual.year}}"></td>
+                		<td><input type="text" name="qualification_level" value="{{qual.level}}"></td>
+                		<td><input type="text" name="qualification_grade" value="{{qual.grade}}"></td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                		<td><input type="text" name="qualification_subject" style="width:150px;"></td>
+                		<td><input type="text" name="qualification_year"></td>
+                		<td><input type="text" name="qualification_level"></td>
+                		<td><input type="text" name="qualification_grade"></td>
+                    </tr>
                 </tbody>
-            </table>
+	        </table>
+
+            <p style="margin-top:20px;">This student exited their college course on: <input type="text" name="courseexit" class="datepicker" value="{{record.data.courseexit}}"></p>
         </div>
     </div>
 </div>
@@ -962,7 +1050,8 @@ fieldset{
 	<div class="row-fluid">
 	    <div class="span12">
 	        <div class="well">
-	            <h1>University data</h1>
+	            <h1>University data <small>the progress of this student through university</small></h1>
+	            <!--<p style="text-align:right;"><a class="btn" href="/admin/import/university">Go to the university data importer</a></p>-->
 	            <p>Where information about progression of the student onto 
 	            years of university courses (or withdrawal) will be shown. To be provided via the 
 	            university interface / spreadsheet or manually entered by 

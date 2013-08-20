@@ -2,12 +2,27 @@
 
 {% block content %}
 
-<p>Choose from the administrative options above</p>
+<div class="row-fluid">
+    <div class="span6">
 
-<p><a href="/admin/student">Manage registrations</a> to gain access to registrations submitted by students, edit or delete them, create new ones, or generate data exports.</p>
+        <div class="alert alert-info"><a class="btn btn-info" href="/admin/student">Manage registrations</a><br>to gain access to registrations submitted by students, edit or delete them, create new ones, or generate data exports.</div>
 
-<p><a href="/admin/data">Manage supporting data</a> to gain access to course and SIMD lists that are used in dropdown lists and to populate extra data for student records.</p>
+        <div class="alert alert-info"><a class="btn btn-info" href="/admin/data">Manage supporting data</a><br>to gain access to course and SIMD lists that are used in dropdown lists and to populate extra data for student records.</div>
 
-<p><a href="/admin/archive">Manage data archives</a> to move old registrations to archives and remove them from immediate displays.</p>
+        <div class="alert alert-info"><a class="btn btn-info" href="/admin/archive">Manage data archives</a><br>to move old registrations to archives and remove them from immediate displays.</div>
 
+        <div class="alert alert-danger"><a class="btn btn-danger" href="/account/logout">LOGOUT OF SWAP ADMIN</a><br>You are currently logged in as {{current_user.id}}</div>
+
+    </div>
+    
+    <div class="span6">
+        <div class="alert alert-info"><a class="btn btn-info" href="/account">Manage user accounts</a><br>to control who can access the admin and college interfaces, and to set contact email addresses.</div>
+        
+        <div class="alert alert-info"><a class="btn btn-info" href="/admin/import/ucas">Use UCAS data importer</a><br>to attempt to match student registrations to UCAS numbers and to update student registrations with UCAS course applications data.</div>
+
+        <div class="alert alert-info"><a class="btn btn-info" href="/colleges">Use colleges interface</a><br>to check on the information available to colleges for updating student qualifications achieved at college.</div>
+
+    </div>
+
+</div>
 {% endblock %}

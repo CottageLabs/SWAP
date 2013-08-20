@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+jQuery(document).ready(function() { 
+
+    // set datepicker
+    var opts = {
+        inline: true,
+        dateFormat: 'dd/mm/yy',
+        changeYear: true
+    }
+    $('.datepicker').datepicker(opts);
+
+    // function of things to do whenever a row is appended
+    var preprow = function(row) {
+        $(row).find('.delete-row').bind('click',deleterow);
+        $(row).find('select').val("");
+        $(row).find('input').val("");
+        $(row).find('textarea').html("");
+    }
+
+    // add / remove rows to list items
+    $('table.multi').find('tbody').children('tr').each(function() {
+        $(this).children('td').first().prepend('<a class="btn btn-warning delete-row" style="margin:-10px 2px 0 0;" href="#">delete</a>').children('select, input').addClass('narrow');
+    });
+    $('table.multi').find('tbody').append('<tr><td><a class="btn btn-success add-row" href="#">add</a></td></tr>');
+    var addrow = function(event) {
+        event.preventDefault();
+        $(this).closest('tr').siblings().length == 5 ? $(this).hide() : false;
+        if ( $(this).closest('tr').siblings().length < 6 ) {
+            var row = $(this).closest('tr').prev().clone(true).get(0);
+            $(row).find('.noclone').remove();
+            $(row).insertBefore($(this).closest('tr'));
+            preprow(row);
+        }
+    }
+    $('.add-row').bind('click',addrow);
+    var deleterow = function(event) {
+        event.preventDefault();
+        var row = $(this).closest('tr').clone(true).get(0);
+        $(this).closest('tr').siblings().length == 6 ? $(this).closest('tr').siblings().find('.add-row').show() : false;
+        if ( $(this).closest('tr').siblings().length == 1 ) {
+            $(row).find('.noclone').remove();
+            $(row).insertBefore($(this).closest('tr'));
+            preprow(row);
+        }
+        $(this).closest('tr').remove();
+    }
+    $('.delete-row').bind('click',deleterow);
+
+})
+</script>
+
+<style>
+.title{
+    font-weight:bold;
+}
+</style>
+
+<div class="row-fluid">
+    <div class="span12">
+
+        <div class="well">
+            <h1>{{ student.first_name }} {{ student.last_name }}</h1>
+
+            <table class="table table-bordered">
+                <tr>
+                    <td class="title">Date of birth</td> <td>{{ student.date_of_birth }}</td>
+                    <td class="title">Post code</td> <td>{{ student.post_code }}</td>
+                </tr>
+                <tr>
+                    <td class="title">College</td> <td>{{ student.college }}</td>
+                    <td class="title">Campus</td> <td>{{ student.campus }}</td>
+                </tr>
+            </table>
+
+            {% if qualifications not in student or not student.qualifications %}
+                <p>No college qualifications provided yet.</p>
+            {% endif %}
+
+        </div>
+
+        <form method="POST">
+
+            <p>Please let us know of the qualifications achieved by this student{% if college != True %} at {{college}}{% endif %}.</p>
+
+	        <table class="multi" style="margin-top:20px;">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Year completed</th>
+                        <th>Level of qualification</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for qual in student.qualifications %}
+                    <tr>
+                		<td><input type="text" name="qualification_subject" style="width:150px;" value="{{qual.subject}}"></td>
+                		<td><input type="text" name="qualification_year" value="{{qual.year}}"></td>
+                		<td><input type="text" name="qualification_level" value="{{qual.level}}"></td>
+                		<td><input type="text" name="qualification_grade" value="{{qual.grade}}"></td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                		<td><input type="text" name="qualification_subject" style="width:150px;"></td>
+                		<td><input type="text" name="qualification_year"></td>
+                		<td><input type="text" name="qualification_level"></td>
+                		<td><input type="text" name="qualification_grade"></td>
+                    </tr>
+                </tbody>
+	        </table>
+
+            <p style="margin-top:20px;">Please let us know if this student has left their course of study{% if college != True %} at {{ college }}{% endif %}, either as an abandonment before completion or upon completion of their course.</p>
+            <p>Course exit date: <input type="text" name="courseexit" class="datepicker" value="{{student.courseexit}}"></p>
+
+        <input style="margin:20px 0 0 30%;" class="btn btn-large btn-primary" type="submit" name="submit" value="submit updates">
+        
+        </form>
+
+
+	</div>
+</div>
+		
+        
+        
+{% endblock %}
+

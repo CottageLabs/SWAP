@@ -8,7 +8,7 @@ from portality.core import app, login_manager
 
 from portality.view.swap.account import blueprint as account
 from portality.view.swap.admin import blueprint as admin
-from portality.view.swap.universities import blueprint as universities
+from portality.view.swap.colleges import blueprint as colleges
 from portality.view.swap.schools import blueprint as schools
 from portality.view.swap.forms import blueprint as forms
 from portality.view.swap.imports import blueprint as imports
@@ -21,7 +21,7 @@ from portality.view.stream import blueprint as stream
 
 app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(admin, url_prefix='/admin')
-app.register_blueprint(universities, url_prefix='/universities')
+app.register_blueprint(colleges, url_prefix='/colleges')
 app.register_blueprint(schools, url_prefix='/schools')
 app.register_blueprint(forms, url_prefix='/registration')
 app.register_blueprint(imports, url_prefix='/admin/import')
