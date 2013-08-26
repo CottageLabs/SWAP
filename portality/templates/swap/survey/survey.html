@@ -76,10 +76,22 @@ jQuery(document).ready(function() {
     var triggersave = function(event) {
         if ( !$('#survey').parsley('validate') ) {
             event.preventDefault();
-            $('#activealert').show();
+            $('.activealert').show();
         }
     };
     $('#triggersave').bind('click',triggersave);
+
+    // block an enter keypress from submitting the form
+    $("form").bind("keypress", function (event) {
+        var key = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+        if (key == 13) {
+            return false;
+        }
+    });
+    
+    // when an input box is entered, remove the placeholder. This used to work automatically, 
+    // but for some reason stupid browsers now leave it there
+    $('input[placeholder]').bind("focus",function() { $(this).removeAttr('placeholder'); });
 });
 </script>
 
@@ -354,12 +366,23 @@ input.bigfield{
                     <tr>
                         <td style="text-align:right;padding:6px 10px 0 0;">
                             <p>Do you have any previous qualifications at grade 3/grade C 
-                            <br>or above in Maths and English? If so please list 
+                            <br>or above in Maths? If so please list 
                             <br>qualifications and grades. (Examined qualifications only, 
                             <br>no need to mention individual modules.)</p>
                         </td>
                         <td>
-                            <textarea name="other_maths_english" class="bigfield"></textarea>
+                            <textarea name="other_maths" class="bigfield"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">
+                            <p>Do you have any previous qualifications at grade 3/grade C 
+                            <br>or above in English? If so please list 
+                            <br>qualifications and grades. (Examined qualifications only, 
+                            <br>no need to mention individual modules.)</p>
+                        </td>
+                        <td>
+                            <textarea name="other_english" class="bigfield"></textarea>
                         </td>
                     </tr>
                         
@@ -422,8 +445,7 @@ input.bigfield{
                 <tr>
                     <td>
                         <p><strong>Which of these best describes your situation immediately
-	        prior to starting your access programme?</strong> <br>Please select all that 
-                        apply.</p>
+	        prior to starting your access programme?</strong> <br>Click in the box to see options.</p>
                     </td>
                     <td>
                         <select name="situation" multiple="multiple" class="select2this" placeholder="select all that apply">
@@ -452,8 +474,7 @@ input.bigfield{
                 <tr>
                     <td>
                         <p><strong>What financial support will you receive while you 
-                        are on a SWAP Programme?</strong> <br>Please select all that 
-                        apply.</p>
+                        are on a SWAP Programme?</strong> <br>Click in the box to see options.</p>
                     </td>
                     <td>
                         <select name="funding" multiple="multiple" class="select2this" placeholder="select all that apply">
@@ -525,8 +546,7 @@ input.bigfield{
                         <p><strong>Please tell us about any disabilities you 
                         have.</strong><br>This information is collected in 
                         accordance with the code of practice issued by the 
-                        Disability Discrimination Act. Please select all that 
-                        apply.</p>
+                        Disability Discrimination Act. Click in the box to see options.</p>
                     </td>
                     <td>
                         <select name="disability" multiple="multiple" class="select2this" placeholder="select all that apply">
@@ -655,11 +675,8 @@ input.bigfield{
 	        </div>
 	    </div>
 	    <div class="span6">
-	        <div id="activealert" class="alert alert-warning clearfix" style="display:none;">
-	            <p>There are errors with your responses. Please click below to review your responses, then you can scroll through or use the previous / next buttons to check them. Any errors will be highlighted in red. Once there are no errors, please try to submit once again.</p>
-	        </div>
-	        <div class="alert alert-warning clearfix">
-        	    <p><button class="btn btn-warning span2 review" style="margin-left:100px;">Review your responses</button></p>
+	        <div class="activealert alert alert-warning clearfix" style="display:none;">
+	            <p>There were errors with your responses. Please ensure all boxes in red have been completed correctly. Once correct, please re-submit.</p>
 	        </div>
 	    </div>
     </div>

@@ -93,23 +93,32 @@ def student(uuid=None):
             return render_template('swap/admin/student.html', record=student, selections=selections)
     
     
-# do updating of schools / institutes / courses / pae answers / interview data
+# do updating of course / simd data
 @blueprint.route('/data')
+@blueprint.route('/data/<model>')
 @blueprint.route('/data/<model>/<uuid>', methods=['GET','POST','DELETE'])
 def data(model=None,uuid=None):
+    selections={
+        "course": dropdowns('course','course'),
+        "college": dropdowns('course','college'),
+        "campus": dropdowns('course','campus'),
+        "region": dropdowns('course','region'),
+        "classification": dropdowns('course','classification')
+    }
+
     if request.method == 'GET':
-        if model is None:
-            return render_template('swap/admin/data.html')
+        if model is None or model is not None and uuid is None:
+            return render_template('swap/admin/data.html', selections=selections, model=model)
         else:
             if uuid == "new" or uuid is None:
-                return render_template('swap/admin/datamodel.html', model=model, record=None)
+                return render_template('swap/admin/datamodel.html', model=model, record=None, selections=selections)
             else:
                 klass = getattr(models, model[0].capitalize() + model[1:] )
                 rec = klass().pull(uuid)
                 if rec is None:
                     abort(404)
                 else:
-                    return render_template('swap/admin/datamodel.html', model=model, record=rec)
+                    return render_template('swap/admin/datamodel.html', model=model, record=rec, selections=selections)
     elif ( request.method == 'POST' and request.values.get('submit','') == "Delete" ) or request.method == 'DELETE':
         if model is not None:
             klass = getattr(models, model[0].capitalize() + model[1:] )
@@ -142,7 +151,7 @@ def data(model=None,uuid=None):
                     rec.data = newrec
                     rec.save()
                     flash("Your " + model + " has been updated", "success")
-                    return render_template('swap/admin/datamodel.html', model=model, record=rec)
+                    return render_template('swap/admin/datamodel.html', model=model, record=rec, selections=selections)
             else:
                 rec = klass(**newrec)
                 rec.save()

@@ -208,7 +208,13 @@ def index(model=None):
                                     student.data['ucas_number'] = ucas_number
                                     student.save()
                                     updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a> with UCAS number ' + ucas_number)
-                                
+                            
+                            # if a student is found, when they appear on the UCAS
+                            # list their applications should be overwritten. So
+                            # if there is a student, overwrite the appns list
+                            if student is not None:
+                                student.data['applications'] = []
+
                         except:
                             # failed to read the person row
                             failures.append('Failed to read what appeared to be person details out of row ' + str(counter))
@@ -226,6 +232,12 @@ def index(model=None):
                                 course_name = rec[7]
                                 start_year = rec[8]
 
+                                '''original plan was to append, but if a student 
+                                is on the UCAS spreadsheet, their application data
+                                should just be overwritten. The person finder 
+                                above replaces student.data['applications'] with 
+                                an empty list on discovery
+                                
                                 # check if this appn is already in the record
                                 newappn = True
                                 for appn in student.data['applications']:
@@ -233,14 +245,15 @@ def index(model=None):
                                         newappn = False
 
                                 # if this appn is not in the record yet, add it
-                                if newappn:
-                                    student.data['applications'].append({
-                                        "institution_code": institution_code,
-                                        "institution_shortname": institution_shortname,
-                                        "course_code": course_code,
-                                        "course_name": course_name,
-                                        "start_year": start_year
-                                    })
+                                if newappn:'''
+
+                                student.data['applications'].append({
+                                    "institution_code": institution_code,
+                                    "institution_shortname": institution_shortname,
+                                    "course_code": course_code,
+                                    "course_name": course_name,
+                                    "start_year": start_year
+                                })
                             except:
                                 # failed to add the appn data to the student
                                 failures.append('Failed to read what appeared to be application data out of row ' + str(counter))

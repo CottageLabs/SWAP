@@ -38,7 +38,22 @@ def stream(index='record',key='tags',size=100):
         if not q.startswith("*"): q = "*" + q
 
     qry = {
-        'query':{'query_string':{'query':q}},
+        'query':{
+            'bool':{
+                'must':[
+                    {
+                        'query_string':{'query':q}
+                    }
+                ],
+                'must_not':[
+                    {
+                        'term':{
+                            'disabled'+app.config['FACET_FIELD']: "on"
+                        }
+                    }
+                ]
+            }
+        },
         'size': 0,
         'facets':{}
     }

@@ -1,9 +1,24 @@
 {% extends "swap/admin/admin-base.html" %}
 
+{% block options %}
+    <a class="btn {% if model=="course" %}btn-success{% endif %}" data-type="course" href="/admin/data/course">Courses</a>
+    <a class="btn {% if model=="simd" %}btn-success{% endif %}" data-type="simd" href="/admin/data/simd">SIMD</a>
+    <a class="btn btn-primary addnew" href="#">Add new <span id="newtype" class="newtype">{{model}}</span></a>
+{% endblock %}
+
 {% block content %}
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+
+    $('.suggests').each(function() {
+        var selections = {{selections|tojson|safe}};
+        var type = $(this).attr('name');
+        $(this).autocomplete({
+            'source':selections[type],
+            'minLength':0
+        });
+    });
 
 });
 </script>
@@ -20,9 +35,18 @@ input{
     </div>
 </div>
 
+<form action="" id="datamodel" name="datamodel" method="POST" data-validate="parsley">
+
+{% if current_user.do_admin %}
+<div class="row-fluid">
+    <div class="span12">
+       	<p style="text-align:right;"><input class="btn btn-success" type="submit" name="submit" value="Save"></p>
+    </div>
+</div>
+{% endif %}
+
 <div class="row-fluid">
     <div class="span12" id="formholder">
-    <form action="" id="datamodel" name="datamodel" method="POST" data-validate="parsley">
         <table>
             <tbody>
 
@@ -30,37 +54,40 @@ input{
             {% if model == "course" %}
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 0;width:250px;">course</td>
-            		<td><input type="text" name="course" data-required="true"
+            		<td><input class="suggests" type="text" name="course" data-required="true"
             		{% if record %} value="{{record.data.course}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">at college</td>
-            		<td><input type="text" name="college"
+            		<td><input class="suggests" type="text" name="college"
             		{% if record %} value="{{record.data.college}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">on campus</td>
-            		<td><input type="text" name="campus"
+            		<td><input class="suggests" type="text" name="campus"
             		{% if record %} value="{{record.data.campus}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">college region</td>
-            		<td><input type="text" name="region"
+            		<td><input class="suggests" type="text" name="region"
             		{% if record %} value="{{record.data.region}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">SWAP locale</td>
-            		<td><input type="text" name="locale"
-            		{% if record %} value="{{record.data.locale}}"{% endif %}
-            		></td>
+            		<td><select name="locale">
+            		    <option></option>
+            		    <option {% if record %}{% if record.data.locale.lower() == "east" %} selected="selected"{% endif %}{% endif %}>East</option>
+            		    <option {% if record %}{% if record.data.locale.lower() == "west" %} selected="selected"{% endif %}{% endif %}>West</option>
+            		</select>
+            		</td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">course classification</td>
-            		<td><input type="text" name="classification"
+            		<td><input class="suggests" type="text" name="classification"
             		{% if record %} value="{{record.data.classification}}"{% endif %}
             		></td>
                 </tr>
@@ -68,6 +95,12 @@ input{
                     <td style="text-align:right;padding:6px 10px 0 100px;">college previous names</td>
             		<td><input type="text" name="previous_name"
             		{% if record %} value="{{','.join(record.data.previous_name)}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">disabled</td>
+            		<td><input type="checkbox" name="disabled" style="margin-top:8px;margin-bottom:8px;"
+            		{% if record %}{% if record.data.disabled %} checked="checked"{% endif %}{% endif %}
             		></td>
                 </tr>
 
@@ -161,11 +194,11 @@ input{
             </tbody>
         </table>
         {% endif %}
-
-    </form>
     
     </div>
 </div>
+
+</form>
 
 
 {% endblock %}

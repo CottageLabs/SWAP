@@ -66,7 +66,17 @@ def student():
 
 def dropdowns(model,key='name'):
     qry = {
-        'query':{'match_all':{}},
+        'query':{
+            'bool':{
+                'must_not':[
+                    {
+                        'term':{
+                            'disabled'+app.config['FACET_FIELD']: "on"
+                        }
+                    }
+                ]
+            }
+        },
         'size': 0,
         'facets':{}
     }

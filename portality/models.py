@@ -52,6 +52,11 @@ class Student(DomainObject):
                 self.data['classification'] = c.data.get('classification',"")
                 self.data['previous_name'] = c.data.get('previous_name',"")
 
+        if len(self.data.get('other_english',"")) > 1 or len(self.data.get('other_maths',"")) > 1:
+            self.data['other_qualifications'] = True
+        else:
+            self.data['other_qualifications'] = False
+
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
 
 
@@ -120,6 +125,17 @@ class Course(DomainObject):
         if old is not None:
             if old.data['college'] != self.data['college']:
                 self.data['previous_name'].append(old.data['college'])
+
+        if not isinstance(self.data.get('previous_name',""),list):
+            self.data['previous_name'] = self.data.get('previous_name',"").split(",")
+        if 'previous_name' not in self.data: self.data['previous_name'] = []
+
+        if 'locale' in self.data and len(self.data['locale']) > 1:
+            self.data['locale'] = self.data['locale'][0].upper() + self.data['locale'][1:]
+            if self.data['locale'].lower() not in ['east','west']:
+                self.data['locale'] = 'East'
+        else:
+            self.data['locale'] = 'East'
 
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
 

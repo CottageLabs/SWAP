@@ -345,6 +345,13 @@ fieldset{
                 		></td>
                     </tr>
 
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 100px;">Age on entry</td>
+                		<td><input type="text" name="ageonentry" ></td>
+                		<td></td>
+                		<td></td>
+                    </tr>
+
                 {% if record %}
                     
                     <tr style="display:none;">
@@ -401,7 +408,7 @@ fieldset{
                     
                     <tr>                    
                         <td style="text-align:right;padding:6px 10px 0 100px;">Study skills</td>
-                		<td><select name="studyskills" tabindex=16 class="select2this">
+                		<td><select name="studyskills" class="select2this">
                 		    <option></option>
                 		    {% for opt in selections.studyskills %}
                 		    <option
@@ -414,6 +421,7 @@ fieldset{
                         <td style="padding:6px 0 0 10px;">attended <input type="checkbox" name="attended"{% if record.data.attended %} checked="checked"{% endif %}></td>
 
                     </tr>
+
                     
                     
             	{% endif %}
@@ -525,12 +533,39 @@ fieldset{
                     <tr>
                         <td style="text-align:right;padding:6px 10px 0 0;">
                             <p>Any previous qualifications at grade 3/grade C 
-                            <br>or above in Maths and English. (Listing qualifications 
+                            <br>or above in Maths. (Listing qualifications 
                             <br>and grades of Examined qualifications only, 
                             <br>no need to mention individual modules.)</p>
                         </td>
                         <td>
-                            <textarea name="other_maths_english" class="bigfield">{% if record %}{{record.data.other_maths_english}}{% endif %}</textarea>
+                            <textarea name="other_maths" class="bigfield">{% if record %}{{record.data.other_maths}}{% endif %}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">
+                            <p>Any previous qualifications at grade 3/grade C 
+                            <br>or above in English. (Listing qualifications 
+                            <br>and grades of Examined qualifications only, 
+                            <br>no need to mention individual modules.)</p>
+                        </td>
+                        <td>
+                            <textarea name="other_english" class="bigfield">{% if record %}{{record.data.other_english}}{% endif %}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">
+                            <p>Student has other qualifications:</p>
+                        </td>
+                        <td>
+                            <input style="margin-top:8px;" type="checkbox" name="other_qualifications"{% if record %}{% if record.data.other_qualifications %} checked="checked"{% endif %}{% endif %}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">
+                            <p>Previous qualifications at level 6:</p>
+                        </td>
+                        <td>
+                            <input style="margin-top:8px;" type="checkbox" name="previous_level6_qualifications"{% if record %}{% if record.data.previous_level6_qualifications %} checked="checked"{% endif %}{% endif %}>
                         </td>
                     </tr>
                         
