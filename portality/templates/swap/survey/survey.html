@@ -218,7 +218,7 @@ input.bigfield{
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Campus</td>
-                		<td><select name="campus" tabindex=6 class="campusselector">
+                		<td><select name="campus" data-required="true" tabindex=6 class="campusselector">
                 		    <option></option>
                 		    {% for opt in selections.campus %}
                 		        <option>{{ opt }}</option>
@@ -230,7 +230,7 @@ input.bigfield{
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Course</td>
-                		<td><select name="course" tabindex=7 class="courseselector">
+                		<td><select name="course" data-required="true" tabindex=7 class="courseselector">
                 		    <option></option>
                 		    {% for opt in selections.courses %}
                 		        <option>{{ opt }}</option>

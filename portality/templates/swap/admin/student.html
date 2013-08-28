@@ -1086,19 +1086,31 @@ fieldset{
 	    <div class="span12">
 	        <div class="well">
 	            <h1>University data <small>the progress of this student through university</small></h1>
-	            <!--<p style="text-align:right;"><a class="btn" href="/admin/import/university">Go to the university data importer</a></p>-->
-	            <p>Where information about progression of the student onto 
-	            years of university courses (or withdrawal) will be shown. To be provided via the 
-	            university interface / spreadsheet or manually entered by 
-                SWAP staff.</p>
+	            <p style="text-align:right;"><a class="btn" href="/admin/import/university">Go to the university data importer</a></p>
 	        </div>
 	    </div>
 	</div>
 
 	<div class="row-fluid">
 	    <div class="span12">		
-	        <table>
+	        <table class="multi">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Year completed</th>
+                    </tr>
+                </thead>
 	            <tbody>
+                    {% for prog in record.data.progressions %}
+                    <tr>
+                		<td><input type="text" name="progression_year" style="width:150px;" value="{{prog.year}}"></td>
+                		<td><input type="text" name="progression_status" value="{{prog.status}}"></td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                		<td><input type="text" name="progression_year" style="width:150px;"></td>
+                		<td><input type="text" name="progression_status"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

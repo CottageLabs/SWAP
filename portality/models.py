@@ -61,10 +61,52 @@ class Student(DomainObject):
 
 
     def save_from_form(self, request):
-        rec = {}
+        rec = {
+            'applications':[],
+            'qualifications':[],
+            'progressions':[]
+        }
         
+        for k,v in enumerate(request.form.getlist('application_institution_code')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    appn = {
+                        "institution_code": v,
+                        "institution_shortname": request.form.getlist('application_institution_shortname')[k],
+                        "course_code": request.form.getlist('application_course_code')[k],
+                        "course_name": request.form.getlist('application_course_name')[k],
+                        "start_year": request.form.getlist('application_start_year')[k]
+                    }
+                    rec["applications"].append(appn)
+                except:
+                    pass
+
+        for k,v in enumerate(request.form.getlist('qualification_subject')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    qual = {
+                        "subject": v,
+                        "year": request.form.getlist('qualification_year')[k],
+                        "level": request.form.getlist('qualification_level')[k],
+                        "grade": request.form.getlist('qualification_grade')[k]
+                    }
+                    rec["qualifications"].append(qual)
+                except:
+                    pass
+
+        for k,v in enumerate(request.form.getlist('progression_year')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    prog = {
+                        "year": v,
+                        "status": request.form.getlist('progression_status')[k]
+                    }
+                    rec["progressions"].append(prog)
+                except:
+                    pass
+
         for key in request.form.keys():
-            if key not in ['submit']:
+            if not key.startswith('application_') and not key.startswith('qualification_') and not key.startswith('progression_') and key not in ['submit']:
                 rec[key] = request.form[key]
 
         if self.id is not None: rec['id'] = self.id

@@ -25,9 +25,38 @@ jQuery(document).ready(function() {
 
 {% else %}
 
+{% if model == "university" %}
 <div class="row-fluid" style="margin-bottom:10px;">
     <div class="span12">
+        <h1>Export university applications / progressions lists</h1>
+        <p>You can export a list of students that have applied to a given university, or a list of students that are already known to have progressed onto a course at a given university, so that you can send the list to the university in question to retrieve further progression data. If you require a more customised list, use the <a href="/admin/student">Manage registrations</a> page to filter a custom list and export it.</p>
+        <form action="" method="POST">
+            <p>For which university do you wish to export students? 
+                <select name="exportuniversity">
+                    <option></option>
+                </select>
+            </p>
+            <p>Do you want to export students who have applied here, or students who are progressing here?
+                <select name="exportwhat">
+                    <option></option>
+                    <option>applications</option>
+                    <option>progressions</option>
+                </select>
+            </p>
+            <p><input class="btn" type="submit" name="submit" value="Export the university list"></p>
+        </form>
+    </div>
+</div>
+<hr></hr>
+{% endif %}
+
+<div class="row-fluid" style="margin-bottom:10px;">
+    <div class="span12">
+        {% if model %}
+        <h1>Import {{model}} records</h1>
+        {% else %}
         <h1>Import supporting data records</h1>
+        {% endif %}
     </div>
 </div>
 
