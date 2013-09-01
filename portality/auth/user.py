@@ -33,18 +33,10 @@ def view_admin(user):
         return is_super(user)
 
 
-# a user associated to a university, who can see relevant students and submit updates
-def is_university(user):
-    if user.data.get('university',False):
-        return user.data['university']
-    else:
-        return view_admin(user)
-
-
 # a user associated to a college
-def is_college(user):
-    if user.data.get('college',False):
-        return user.data['college']
+def is_course_manager(user):
+    if user.data.get('course',False):
+        return user.data['course']
     else:
         return view_admin(user)
 

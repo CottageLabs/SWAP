@@ -42,13 +42,20 @@ def student():
     
     if request.method == 'GET':
         # TODO: if people are logged in it may be necessary to render a form with previously submitted data
+        nats = dropdowns('student','nationality')
+        if 'Scottish' in nats: nats.remove('Scottish')
+        if 'English' in nats: nats.remove('English')
+        if 'Irish' in nats: nats.remove('Irish')
+        if 'Welsh' in nats: nats.remove('Welsh')
+        nats = ['Scottish','English','Irish','Welsh'] + nats
         response = make_response(
             render_template(
                 'swap/survey/survey.html', 
                 selections={
                     "colleges": dropdowns('course','college'),
                     "campus": dropdowns('course','campus'),
-                    "courses": dropdowns('course','course')
+                    "courses": dropdowns('course','course'),
+                    "nationalities": nats
                 },
                 data={}
             )

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+jQuery(document).ready(function() { 
+
+    // set datepicker
+    var opts = {
+        inline: true,
+        dateFormat: 'dd/mm/yy',
+        changeYear: true
+    }
+    $('.datepicker').datepicker(opts);
+
+})
+</script>
+
+<style>
+.title{
+    font-weight:bold;
+}
+</style>
+
+{% if current_user.view_admin %}
+<p style="text-align:right;margin:0 0 20px 0;">
+<a class="btn" href="/admin/student/{{student.id}}">Go to student record</a>
+</p>
+{% endif %}
+
+<div class="row-fluid">
+    <div class="span12">
+
+        <div class="well">
+            <h1>{{ student.first_name }} {{ student.last_name }}</h1>
+
+            <table class="table table-bordered">
+                <tr>
+                    <td class="title">Date of birth</td> <td>{{ student.date_of_birth }}</td>
+                    <td class="title">Post code</td> <td>{{ student.post_code }}</td>
+                </tr>
+                <tr>
+                    <td class="title">College</td> <td>{{ student.college }}</td>
+                    <td class="title">Campus</td> <td>{{ student.campus }}</td>
+                </tr>
+            </table>
+
+            <h2>{{student.course}}</h2>
+        </div>
+
+        <form method="POST">
+
+            <p>Please let us know of the progress achieved by this student.</p>
+
+            <table class="table table-bordered">
+                <tr>
+                    <td>Number of completed units:</td>
+                    <td><input type="text" name="completedunits" value="{{student.completedunits}}"></td>
+                </tr>
+                <tr>
+                    <td>Profile grades:</td>
+                    <td><textarea name="profilegrades" value="{{student.profilegrades}}"></textarea></td>
+                </tr>
+                <tr>
+                    <td>Please let us know, if this student withdrew from their course of study, the date on which they left.</td>
+                    <td><input type="text" name="courseexit" class="datepicker" value="{{student.courseexit}}"></td>
+                </tr>
+                <tr>
+                    <td>And if they withdrew, their <b>main reason</b> for leaving.</td>
+                    <td><select name="exitreason">
+                        <option></option>
+                        <option {% if student.exitreason == "Finance" %} selected="selected"{% endif %}>Finance</option>
+                        <option {% if student.exitreason == "Domestic" %} selected="selected"{% endif %}>Domestic</option>
+                        <option {% if student.exitreason == "Course difficulty" %} selected="selected"{% endif %}>Course difficulty</option>
+                        <option {% if student.exitreason == "Lost interest" %} selected="selected"{% endif %}>Lost interest</option>
+                        <option {% if student.exitreason == "Got a job" %} selected="selected"{% endif %}>Got a job</option>
+                        <option {% if student.exitreason == "Health" %} selected="selected"{% endif %}>Health</option>
+                        <option {% if student.exitreason == "Unsuitable" %} selected="selected"{% endif %}>Unsuitable</option>
+                        <option {% if student.exitreason == "Timetable" %} selected="selected"{% endif %}>Timetable</option>
+                        <option {% if student.exitreason == "Did not fit in" %} selected="selected"{% endif %}>Did not fit in</option>
+                        <option {% if student.exitreason == "Teachers" %} selected="selected"{% endif %}>Teachers</option>
+                        <option {% if student.exitreason == "Other" %} selected="selected"{% endif %}>Other</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>If the student has completed and progressed beyond the course, please let us know where to.</td>
+                    <td><select name="progression">
+                        <option></option>
+                        <option {% if student.progression == "Work" %} selected="selected"{% endif %}>Work</option>
+                        <option {% if student.progression == "Other" %} selected="selected"{% endif %}>Other</option>
+                        <option {% if student.progression == "Not known" %} selected="selected"{% endif %}>Not known</option>
+                        <option {% if student.progression == "FEC-Other" %} selected="selected"{% endif %}>FEC-Other</option>
+                        <option {% if student.progression == "FEC-HN" %} selected="selected"{% endif %}>FEC-HN</option>
+                        <option {% if student.progression == "HEI" %} selected="selected"{% endif %}>HEI</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>If the student progressed to an FEC / HEI, please let us know the name.</td>
+                    <td><input type="text" name="progression_where" value="{{student.progression_where}}"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input class="btn btn-large btn-primary" type="submit" name="submit" value="submit updates"></td>
+                </tr>
+            </table>
+        
+        </form>
+
+
+	</div>
+</div>
+		
+        
+        
+{% endblock %}
+

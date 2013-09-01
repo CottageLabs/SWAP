@@ -61,36 +61,22 @@ class Student(DomainObject):
 
 
     def save_from_form(self, request):
-        rec = {
-            'applications':[],
-            'qualifications':[],
-            'progressions':[]
-        }
+        applications = []
+        progressions = []
         
         for k,v in enumerate(request.form.getlist('application_institution_code')):
             if v is not None and len(v) > 0 and v != " ":
                 try:
                     appn = {
+                        "choice_number": request.form.getlist('application_choice_number')[k],
                         "institution_code": v,
                         "institution_shortname": request.form.getlist('application_institution_shortname')[k],
                         "course_code": request.form.getlist('application_course_code')[k],
+                        "conditions": request.form.getlist('application_conditions')[k],
                         "course_name": request.form.getlist('application_course_name')[k],
                         "start_year": request.form.getlist('application_start_year')[k]
                     }
-                    rec["applications"].append(appn)
-                except:
-                    pass
-
-        for k,v in enumerate(request.form.getlist('qualification_subject')):
-            if v is not None and len(v) > 0 and v != " ":
-                try:
-                    qual = {
-                        "subject": v,
-                        "year": request.form.getlist('qualification_year')[k],
-                        "level": request.form.getlist('qualification_level')[k],
-                        "grade": request.form.getlist('qualification_grade')[k]
-                    }
-                    rec["qualifications"].append(qual)
+                    applications.append(appn)
                 except:
                     pass
 
@@ -101,16 +87,19 @@ class Student(DomainObject):
                         "year": v,
                         "status": request.form.getlist('progression_status')[k]
                     }
-                    rec["progressions"].append(prog)
+                    progressions.append(prog)
                 except:
                     pass
 
-        for key in request.form.keys():
-            if not key.startswith('application_') and not key.startswith('qualification_') and not key.startswith('progression_') and key not in ['submit']:
-                rec[key] = request.form[key]
+        if len(applications) > 0: self.data['applications'] = applications
+        if len(progressions) > 0: self.data['applications'] = applications
 
-        if self.id is not None: rec['id'] = self.id
-        self.data = rec
+        for key in request.form.keys():
+            if key == 'nationality':
+                self.data[key] = request.form[key][0].upper() + request.form[key][1:]
+            elif not key.startswith('application_') and not key.startswith('progression_') and key not in ['submit']:
+                self.data[key] = request.form[key]
+
         self.save()
 
     
@@ -142,6 +131,14 @@ class Course(DomainObject):
         else:
             return None
 
+    def delete(self):
+        # delete contact account
+        if self.data.get('contact_email',"") != "":
+            exists = Account.pull(self.data['contact_email'])
+            if exists is not None:
+                exists.delete()
+        r = requests.delete(self.target() + self.id)
+
     def save(self):
         if 'id' in self.data:
             id_ = self.data['id'].strip()
@@ -167,6 +164,33 @@ class Course(DomainObject):
         if old is not None:
             if old.data['college'] != self.data['college']:
                 self.data['previous_name'].append(old.data['college'])
+            # remove any old accounts
+            if self.data.get('contact_email',"") != old.data.get('contact_email',False):
+                oldaccount = Account.pull(old.data.get('contact_email',""))
+                if oldaccount is not None: oldaccount.delete()
+
+        # create any new accounts
+        if self.data.get('contact_email',"") != "" and ( old is None or self.data.get('contact_email',"") != old.data.get('contact_email',False) ):
+            account = Account.pull(self.data['contact_email'])
+            if account is None:
+                account = Account(
+                    id=self.data['contact_email'], 
+                    email=self.data['contact_email']
+                )
+                account.data[self.__type__] = self.id
+                if len(self.data.get("contact_password","")) > 1:
+                    pw = self.data['contact_password']
+                    del self.data['contact_password']
+                else:
+                    pw = "password"
+                account.set_password(pw)
+                account.save()
+        # change any passwords
+        elif self.data.get('contact_email',"") != "" and self.data.get('contact_password',"") != "":
+            account = Account.pull(self.data['contact_email'])
+            account.set_password(self.data['contact_password'])
+            account.save()
+            del self.data['contact_password']
 
         if not isinstance(self.data.get('previous_name',""),list):
             self.data['previous_name'] = self.data.get('previous_name',"").split(",")
@@ -180,6 +204,19 @@ class Course(DomainObject):
             self.data['locale'] = 'East'
 
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
+
+    def save_from_form(self, request):
+        for key in request.form.keys():
+            if key not in ['submit']:
+                val = request.form[key]
+                if val == "on":
+                    self.data[key] = True
+                elif val == "off":
+                    self.data[key] = False
+                else:
+                    self.data[key] = val
+        
+        self.save()
 
 
 class Simd(DomainObject):
@@ -271,16 +308,12 @@ class Account(DomainObject, UserMixin):
         return auth.user.view_admin(self)
 
     @property
-    def is_university(self):
-        return auth.user.is_university(self)
-
-    @property
-    def is_college(self):
-        return auth.user.is_college(self)
+    def is_course_manager(self):
+        return auth.user.is_course_manager(self)
             
     @property
     def agreed_policy(self):
-        if not isinstance(self.is_college,bool) or not isinstance(self.is_university,bool):
+        if not isinstance(self.is_course_manager,bool):
             return self.data.get('agreed_policy',False)
         else:
             return True

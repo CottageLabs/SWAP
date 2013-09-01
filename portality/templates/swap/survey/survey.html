@@ -5,8 +5,27 @@
 <script>
 jQuery(document).ready(function() {    
 
-    $("[data-required]").attr('data-required-message',"");
-
+    // manually setup parsley
+    $('#survey').parsley({
+        'validators':{
+            'ispostcode': function( val ) {
+                var checked = checkPostCode(val);
+                if (val.length == 0) {
+                    return true;
+                } else if (checked) {
+                    $('#post_code_box').val(checked);
+                    return true;
+                } else {
+                    return false;
+                };
+            }
+        },
+        'messages':{
+            'ispostcode': "",
+            'required': ""
+        }
+    });
+    
     // add a datepicker to all datepicker classes
     var opts = {
         inline: true,
@@ -92,6 +111,12 @@ jQuery(document).ready(function() {
     // when an input box is entered, remove the placeholder. This used to work automatically, 
     // but for some reason stupid browsers now leave it there
     $('input[placeholder]').bind("focus",function() { $(this).removeAttr('placeholder'); });
+
+    // provide autocomplete nationalities
+    $('#nationalities').autocomplete({
+        'source': {{selections.nationalities|tojson|safe}},
+        'minLength': 0
+    });
 });
 </script>
 
@@ -127,7 +152,7 @@ input.bigfield{
 }
 </style>
 
-<form action="" id="survey" name="survey" method="post" data-validate="parsley">
+<form action="" id="survey" name="survey" method="post">
 <fieldset>
 
 
@@ -238,7 +263,7 @@ input.bigfield{
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
-                		<td><input type="text" name="post_code" data-required="true" tabindex=15></td>
+                		<td><input id="post_code_box" type="text" name="post_code" data-ispostcode="true" tabindex=15></td>
                     </tr>
         	        <tr>
         	            <td style="text-align:right;padding:6px 10px 0 0;">
@@ -251,14 +276,7 @@ input.bigfield{
         	            </td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Your nationality</td>
-                		<td><select name="nationality" tabindex=16>
-                		    <option></option>
-                		    <option>Scottish</option>
-                		    <option>English</option>
-                		    <option>Welsh</option>
-                		    <option>Irish</option>
-                		    <option>Other</option>
-                		</select></td>
+                		<td><input id="nationalities" type="text" name="nationality" tabindex=16></td>
                     </tr>
                     <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">

@@ -7,20 +7,27 @@ jQuery(document).ready(function() {
 }):
 </script>
 
-{% if updates or failures %}
+{% if updates or failures or stayedsame %}
 
 <div class="row-fluid" style="margin-bottom:10px;">
-    <div class="span6">
+    <div class="span4">
     {% for failure in failures %}
         <p class="alert alert-info">{{ failure|safe }}</p>
     {% endfor %}
     </div>
     
-    <div class="span6">
+    <div class="span4">
     {% for update in updates %}
         <p class="alert alert-success">{{ update|safe }}</p>
     {% endfor %}
     </div>
+
+    <div class="span4">
+    {% for ss in stayedsame %}
+        <p class="alert alert-success">{{ ss|safe }}</p>
+    {% endfor %}
+    </div>
+
 </div>
 
 {% else %}

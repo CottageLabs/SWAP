@@ -136,6 +136,12 @@ jQuery(document).ready(function() {
     }
     $('.delete-row').bind('click',deleterow);
 
+    // provide autocomplete nationalities
+    $('#nationalities').autocomplete({
+        'source': {{selections.nationalities|tojson|safe}},
+        'minLength': 0
+    });
+
 {% endif %}
 
 });
@@ -307,24 +313,9 @@ fieldset{
         	            </td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Nationality</td>
-                		<td><select name="nationality" tabindex=16>
-                		    <option></option>
-                		    <option
-                		    {% if record %}{% if record.data.nationality == "Scottish" %} selected="selected"{% endif %}{% endif %}
-                		    >Scottish</option>
-                		    <option
-                		    {% if record %}{% if record.data.nationality == "English" %} selected="selected"{% endif %}{% endif %}
-                		    >English</option>
-                		    <option
-                		    {% if record %}{% if record.data.nationality == "Welsh" %} selected="selected"{% endif %}{% endif %}
-                		    >Welsh</option>
-                		    <option
-                		    {% if record %}{% if record.data.nationality == "Irish" %} selected="selected"{% endif %}{% endif %}
-                		    >Irish</option>
-                		    <option
-                		    {% if record %}{% if record.data.nationality == "Other" %} selected="selected"{% endif %}{% endif %}
-                		    >Other</option>
-                		</select></td>
+                		<td><input type="text" id="nationalities" name="nationality" tabindex=16
+                		{% if record %} value="{{record.data.nationality}}"{% endif %}
+                		></td>
 
                     </tr>
                     <tr>
@@ -398,7 +389,6 @@ fieldset{
                     <tr style="height:30px;">
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Created date</td>
                 		<td>
-                		    <input type="hidden" name="created_date" value="{{record.data.created_date}}">
                 		    <p style="padding-top:5px;">{{record.data.created_date}}</p>
                 		</td>
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Last updated</td>
@@ -972,6 +962,7 @@ fieldset{
 <!-- the ucas section -->
 <div class="part ucas">
 
+    {% if record %}
 	<div class="row-fluid">
 	    <div class="span12">
 	        <div class="well">
@@ -981,46 +972,43 @@ fieldset{
 	    </div>
 	</div>
 
+    {% if record.data.applications %}
 	<div class="row-fluid">
 	    <div class="span12">		
-	        <table class="multi">
+	        <table>
                 <thead>
                     <tr>
+                        <th>Number</th>
                         <th>Institution code</th>
                         <th>Institution shortname</th>
                         <th>Course code</th>
+                        <th>Conditions</th>
                         <th>Course name</th>
                         <th>Starting year</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% if record %}
-                        {% for app in record.data.applications %}
+                    {% for app in record.data.applications %}
                     <tr>
-                		<td><input type="text" name="application_institution_code" value="{{app.institution_code}}" style="width:100px;"></td>
-                		<td><input type="text" name="application_institution_shortname" value="{{app.institution_shortname}}" style="width:150px;"></td>
-                		<td><input type="text" name="application_course_code" value="{{app.course_code}}" style="width:100px;"></td>
-                		<td><input type="text" name="application_course_name" value="{{app.course_name}}" style="width:200px;"></td>
-                		<td><input type="text" name="application_start_year" value="{{app.start_year}}" style="width:100px;"></td>
+                		<td>{{app.choice_number}}</td>
+                		<td>{{app.institution_code}}</td>
+                		<td>{{app.institution_shortname}}</td>
+                		<td>{{app.course_code}}</td>
+                		<td>{{app.conditions}}</td>
+                		<td>{{app.course_name}}</td>
+                		<td>{{app.start_year}}</td>
                     </tr>
-                        {% endfor %}
-                    {% endif %}
-
-{% if current_user.do_admin and (not record or record.archive == 'current') %}
-                    <tr>
-                		<td><input type="text" name="application_institution_code" style="width:100px;"></td>
-                		<td><input type="text" name="application_institution_shortname" style="width:150px;"></td>
-                		<td><input type="text" name="application_course_code" style="width:100px;"></td>
-                		<td><input type="text" name="application_course_name" style="width:200px;"></td>
-                		<td><input type="text" name="application_start_year" style="width:100px;"></td>
-                    </tr>
-{% endif %}
+                    {% endfor %}
 
                 </tbody>
             </table>
 	        
 	    </div>
 	</div>
+	{% else %}
+	<p>No UCAS applications reported for this student yet.</p>
+    {% endif %}	
+    {% endif %}
 
 
 </div>
@@ -1032,48 +1020,69 @@ fieldset{
 <!-- the college section -->
 <div class="part college">
 
-    
 	<div class="row-fluid">
 	    <div class="span12">
 	        <div class="well">
-	            <h1>College data <small>the qualifications this student gained at college</small></h1>
-	            <p style="text-align:right;"><a class="btn" href="/colleges">Go to the colleges interface</a></p>
+	            <h1>College data <small>what this student achieved at college</small></h1>
+	            <p style="text-align:right;"><a class="btn" href="/courses">Go to the courses interface</a></p>
 	        </div>
 	    </div>
 	</div>
 
+    {% if record %}
 	<div class="row-fluid">
-	    <div class="span12">		
-	        <table class="multi" style="margin-top:20px;">
-                <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Year completed</th>
-                        <th>Level of qualification</th>
-                        <th>Grade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for qual in record.data.qualifications %}
-                    <tr>
-                		<td><input type="text" name="qualification_subject" style="width:150px;" value="{{qual.subject}}"></td>
-                		<td><input type="text" name="qualification_year" value="{{qual.year}}"></td>
-                		<td><input type="text" name="qualification_level" value="{{qual.level}}"></td>
-                		<td><input type="text" name="qualification_grade" value="{{qual.grade}}"></td>
-                    </tr>
-                    {% endfor %}
-                    <tr>
-                		<td><input type="text" name="qualification_subject" style="width:150px;"></td>
-                		<td><input type="text" name="qualification_year"></td>
-                		<td><input type="text" name="qualification_level"></td>
-                		<td><input type="text" name="qualification_grade"></td>
-                    </tr>
-                </tbody>
-	        </table>
-
-            <p style="margin-top:20px;">This student exited their college course on: <input type="text" name="courseexit" class="datepicker" value="{{record.data.courseexit}}"></p>
+	    <div class="span12">
+            <table class="table table-bordered">
+                <tr>
+                    <td>Number of completed units:</td>
+                    <td><input type="text" name="completedunits" value="{{record.data.completedunits}}"></td>
+                </tr>
+                <tr>
+                    <td>Profile grades:</td>
+                    <td><textarea name="profilegrades" value="{{record.data.profilegrades}}"></textarea></td>
+                </tr>
+                <tr>
+                    <td>If this student withdrew from their course of study, the date on which they left.</td>
+                    <td><input type="text" name="courseexit" class="datepicker" value="{{record.data.courseexit}}"></td>
+                </tr>
+                <tr>
+                    <td>And if they withdrew, their <b>main reason</b> for leaving.</td>
+                    <td><select name="exitreason">
+                        <option></option>
+                        <option {% if record.data.exitreason == "Finance" %} selected="selected"{% endif %}>Finance</option>
+                        <option {% if record.data.exitreason == "Domestic" %} selected="selected"{% endif %}>Domestic</option>
+                        <option {% if record.data.exitreason == "Course difficulty" %} selected="selected"{% endif %}>Course difficulty</option>
+                        <option {% if record.data.exitreason == "Lost interest" %} selected="selected"{% endif %}>Lost interest</option>
+                        <option {% if record.data.exitreason == "Got a job" %} selected="selected"{% endif %}>Got a job</option>
+                        <option {% if record.data.exitreason == "Health" %} selected="selected"{% endif %}>Health</option>
+                        <option {% if record.data.exitreason == "Unsuitable" %} selected="selected"{% endif %}>Unsuitable</option>
+                        <option {% if record.data.exitreason == "Timetable" %} selected="selected"{% endif %}>Timetable</option>
+                        <option {% if record.data.exitreason == "Did not fit in" %} selected="selected"{% endif %}>Did not fit in</option>
+                        <option {% if record.data.exitreason == "Teachers" %} selected="selected"{% endif %}>Teachers</option>
+                        <option {% if record.data.exitreason == "Other" %} selected="selected"{% endif %}>Other</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>If the student has completed and progressed beyond the course, where to.</td>
+                    <td><select name="progression">
+                        <option></option>
+                        <option {% if record.data.progression == "Work" %} selected="selected"{% endif %}>Work</option>
+                        <option {% if record.data.progression == "Other" %} selected="selected"{% endif %}>Other</option>
+                        <option {% if record.data.progression == "Not known" %} selected="selected"{% endif %}>Not known</option>
+                        <option {% if record.data.progression == "FEC-Other" %} selected="selected"{% endif %}>FEC-Other</option>
+                        <option {% if record.data.progression == "FEC-HN" %} selected="selected"{% endif %}>FEC-HN</option>
+                        <option {% if record.data.progression == "HEI" %} selected="selected"{% endif %}>HEI</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>If the student progressed to an FEC / HEI, which one (if known).</td>
+                    <td><input type="text" name="progression_where" value="{{record.data.progression_where}}"></td>
+                </tr>
+            </table>
         </div>
     </div>
+    {% endif %}
+
 </div>
 
 
