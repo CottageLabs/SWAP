@@ -27,9 +27,7 @@ def index():
     userstats = {
         "super_user": 0,
         "do_admin": 0,
-        "view_admin": 0,
-        "school_users": 0,
-        "institution_users": 0
+        "view_admin": 0
     }
     if users['hits']['total'] != 0:
         accs = [models.Account.pull(i['_source']['id']) for i in users['hits']['hits']]
@@ -39,8 +37,6 @@ def index():
             if acc.id in app.config['SUPER_USER']: userstats['super_user'] += 1
             elif acc.data.get('do_admin',"") != "": userstats["do_admin"] += 1
             elif acc.data.get('view_admin',"") != "": userstats["view_admin"] += 1
-            if acc.data.get('school',"") != "": userstats["school_users"] += 1
-            if acc.data.get('institution',"") != "": userstats["institution_users"] += 1
 
             user = {'id':acc.id}
             if 'created_date' in acc.data:
@@ -190,8 +186,6 @@ def register():
             id=form.w.data, 
             email=form.n.data,
             api_key=api_key,
-            school = form.school.data,
-            institution = form.institution.data,
             view_admin = form.view_admin.data,
             do_admin = form.do_admin.data
         )
