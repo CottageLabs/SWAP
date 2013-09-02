@@ -190,8 +190,8 @@ input{
             </thead>
             <tbody>
     	        <tr>
-            		<td><input style="width:160px;" type="text" name="contact_name" value="{{record.data.contact_name}}"></td>
-            		<td><input style="width:180px;" type="text" name="contact_email" value="{{record.data.contact_email}}"></td>
+            		<td><input style="width:160px;" type="text" name="contact_name" {% if record %}value="{{record.data.contact_name}}"{% endif %}></td>
+            		<td><input style="width:180px;" type="text" name="contact_email" {% if record %}value="{{record.data.contact_email}}"{% endif %}></td>
             		<td><input style="width:180px;" type="text" name="contact_password" placeholder="********"></td>
                 </tr>
             </tbody>
