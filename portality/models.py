@@ -95,7 +95,7 @@ class Student(DomainObject):
         if len(progressions) > 0: self.data['applications'] = applications
 
         for key in request.form.keys():
-            if key == 'nationality':
+            if key == 'nationality' and len(request.form[key]) > 1:
                 self.data[key] = request.form[key][0].upper() + request.form[key][1:]
             elif not key.startswith('application_') and not key.startswith('progression_') and key not in ['submit']:
                 self.data[key] = request.form[key]
