@@ -20,13 +20,13 @@ PUBLIC_REGISTER = False # Can people register publicly? If false, only the super
 ELASTIC_SEARCH_HOST = "http://127.0.0.1:9200"
 ELASTIC_SEARCH_DB = "swap"
 INITIALISE_INDEX = True # whether or not to try creating the index and required index types on startup
-NO_QUERY_VIA_API = ['account'] # list index types that should not be queryable via the API
+NO_QUERY_VIA_API = ['account','student'] # list index types that should not be queryable via the API
 PUBLIC_ACCESSIBLE_JSON = True # can not logged in people get JSON versions of pages by querying for them?
 
 # if search filter is true, anonymous users only see visible and accessible pages in query results
 # if search sort and order are set, all queries from /query will return with default search unless one is provided
 # placeholder image can be used in search result displays
-ANONYMOUS_SEARCH_FILTER = True
+ANONYMOUS_SEARCH_FILTER = False
 SEARCH_SORT = ''
 SEARCH_SORT_ORDER = ''
 
