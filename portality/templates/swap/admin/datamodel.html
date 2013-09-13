@@ -2,8 +2,9 @@
 
 {% block options %}
     <a class="btn {% if model=="course" %}btn-success{% endif %}" data-type="course" href="/admin/data/course">Courses</a>
+    <a class="btn {% if model=="progression" %}btn-success{% endif %}" data-type="progression" href="/admin/data/progression">Progression</a>
     <a class="btn {% if model=="simd" %}btn-success{% endif %}" data-type="simd" href="/admin/data/simd">SIMD</a>
-    <a class="btn btn-primary addnew" href="#">Add new <span id="newtype" class="newtype">{{model}}</span></a>
+    {% if record %}<a class="btn btn-primary addnew" href="#">Add new <span id="newtype" class="newtype">{{model}}</span></a>{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -103,6 +104,20 @@ input{
             		{% if record %}{% if record.data.disabled %} checked="checked"{% endif %}{% endif %}
             		></td>
                 </tr>
+
+
+
+            {% elif model == "progression" %}
+
+
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">progression stuff here</td>
+            		<td><input type="text" name="progression"
+            		{% if record %} value="{{record.data.progression}}"{% endif %}
+            		></td>
+                </tr>
+
+
 
             {% elif model == "simd" %}
 

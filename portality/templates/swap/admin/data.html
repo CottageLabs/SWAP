@@ -3,8 +3,10 @@
 
 {% block options %}
             <a class="btn btn-success searchtype" data-type="course" href="/admin/data/course">Courses</a>
+            <a id="progtrigger" class="btn searchtype" data-type="progression" href="/admin/data/progression">Progression</a>
             <a id="simdtrigger" class="btn searchtype" data-type="simd" href="/admin/data/simd">SIMD</a>
             <a class="btn btn-primary addnew" href="#">Add new <span id="newtype" class="newtype">course</span></a>
+            <a class="btn exporter" href="/admin/data/course/export">Export all <span class="newtype">course</span>s</a>
             <!--<a class="btn btn-warning bulkload" href="/admin/import">Bulk import <span class="newtype">college</span></a>-->
 
 {% endblock %}
@@ -72,6 +74,26 @@ jQuery(document).ready(function($) {
         facets: []
     };
 
+    optsets.progression = {
+        search_url: '/query/progression?',
+        datatype: 'JSON',
+        //sort: ['post_code.exact'],
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="/admin/data/progression/',
+                        "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "id",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: []
+    };
+
     var opts = {
         search_url: optsets.course.search_url,
         datatype: optsets.course.datatype,
@@ -104,10 +126,14 @@ jQuery(document).ready(function($) {
         p.append('<div id="facetview"></div>');
         $('#facetview').facetview(opts);
         $('.newtype').text(type);
+        $('.exporter').attr('href','/admin/data/' + type + '/export');
     }
     $('.searchtype').bind('click',searchtype);
     {% if model == "simd" %}
     $('#simdtrigger').trigger('click');
+    {% endif %}
+    {% if model == "progression" %}
+    $('#progtrigger').trigger('click');
     {% endif %}
     
     var addnew = function(event) {

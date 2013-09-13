@@ -1,12 +1,14 @@
 import json, time
-from copy import deepcopy
+from datetime import datetime
 
-from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, url_for
+from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, url_for, send_file
 from flask.ext.login import current_user
 
 from portality.core import app
 from portality.view.swap.forms import dropdowns
 import portality.models as models
+
+import cStringIO as StringIO
 
 
 
@@ -99,6 +101,61 @@ def student(uuid=None):
             flash("Student record has been updated", "success")
             return render_template('swap/admin/student.html', record=student, selections=selections)
     
+
+# allow for export of all supporting data models
+@blueprint.route('/data/<model>/export')
+def exportdata(model):
+    # get all the records of this type of model
+    klass = getattr(models, model[0].capitalize() + model[1:] )
+    records = [i['_source'] for i in klass.query(size=10000000).get('hits',{}).get('hits',[])]
+    # make a csv string of the records
+    csvdata = StringIO.StringIO()
+    firstrecord = True
+    if len(records) != 0:
+        keys = sorted(records[0].keys())
+        if 'id' in keys: keys.remove('id')
+        if 'created_date' in keys: keys.remove('created_date')
+        if 'last_updated' in keys: keys.remove('last_updated')
+    else:
+        keys = []
+    for record in records:
+        # for the first one, put the keys on the first line, otherwise just newline
+        if firstrecord:
+            fk = True
+            for key in keys:
+                if fk:
+                    fk = False
+                else:
+                    csvdata.write(',')
+                csvdata.write('"' + key + '"')
+            csvdata.write('\n')
+            firstrecord = False
+        else:
+            csvdata.write('\n')
+        # and then add each record as a line with the keys as chosen by the user
+        firstkey = True
+        for key in keys:
+            if firstkey:
+                firstkey = False
+            else:
+                csvdata.write(',')
+            if isinstance(record[key],bool):
+                if record[key]:
+                    csvdata.write('"true"')
+                else:
+                    csvdata.write('"false"')
+            elif isinstance(record[key],list):
+                csvdata.write('"' + ",".join(record[key]) + '"')
+            else:
+                csvdata.write('"' + record[key].replace('"',"'") + '"')
+    # dump to the browser as a csv attachment
+    csvdata.seek(0)
+    return send_file(
+        csvdata, 
+        mimetype='text/csv',
+         attachment_filename="swap_" + model + "_export_" + datetime.now().strftime("%d%m%Y%H%M") + ".csv",
+        as_attachment=True
+    )
     
 # do updating of course / simd data
 @blueprint.route('/data')

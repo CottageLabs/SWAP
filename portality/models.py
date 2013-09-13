@@ -102,6 +102,10 @@ class Student(DomainObject):
 
         self.save()
 
+
+class Progression(DomainObject):
+    __type__ = "progression"
+    
     
 class Course(DomainObject):
     __type__ = 'course'

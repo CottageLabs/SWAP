@@ -10,6 +10,7 @@ from portality.view.swap.account import blueprint as account
 from portality.view.swap.admin import blueprint as admin
 from portality.view.swap.courses import blueprint as courses
 from portality.view.swap.forms import blueprint as forms
+from portality.view.swap.progression import blueprint as progression
 from portality.view.swap.imports import blueprint as imports
 from portality.view.swap.exports import blueprint as exports
 
@@ -22,6 +23,7 @@ app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(courses, url_prefix='/courses')
 app.register_blueprint(forms, url_prefix='/registration')
+app.register_blueprint(progression, url_prefix='/progression')
 app.register_blueprint(imports, url_prefix='/admin/import')
 app.register_blueprint(exports, url_prefix='/admin/export')
 

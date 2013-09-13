@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+jQuery(document).ready(function() {    
+    
+    var limitcourse = function(event) {
+        $('.courseselector').attr("disabled","disabled");
+        var url = '/stream/course/course?q=college.exact:"' + $('.collegeselector').val() + '" AND campus.exact:"' + $(this).val() + '"';
+        $.ajax({
+            method:'GET',
+            datatype:'JSON',
+            url:url,
+            obj:$(this),
+            success: function(data) {
+                var opts = '<option></option>';
+                for ( var i = 0; i < data.length; i++ ) {
+                    opts += "<option>" + data[i] + "</option>";
+                }
+                $('.courseselector').html(opts).removeAttr("disabled");
+            }
+        });
+    }
+    var limitcampus = function(event) {
+        var college = $(this).val();
+        $('.campusselector').attr("disabled","disabled");
+        $('.courseselector').attr("disabled","disabled");
+        if ( college == "" ) {
+            var campus = {{ selections.campus|tojson|safe }};
+            var opts = '<option></option>';
+            for ( var i = 0; i < campus.length; i++ ) {
+                opts += "<option>" + campus[i] + "</option>";
+            }
+            $('.campusselector').html(opts).removeAttr("disabled");
+            $('.courseselector').html(opts).removeAttr("disabled");
+        } else {
+            var url = '/stream/course/campus?q=college.exact:"' + college + '"';
+            $.ajax({
+                method:'GET',
+                datatype:'JSON',
+                url:url,
+                obj:$(this),
+                success: function(data) {
+                    var opts = '<option></option>';
+                    for ( var i = 0; i < data.length; i++ ) {
+                        opts += "<option>" + data[i] + "</option>";
+                    }
+                    $('.campusselector').html(opts).removeAttr("disabled");
+                }
+            });
+        }
+    }
+    $('.collegeselector').bind('change',limitcampus);
+    $('.campusselector').bind('change',limitcourse);
+
+
+    var progression = function(event) {
+        event.preventDefault();
+        var url = '/query/progression?q=college.exact:"';
+        url += $('.collegeselector').val();
+        url += '" AND campus.exact:"';
+        url += $('.campusselector').val();
+        url += '" AND course.exact:"';
+        url += $('.courseselector').val() + '"';
+        $.ajax({
+            method:'GET',
+            datatype:'JSON',
+            url:url,
+            obj:$(this),
+            success: function(data) {
+                if ( data.hits.total == 0 ) {
+                    var opts = "<tr><td><p>Sorry, there are no courses available at the moment.</p></td></tr>";
+                } else {
+                    var opts = '';
+                    for ( var i = 0; i < data.hits.hits.length; i++ ) {
+                        opts += "<tr><td>" + data.hits.hits[i]['_source']['name'] + "</td></tr>";
+                    }
+                }
+                $('#progressoptions').html(opts);
+            }
+        });
+    }
+    $('#progression').bind('click',progression);
+
+});
+</script>
+
+
+
+      <div class="row-fluid">
+        
+        <div class="span6">
+            <div class="well">
+                <h1>SWAP <br>progression service</h1>
+                <p>Please begin by confirming what and where you currently study:</p>
+            </div>
+        </div>
+        
+        <div class="span6">
+
+
+	        <table>
+	            <tbody>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">College</td>
+                		<td><select name="college" data-required="true" tabindex=5 class="collegeselector">
+                		    <option></option>
+                		    {% for opt in selections.colleges %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 0;">Campus</td>
+                		<td><select name="campus" data-required="true" tabindex=6 class="campusselector">
+                		    <option></option>
+                		    {% for opt in selections.campus %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                    </tr>
+        	        <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Course</td>
+                		<td><select name="course" data-required="true" tabindex=7 class="courseselector">
+                		    <option></option>
+                		    {% for opt in selections.courses %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                    </tr>
+                    <tr>
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">&nbsp;</td>
+                        <td><input id="progression" class="btn btn-primary" type="submit" name="submit" value="search for courses" style="width:100%;"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+      </div>
+
+
+<hr></hr>
+
+<table class="table table-striped table-bordered" id="progressoptions">
+</table>
+
+
+{% endblock %}

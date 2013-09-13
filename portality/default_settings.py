@@ -58,5 +58,6 @@ MAPPINGS = {
 MAPPINGS['account'] = {'account':MAPPINGS["student"]["student"]}
 MAPPINGS['course'] = {'course':MAPPINGS["student"]["student"]}
 MAPPINGS['simd'] = {'simd':MAPPINGS["student"]["student"]}
+MAPPINGS['progression'] = {'progression':MAPPINGS["student"]["student"]}
 MAPPINGS['archive'] = {'archive':MAPPINGS["student"]["student"]}
 
