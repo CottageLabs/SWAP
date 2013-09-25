@@ -24,9 +24,10 @@ def progression():
     return render_template(
         'swap/progression.html',
         selections={
-            "colleges": dropdowns('course','college'),
-            "campus": dropdowns('course','campus'),
-            "courses": dropdowns('course','course')
+            "colleges": dropdowns('progression','access_course_college'),
+            "accesscourses": dropdowns('progression','access_course_name'),
+            "degrees": dropdowns('progression','degree_course_name'),
+            "institutions": dropdowns('progression','degree_institution_name'),
         }
     )
         

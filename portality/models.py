@@ -92,7 +92,7 @@ class Student(DomainObject):
                     pass
 
         if len(applications) > 0: self.data['applications'] = applications
-        if len(progressions) > 0: self.data['applications'] = applications
+        if len(progressions) > 0: self.data['progressions'] = progressions
 
         for key in request.form.keys():
             if key == 'nationality' and len(request.form[key]) > 1:
@@ -105,6 +105,10 @@ class Student(DomainObject):
 
 class Progression(DomainObject):
     __type__ = "progression"
+
+
+class Uninote(DomainObject):
+    __type__ = "uninote"
     
     
 class Course(DomainObject):
@@ -134,14 +138,17 @@ class Course(DomainObject):
             return cls.pull(found['hits']['hits'][0]['_source']['id'])
         else:
             return None
+            
 
     def delete(self):
-        # delete contact account
-        if self.data.get('contact_email',"") != "":
-            exists = Account.pull(self.data['contact_email'])
-            if exists is not None:
-                exists.delete()
+        # delete contact accounts
+        for c in self.data.get('contacts',[]):
+            if c['email'] != "":
+                exists = Account.pull(c['email'])
+                if exists is not None:
+                    exists.delete()
         r = requests.delete(self.target() + self.id)
+
 
     def save(self):
         if 'id' in self.data:
@@ -164,37 +171,42 @@ class Course(DomainObject):
         if 'classification' not in self.data:
             self.data['classification'] = ""
 
+
+
         old = Course.pull(self.id)
         if old is not None:
             if old.data['college'] != self.data['college']:
                 self.data['previous_name'].append(old.data['college'])
             # remove any old accounts
-            if self.data.get('contact_email',"") != old.data.get('contact_email',False):
-                oldaccount = Account.pull(old.data.get('contact_email',""))
-                if oldaccount is not None: oldaccount.delete()
+            for oc in old.data.get('contacts',[]):
+                if oc.get('email',"") not in [o.get('email',False) for o in self.data.get('contacts',[])]:
+                    oldaccount = Account.pull(oc.get('email',""))
+                    if oldaccount is not None: oldaccount.delete()
 
-        # create any new accounts
-        if self.data.get('contact_email',"") != "" and ( old is None or self.data.get('contact_email',"") != old.data.get('contact_email',False) ):
-            account = Account.pull(self.data['contact_email'])
-            if account is None:
-                account = Account(
-                    id=self.data['contact_email'], 
-                    email=self.data['contact_email']
-                )
-                account.data[self.__type__] = self.id
-                if len(self.data.get("contact_password","")) > 1:
-                    pw = self.data['contact_password']
-                    del self.data['contact_password']
-                else:
-                    pw = "password"
-                account.set_password(pw)
+        for c in self.data.get('contacts',[]):
+            # create any new accounts
+            if c.get('email',"") != "" and ( old is None or c.get('email',"") not in [o.get('email',False) for o in old.data.get('contacts',[])] ):
+                account = Account.pull(c['email'])
+                if account is None:
+                    c['email'] = c['email'].lower()
+                    account = Account(
+                        id=c['email'], 
+                        email=c['email']
+                    )
+                    account.data[self.__type__] = self.id # TODO: how will user be related to students via their courses?
+                    if len(c.get("password","")) > 1:
+                        pw = c['password']
+                        c['password'] = ""
+                    else:
+                        pw = "password"
+                    account.set_password(pw)
+                    account.save()
+            # change any passwords
+            elif c.get('email',"") != "" and c.get('password',"") != "":
+                account = Account.pull(c['email'])
+                account.set_password(c['password'])
                 account.save()
-        # change any passwords
-        elif self.data.get('contact_email',"") != "" and self.data.get('contact_password',"") != "":
-            account = Account.pull(self.data['contact_email'])
-            account.set_password(self.data['contact_password'])
-            account.save()
-            del self.data['contact_password']
+                c['password'] = ""
 
         if not isinstance(self.data.get('previous_name',""),list):
             self.data['previous_name'] = self.data.get('previous_name',"").split(",")
@@ -209,18 +221,46 @@ class Course(DomainObject):
 
         r = requests.post(self.target() + self.data['id'], data=json.dumps(self.data))
 
+
+
+
     def save_from_form(self, request):
+        rec = {
+            "contacts": []
+        }
+        
+        for k,v in enumerate(request.form.getlist('contact_email')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    rec["contacts"].append({
+                        "name": request.form.getlist('contact_name')[k],
+                        "email": v,
+                        "password": request.form.getlist('contact_password')[k]
+                    })
+                except:
+                    pass
+
         for key in request.form.keys():
-            if key not in ['submit']:
+            if not key.startswith("contact_") and key not in ['submit']:
                 val = request.form[key]
                 if val == "on":
-                    self.data[key] = True
+                    rec[key] = True
                 elif val == "off":
-                    self.data[key] = False
+                    rec[key] = False
                 else:
-                    self.data[key] = val
+                    rec[key] = val
+
+        if len(rec['contacts']) == 0: del rec['contacts']
+        for k, v in rec.items():
+            self.data[k] = v
         
         self.save()
+
+
+
+
+
+
 
 
 class Simd(DomainObject):

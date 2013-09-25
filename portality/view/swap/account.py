@@ -171,7 +171,7 @@ class RegisterForm(Form):
         validators.EqualTo('c', message='Passwords must match')
     ])
     c = PasswordField('Repeat Password')
-    swap_locale = SelectField('SWAP locale', choices=[('east','east'),('west','west')])
+    swap_locale = SelectField('SWAP locale', choices=[('East','East'),('West','West')])
     view_admin = BooleanField('View admin')
     do_admin = BooleanField('Do admin')
 
@@ -187,7 +187,8 @@ def register():
             email=form.n.data,
             api_key=api_key,
             view_admin = form.view_admin.data,
-            do_admin = form.do_admin.data
+            do_admin = form.do_admin.data,
+            swap_locale = form.swap_locale.data
         )
         account.set_password(form.s.data)
         account.save()

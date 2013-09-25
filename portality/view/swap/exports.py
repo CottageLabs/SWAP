@@ -46,6 +46,14 @@ def index():
 
 
 def download_csv(recordlist,keys):
+    # re-order some of the keys
+    keyorder = ['first_name','last_name','date_of_birth', 'gender','college','campus','course','travel','email','home_phone','mobile_phone','address','post_code','nationality']
+
+    for k in reversed(keyorder):
+        if k in keys:
+            keys.remove(k)
+            keys = [k] + keys
+
     # make a csv string of the records
     csvdata = StringIO.StringIO()
     firstrecord = True
@@ -71,25 +79,9 @@ def download_csv(recordlist,keys):
             else:
                 csvdata.write(',')
             if key in record.keys():
-                if key in ['applications','interests','qualifications','experience']:
-                    tidykey = ""
-                    firstline = True
-                    for line in record[key]:
-                        if firstline:
-                            firstline = False
-                        else:
-                            tidykey += '\n'
-                        if key == 'applications':
-                            tidykey += line['pae_requested'] + " " + line['level'] + " " + line['subject'] + " at " + line['institution']
-                            if line.get('pae_reply_received',"") != "":
-                                tidykey += '(' + line['pae_reply_received'] + ') consider '
-                                tidykey += line['consider'] + ' ' + line['conditions'].replace('\n',' ')
-                        elif key == 'interests':
-                            tidykey += line['title'] + " - " + line['brief_description']
-                        elif key =='qualifications':
-                            tidykey += line['year'] + " grade " + line['grade'] + " in " + line['level'] + " " + line['subject']
-                        elif key == 'experience':
-                            tidykey += line['date_from'] + " to " + line['date_to'] + " " + line['title'] + " - " + line['brief_description']
+                if key == 'address':
+                    tidykey = record.get('address_line_1','') + ' ' + record.get('address_line_2','') + ' ' + record.get('city','')
+                    tidykey = tidykey.replace('"',"'")
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:

@@ -4,6 +4,7 @@
 {% block options %}
             <a class="btn btn-success searchtype" data-type="course" href="/admin/data/course">Courses</a>
             <a id="progtrigger" class="btn searchtype" data-type="progression" href="/admin/data/progression">Progression</a>
+            <a id="progtrigger" class="btn searchtype" data-type="uninote" href="/admin/data/uninote">Uni notes</a>
             <a id="simdtrigger" class="btn searchtype" data-type="simd" href="/admin/data/simd">SIMD</a>
             <a class="btn btn-primary addnew" href="#">Add new <span id="newtype" class="newtype">course</span></a>
             <a class="btn exporter" href="/admin/data/course/export">Export all <span class="newtype">course</span>s</a>
@@ -77,7 +78,7 @@ jQuery(document).ready(function($) {
     optsets.progression = {
         search_url: '/query/progression?',
         datatype: 'JSON',
-        //sort: ['post_code.exact'],
+        sort: ['degree_course_name.exact'],
         resdisplay: [
                 [
                     {
@@ -86,7 +87,43 @@ jQuery(document).ready(function($) {
                         "post": '">'
                     },
                     {
+                        "field": "degree_course_name",
+                        "post": ' at '
+                    },
+                    {
+                        "field": "degree_institution_name",
+                        "post": ' via '
+                    },
+                    {
+                        "field": "access_course_name",
+                        "post": ' in '
+                    },
+                    {
+                        "field": "access_course_college",
+                        "post": '</a>'
+                    }
+                ]
+            ],
+        facets: [
+            {'field':'degree_institution_name.exact', 'display': 'institution', 'order':'term','size':50}, 
+            {'field':'access_course_college.exact', 'display': 'college', 'order':'term','size':50},
+            {'field':'access_course_name.exact', 'display': 'access course name', 'order':'term','size':50}
+        ]
+    };
+
+    optsets.uninote = {
+        search_url: '/query/uninote?',
+        datatype: 'JSON',
+        //sort: ['post_code.exact'],
+        resdisplay: [
+                [
+                    {
+                        "pre": '<a href="/admin/data/uninote/',
                         "field": "id",
+                        "post": '">'
+                    },
+                    {
+                        "field": "name",
                         "post": '</a>'
                     }
                 ]
