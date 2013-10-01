@@ -1,10 +1,13 @@
 import json, csv, time
+import cStringIO as StringIO
+from datetime import datetime
 
-from flask import Blueprint, request, flash, abort, make_response, render_template, redirect
+from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, send_file
 from flask.ext.login import current_user
 
 from portality.core import app
 import portality.models as models
+from portality.view.swap.forms import dropdowns as dropdowns
 
 
 blueprint = Blueprint('imports', __name__)
@@ -24,20 +27,27 @@ def restrict():
 @blueprint.route('/<model>', methods=['GET','POST'])
 def index(model=None):
     if request.method == 'GET':
-        return render_template('swap/admin/import.html', model=model)
+        if model == 'university':
+            appn_unis = dropdowns('student','applications.institution_shortname')
+            prog_unis = dropdowns('student','progressions.institution_shortname')
+        else:
+            appn_unis = []
+            prog_unis = []
+        return render_template('swap/admin/import.html', model=model, appn_unis=appn_unis, prog_unis=prog_unis)
     elif request.method == 'POST':
         # check if it is a submission request from the university import page
         # for an export of university progressions
         if request.form['submit'] == 'Export the university list':
             uni = request.form['exportuniversity']
             what = request.form['exportwhat']
-            # generate an export of the relevant sorts of data and send it to the user
-            flash("This functionality is in progress - should provide you a csv file")
-            return render_template('swap/admin/import.html', model="university")
+            
+            students = _get_students(uni,what)
+            return _download_applications(students, what, uni)
+
 
         else:
     
-            try:
+            if True:#try:
                 records = []
                 if "csv" in request.files.get('upfile').filename:
                     upfile = request.files.get('upfile')
@@ -92,7 +102,18 @@ def index(model=None):
                             # if there was one, then reset back to none
                             if student is not None:
                                 # TODO: test if appnset is different from apps for person
-                                if True:
+                                oldappns = student.data.get('applications',[])
+                                print oldappns, appnset
+                                print len(oldappns), len(appnset)
+                                print student.id
+                                if len(oldappns) != len(appnset):
+                                    changed = True
+                                else:
+                                    check = zip(oldappns,appnset)
+                                    print check
+                                    changed = any(x != y for x, y in check)
+                                if changed:
+                                    student.data['applications'] = appnset
                                     student.save()
                                     updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a>')
                                 else:
@@ -236,12 +257,6 @@ def index(model=None):
                                         student.save()
                                         updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a> with UCAS number ' + ucas_number)
                                 
-                                # if a student is found, when they appear on the UCAS
-                                # list their applications should be overwritten. So
-                                # if there is a student, overwrite the appns list
-                                if student is not None:
-                                    student.data['applications'] = []
-
                             except:
                                 # failed to read the person row - except top 2 rows are always info header rows
                                 if counter > 2:
@@ -256,30 +271,18 @@ def index(model=None):
                                     institution_code = rec[1]
                                     institution_shortname = rec[2]
                                     course_code = rec[3]
+                                    decisions = rec[5]
                                     conditions = rec[6]
                                     course_name = rec[7]
                                     start_year = rec[8]
 
-                                    '''original plan was to append, but if a student 
-                                    is on the UCAS spreadsheet, their application data
-                                    should just be overwritten. The person finder 
-                                    above replaces student.data['applications'] with 
-                                    an empty list on discovery
-                                    
-                                    # check if this appn is already in the record
-                                    newappn = True
-                                    for appn in student.data['applications']:
-                                        if appn.get('institution_code',"") == institution_code and appn.get('course_code',"") == course_code and appn.get('start_year',"") == start_year:
-                                            newappn = False
-
-                                    # if this appn is not in the record yet, add it
-                                    if newappn:'''
 
                                     appnset.append({
                                         "choice_number": choice_number,
                                         "institution_code": institution_code,
                                         "institution_shortname": institution_shortname,
                                         "course_code": course_code,
+                                        "decisions": decisions,
                                         "conditions": conditions,
                                         "course_name": course_name,
                                         "start_year": start_year
@@ -307,16 +310,31 @@ def index(model=None):
                         r.data = rec
                         r.save()
 
+
+
+
                 elif model.lower() == 'university':
                     failures = []
                     updates = []
                     counter = 0
+                    # query the student index for a matching student
+                    qry = {
+                        'query':{
+                            'bool':{
+                                'must':[
+                                    {'term':
+                                        {'archive'+app.config['FACET_FIELD']:'current'}
+                                    }
+                                ]
+                            }
+                        }
+                    }
                     for rec in records:
                         # look for the student in the index
                         counter += 1
                         student = None
-                        try:
-                            qry['query']['bool']['must'] = []
+                        if True:#try:
+                            qry['query']['bool']['must'] = [{'term':{'archive'+app.config['FACET_FIELD']:'current'}}]
                             if len(rec.get('ucas_number',"")) > 1:
                                 qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:rec['ucas_number']}})
                             else:
@@ -329,24 +347,41 @@ def index(model=None):
                             q = models.Student().query(q=qry)
                             sid = q['hits']['hits'][0]['_source']['id']
                             student = models.Student.pull(sid)
-                        except:
-                            if counter > 2:
-                                failures.append('Could not find student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
+                        #except:
+                        #    failures.append('Could not find student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
 
-                        if student is None:
-                            if counter > 2:
-                                failures.append('Could not find student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
-                        else:
+                        if student is not None:
                             try:
-                                prog = {
-                                    'year': rec.get('year',""),
-                                    'status': rec.get('status',"")
+                                # this is missing initial uni decision, initial student decision, final uni decision
+                                progn = {
+                                    'start_year': rec.get('start_year',''),
+                                    'course_name': rec.get('course_name',''),
+                                    'course_code': rec.get('course_code',''),
+                                    'institution_shortname': rec.get('institution_shortname',''),
+                                    'reg_1st_year': rec.get('reg_1st_year',''),
+                                    'reg_2nd_year_or_left': rec.get('reg_2nd_year_or_left',''),
+                                    'reg_3rd_year_or_left': rec.get('reg_3rd_year_or_left',''),
+                                    'reg_4th_year_or_left': rec.get('reg_4th_year_or_left',''),
+                                    'degree_classification_awarded': rec.get('degree_classification_awarded','')
                                 }
-                                student.data('progressions').append(prog)
+                                
+                                which = False
+                                if len(student.data.get('progressions',[])) > 0:
+                                    c = 0
+                                    for prog in student.data['progressions']:
+                                        if prog['institution_shortname'] == progn['institution_shortname'] and prog['course_code'] == progn['course_code']:
+                                            which = c
+                                        c += 1
+                                
+                                if isinstance(which,bool):
+                                    student.data['progressions'].append(progn)
+                                else:
+                                    student.data['progressions'][which] = progn
+
                                 student.save()
                                 updates.append('Saved student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
                             except:
-                                updates.append('Failed to save student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
+                                failures.append('Failed to save student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
 
                     flash('Processed ' + str(counter) + ' rows of data')
                     return render_template('swap/admin/import.html', model=model, failures=failures, updates=updates)
@@ -363,9 +398,107 @@ def index(model=None):
                 flash(str(len(records)) + " records have been imported, there are now " + str(checklen) + " records.")
                 return render_template('swap/admin/import.html', model=model)
 
-            except:
-                flash("There was an error importing your records. Please try again.")
-                return render_template('swap/admin/import.html', model=model)
+            #except:
+            #    flash("There was an error importing your records. Please try again.")
+            #    return render_template('swap/admin/import.html', model=model)
 
+
+
+def _get_students(institution,whatsort):
+    qry = {
+        'query':{
+            'bool':{
+                'must':[
+                    {'term':
+                        {'archive'+app.config['FACET_FIELD']:'current'}
+                    }
+                ]
+            }
+        },
+        "sort":[{"created_date"+app.config['FACET_FIELD']:{"order":"desc"}}],
+        'size':10000
+    }
+    if not isinstance(institution,bool):
+        if whatsort == 'applications':
+            qry['query']['bool']['must'].append({'term':{'applications.institution_shortname'+app.config['FACET_FIELD']:institution}})
+        else:
+            qry['query']['bool']['must'].append({'term':{'progressions.institution_shortname'+app.config['FACET_FIELD']:institution}})
+
+    q = models.Student().query(q=qry)
+    students = [i['_source'] for i in q.get('hits',{}).get('hits',[])]
+    matchedstudents = []
+    for student in students:
+        allowedapps = []
+        apps = student['applications']
+        for appn in apps:
+            if not isinstance(institution,bool):
+                if appn['institution_shortname'] == institution:
+                    allowedapps.append(appn)
+            else:
+                allowedapps.append(appn)
+        if len(allowedapps) > 0:
+            student['applications'] = allowedapps
+            matchedstudents.append(student)
+    return matchedstudents
+
+
+
+
+
+def _download_applications(recordlist, whatsort, uni):
+
+    # this key list is missing :
+    # initial offer decision by uni
+    # initial decision by applicant
+    # final decision by uni
+    # where should the three above be taken from? are they on ucas data?
+    keys = ['start_year','locale','ucas_number','last_name','first_name','gender','date_of_birth','post_code','college','institution_shortname', 'course_name','course_code','reg_1st_year','reg_2nd_year_or_left','reg_3rd_year_or_left','reg_4th_year_or_left','degree_classification_awarded']
+
+    # make a csv string of the records, with one line per application
+    csvdata = StringIO.StringIO()
+    firstrecord = True
+    for record in recordlist:
+        if whatsort == 'applications':
+            listing = record.get('applications',[])
+        else:
+            listing = record.get('progressions',[])
+        for appn in listing:
+            # extend the appn with the record data
+            appn.update(record)
+            # for the first one, put the keys on the first line, otherwise just newline
+            if firstrecord:
+                fk = True
+                for key in keys:
+                    if fk:
+                        fk = False
+                    else:
+                        csvdata.write(',')
+                    csvdata.write('"' + key + '"')
+                csvdata.write('\n')
+                firstrecord = False
+            else:
+                csvdata.write('\n')
+            # and then add each application for each student as a line
+            firstkey = True
+            for key in keys:
+                if firstkey:
+                    firstkey = False
+                else:
+                    csvdata.write(',')
+                if key in appn.keys():
+                    # process each key as required
+                    tidykey = appn[key].replace('"',"'")
+                    csvdata.write('"' + tidykey + '"')
+                else:
+                    csvdata.write('""')
+
+    # dump to the browser as a csv attachment
+    csvdata.seek(0)
+    return send_file(
+        csvdata, 
+        mimetype='text/csv',
+         attachment_filename="swap_" + uni + "_export_" + datetime.now().strftime("%d%m%Y%H%M") + ".csv",
+        as_attachment=True
+    )
 
 

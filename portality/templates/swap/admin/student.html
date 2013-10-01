@@ -972,14 +972,15 @@ fieldset{
 
     {% if record.data.applications %}
 	<div class="row-fluid">
-	    <div class="span12">		
-	        <table>
+	    <div class="span12">
+	        <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>Number</th>
                         <th>Institution code</th>
                         <th>Institution shortname</th>
                         <th>Course code</th>
+                        <th>Decisions</th>
                         <th>Conditions</th>
                         <th>Course name</th>
                         <th>Starting year</th>
@@ -992,6 +993,7 @@ fieldset{
                 		<td>{{app.institution_code}}</td>
                 		<td>{{app.institution_shortname}}</td>
                 		<td>{{app.course_code}}</td>
+                		<td>{{app.decisions}}</td>
                 		<td>{{app.conditions}}</td>
                 		<td>{{app.course_name}}</td>
                 		<td>{{app.start_year}}</td>
@@ -1037,7 +1039,7 @@ fieldset{
                 </tr>
                 <tr>
                     <td>Profile grades:</td>
-                    <td><textarea name="profilegrades" value="{{record.data.profilegrades}}"></textarea></td>
+                    <td><textarea name="profilegrades">{{record.data.profilegrades}}</textarea></td>
                 </tr>
                 <tr>
                     <td>If this student withdrew from their course of study, the date on which they left.</td>
@@ -1062,19 +1064,19 @@ fieldset{
                 </tr>
                 <tr>
                     <td>If the student has completed and progressed beyond the course, where to.</td>
-                    <td><select name="progression">
+                    <td><select name="progress">
                         <option></option>
-                        <option {% if record.data.progression == "Work" %} selected="selected"{% endif %}>Work</option>
-                        <option {% if record.data.progression == "Other" %} selected="selected"{% endif %}>Other</option>
-                        <option {% if record.data.progression == "Not known" %} selected="selected"{% endif %}>Not known</option>
-                        <option {% if record.data.progression == "FEC-Other" %} selected="selected"{% endif %}>FEC-Other</option>
-                        <option {% if record.data.progression == "FEC-HN" %} selected="selected"{% endif %}>FEC-HN</option>
-                        <option {% if record.data.progression == "HEI" %} selected="selected"{% endif %}>HEI</option>
+                        <option {% if record.data.progress == "Work" %} selected="selected"{% endif %}>Work</option>
+                        <option {% if record.data.progress == "Other" %} selected="selected"{% endif %}>Other</option>
+                        <option {% if record.data.progress == "Not known" %} selected="selected"{% endif %}>Not known</option>
+                        <option {% if record.data.progress == "FEC-Other" %} selected="selected"{% endif %}>FEC-Other</option>
+                        <option {% if record.data.progress == "FEC-HN" %} selected="selected"{% endif %}>FEC-HN</option>
+                        <option {% if record.data.progress == "HEI" %} selected="selected"{% endif %}>HEI</option>
                     </select></td>
                 </tr>
                 <tr>
                     <td>If the student progressed to an FEC / HEI, which one (if known).</td>
-                    <td><input type="text" name="progression_where" value="{{record.data.progression_where}}"></td>
+                    <td><input type="text" name="progress_where" value="{{record.data.progression_where}}"></td>
                 </tr>
             </table>
         </div>
@@ -1086,9 +1088,11 @@ fieldset{
 
 
 
+
 <!-- the university section -->
 <div class="part university">
 
+    {% if record %}
 	<div class="row-fluid">
 	    <div class="span12">
 	        <div class="well">
@@ -1098,33 +1102,50 @@ fieldset{
 	    </div>
 	</div>
     
-    {% if record %}
+    {% if record.data.progressions %}
 	<div class="row-fluid">
-	    <div class="span12">		
-	        <table class="multi">
+	    <div class="span12">
+	        <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>Subject</th>
-                        <th>Year completed</th>
+                        <th>Starting year</th>
+                        <th>Institution shortname</th>
+                        <th>Course code</th>
+                        <th>Registered 1st year</th>
+                        <th>Registered 2nd year or left</th>
+                        <th>Registered 3rd year or left</th>
+                        <th>Registered 4th year or left</th>
+                        <th>Degree classification awarded</th>
                     </tr>
                 </thead>
-	            <tbody>
-                    {% for prog in record.data.progressions %}
+                <tbody>
+                    {% for app in record.data.progressions %}
                     <tr>
-                		<td><input type="text" name="progression_year" style="width:150px;" value="{{prog.year}}"></td>
-                		<td><input type="text" name="progression_status" value="{{prog.status}}"></td>
+                		<td>{{app.start_year}}</td>
+                		<td>{{app.institution_shortname}}</td>
+                		<td>{{app.course_code}}</td>
+                		<td>{{app.reg_1st_year}}</td>
+                		<td>{{app.reg_2nd_year_or_left}}</td>
+                		<td>{{app.reg_3rd_year_or_left}}</td>
+                		<td>{{app.reg_4th_year_or_left}}</td>
+                		<td>{{app.degree_classification_awarded}}</td>
                     </tr>
                     {% endfor %}
-                    <tr>
-                		<td><input type="text" name="progression_year" style="width:150px;"></td>
-                		<td><input type="text" name="progression_status"></td>
-                    </tr>
+
                 </tbody>
             </table>
-        </div>
-    </div>
+	        
+	    </div>
+	</div>
+	{% else %}
+	<p>No university progressions reported for this student yet.</p>
+    {% endif %}	
     {% endif %}
+
+
 </div>
+
+
 
 
 

@@ -61,6 +61,9 @@ class Student(DomainObject):
 
 
     def save_from_form(self, request):
+        # these lists are not actually used yet, because applications and progressions 
+        # are not editable via the student admin form. They can only be added via the 
+        # import functionality, which puts them in the correct place directly.
         applications = []
         progressions = []
         
@@ -80,12 +83,11 @@ class Student(DomainObject):
                 except:
                     pass
 
-        for k,v in enumerate(request.form.getlist('progression_year')):
+        for k,v in enumerate(request.form.getlist('progression_institution_shortname')):
             if v is not None and len(v) > 0 and v != " ":
                 try:
                     prog = {
-                        "year": v,
-                        "status": request.form.getlist('progression_status')[k]
+                        "institution_shortname": v
                     }
                     progressions.append(prog)
                 except:

@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, request, flash, abort, make_response, render_template, redirect
+from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, url_for
 from flask.ext.login import current_user
 
 from portality.core import app
@@ -65,14 +65,14 @@ def pae(appid):
             course.data['course']
         return render_template('swap/courses/student.html', student=student, course=cs)
 
-    elif request.method == ' POST':
+    elif request.method == 'POST':
         # save the uploaded progression information for the student
         student.save_from_form(request)
 
-        # then email the swap admin admin
+        # then email the swap admin
 
         flash('Thank you very much for submitting your response. It has been saved.')
-        return redirect('.index')
+        return redirect(url_for('.index'))
 
 
 

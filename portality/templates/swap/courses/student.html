@@ -84,19 +84,19 @@ jQuery(document).ready(function() {
                 </tr>
                 <tr>
                     <td>If the student has completed and progressed beyond the course, please let us know where to.</td>
-                    <td><select name="progression">
+                    <td><select name="progress">
                         <option></option>
-                        <option {% if student.progression == "Work" %} selected="selected"{% endif %}>Work</option>
-                        <option {% if student.progression == "Other" %} selected="selected"{% endif %}>Other</option>
-                        <option {% if student.progression == "Not known" %} selected="selected"{% endif %}>Not known</option>
-                        <option {% if student.progression == "FEC-Other" %} selected="selected"{% endif %}>FEC-Other</option>
-                        <option {% if student.progression == "FEC-HN" %} selected="selected"{% endif %}>FEC-HN</option>
-                        <option {% if student.progression == "HEI" %} selected="selected"{% endif %}>HEI</option>
+                        <option {% if student.progress == "Work" %} selected="selected"{% endif %}>Work</option>
+                        <option {% if student.progress == "Other" %} selected="selected"{% endif %}>Other</option>
+                        <option {% if student.progress == "Not known" %} selected="selected"{% endif %}>Not known</option>
+                        <option {% if student.progress == "FEC-Other" %} selected="selected"{% endif %}>FEC-Other</option>
+                        <option {% if student.progress == "FEC-HN" %} selected="selected"{% endif %}>FEC-HN</option>
+                        <option {% if student.progress == "HEI" %} selected="selected"{% endif %}>HEI</option>
                     </select></td>
                 </tr>
                 <tr>
                     <td>If the student progressed to an FEC / HEI, please let us know the name.</td>
-                    <td><input type="text" name="progression_where" value="{{student.progression_where}}"></td>
+                    <td><input type="text" name="progress_where" value="{{student.progression_where}}"></td>
                 </tr>
                 <tr>
                     <td></td>
