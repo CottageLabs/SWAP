@@ -208,12 +208,14 @@ jQuery(document).ready(function() {
         $(this).parent().remove();
         selects();
     }
-    var addinterest = function(event) {
+    var addinterest = function(event, val) {
         event ? event.preventDefault() : false;
-        var val = $('#degree_interests').val();
-        $('#degree_interests').val("");
+        if ( !val ) {
+            val = $('#degree_interests').val();
+            $('#degree_interests').val("");
+        }
         var interest = '<p id="' + val + '" class="lead aninterest" style="color:white;"><a class="removeinterest" style="color:red;" href="#">x </a>' + val + '</p>';
-        $(this).after(interest);
+        $('#addinterest').after(interest);
         $('.removeinterest').unbind('click',removeinterest).bind('click',removeinterest);
         selects();
     }
@@ -229,9 +231,13 @@ jQuery(document).ready(function() {
               'q': request.term
           },
           success: function( data ) {
-            response( data );
-          }
+              response( data );
+          },
         });
+      },
+      select: function( event, ui ) {
+          addinterest( event, ui.item.value );
+          return false;
       },
       minLength: 2
     });
@@ -301,8 +307,8 @@ jQuery(document).ready(function() {
         <thead>
             <tr style="background-color:#66bbff;">
                 <th>
-                    <p style="color:white;">Subjects available at <select id="degree_institution_name">
-                        <option></option>
+                    <p style="color:white;">Universities where subjects are available<br><select style="font-size:1.3em;height:40px;width:300px;" id="degree_institution_name">
+                        <option value="" selected="selected">select ...</option>
                         {% for opt in selections.institutions %}
                             <option>{{ opt }}</option>
                         {% endfor %}
