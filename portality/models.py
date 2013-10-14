@@ -111,7 +111,29 @@ class Progression(DomainObject):
 
 class Uninote(DomainObject):
     __type__ = "uninote"
+
+    @classmethod
+    def pull_by_name(cls, name):
+        r = cls.query(q={"query":{"term":{"name"+app.config['FACET_FIELD']:name}}})
+        try:
+            return cls.pull( r['hits']['hits'][0]['_source']['id'] )
+        except:
+            return None
+
+    def save_from_form(self, request):
     
+        for key in request.form.keys():
+            if key not in ['submit']:
+                val = request.form[key]
+                if val == "on":
+                    self.data[key] = True
+                elif val == "off":
+                    self.data[key] = False
+                else:
+                    self.data[key] = val
+        
+        self.save()
+
     
 class Course(DomainObject):
     __type__ = 'course'

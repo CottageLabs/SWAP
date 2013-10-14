@@ -3,8 +3,9 @@
 {% block options %}
     <a class="btn {% if model=="course" %}btn-success{% endif %}" data-type="course" href="/admin/data/course">Courses</a>
     <a class="btn {% if model=="progression" %}btn-success{% endif %}" data-type="progression" href="/admin/data/progression">Progression</a>
+    <a class="btn {% if model=="uninote" %}btn-success{% endif %}" data-type="uninote" href="/admin/data/uninote">Uni notes</a>
     <a class="btn {% if model=="simd" %}btn-success{% endif %}" data-type="simd" href="/admin/data/simd">SIMD</a>
-    {% if record %}<a class="btn btn-primary addnew" href="#">Add new <span id="newtype" class="newtype">{{model}}</span></a>{% endif %}
+    {% if record %}<a class="btn btn-primary" href="/admin/data/{{ model }}/new">Add new {{model}}</a>{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -12,14 +13,21 @@
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 
+    var selections = {{selections|tojson|safe}};
+
     $('.suggests').each(function() {
-        var selections = {{selections|tojson|safe}};
         var type = $(this).attr('name');
         $(this).autocomplete({
             'source':selections[type],
             'minLength':0
         });
     });
+
+    $('#uninotes').autocomplete({
+        'source':selections.universities,
+        'minLength':0
+    });
+
 
 {% if current_user.do_admin %}
 
@@ -267,15 +275,23 @@ input{
 
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">University name</td>
-            		<td><input type="text" name="name"
+            		<td><input id="uninotes" type="text" name="name"
             		{% if record %} value="{{record.data.name}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">University website</td>
+            		<td><input type="text" name="website"
+            		{% if record %} value="{{record.data.website}}"{% endif %}
+            		></td>
+                </tr>
+    	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Progression notes</td>
-            		<td><textarea name="notes">
-            		{% if record %}{{record.data.notes}}{% endif %}
-            		</textarea></td>
+            		<td><textarea name="notes" style="min-width:600px;width:100%;min-height:300px;">{% if record %}{{record.data.notes}}{% endif %}</textarea></td>
+                </tr>
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">Contact information<br>(Separate each contact<br>by a blank line)</td>
+            		<td><textarea name="contacts" style="min-width:600px;width:100%;min-height:300px;">{% if record %}{{record.data.contacts}}{% endif %}</textarea></td>
                 </tr>
 
             {% endif %}

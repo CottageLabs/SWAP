@@ -47,7 +47,7 @@ def index(model=None):
 
         else:
     
-            if True:#try:
+            try:
                 records = []
                 if "csv" in request.files.get('upfile').filename:
                     upfile = request.files.get('upfile')
@@ -333,7 +333,7 @@ def index(model=None):
                         # look for the student in the index
                         counter += 1
                         student = None
-                        if True:#try:
+                        try:
                             qry['query']['bool']['must'] = [{'term':{'archive'+app.config['FACET_FIELD']:'current'}}]
                             if len(rec.get('ucas_number',"")) > 1:
                                 qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:rec['ucas_number']}})
@@ -347,8 +347,8 @@ def index(model=None):
                             q = models.Student().query(q=qry)
                             sid = q['hits']['hits'][0]['_source']['id']
                             student = models.Student.pull(sid)
-                        #except:
-                        #    failures.append('Could not find student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
+                        except:
+                            failures.append('Could not find student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
 
                         if student is not None:
                             try:
@@ -398,9 +398,9 @@ def index(model=None):
                 flash(str(len(records)) + " records have been imported, there are now " + str(checklen) + " records.")
                 return render_template('swap/admin/import.html', model=model)
 
-            #except:
-            #    flash("There was an error importing your records. Please try again.")
-            #    return render_template('swap/admin/import.html', model=model)
+            except:
+                flash("There was an error importing your records. Please try again.")
+                return render_template('swap/admin/import.html', model=model)
 
 
 

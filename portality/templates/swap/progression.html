@@ -181,6 +181,7 @@ jQuery(document).ready(function() {
                     results += '<p>Grades required: <b>' + hit.metadata.degree_profile_grades_required + '</b></p>';
                     results += '<p>' + hit.metadata.degree_special_requirements + '</p>';
                     results += '<p>' + hit.metadata.degree_additional_information + '</p>';
+                    results += '<p><a target="_blank" href="/progression/notes/' + inst + '">View additional university notes</a> (opens in a new window)</p>';
                     results += '</td>';
                     if ( hit.availability.length ) {
                         results += '<td>';

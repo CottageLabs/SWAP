@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block subheading %}
+
+<h1>Additional notes</h1>
+<p>regarding applications to {{uninote.name}}</p>
+
+{% endblock %}
+
+{% block content %}
+
+<script>
+jQuery(document).ready(function() {    
+
+});    
+</script>
+
+
+<div class="hero-unit" style="background-color:#66bbff;">
+    <h1 style="color:white;">{{uninote.name}}
+    {% if uninote.website %}<br><small><a style="color:white;" href="{{uninote.website}}">{{uninote.website}}</a></small>{% endif %}
+    </h1>
+</div>
+
+
+<div class="row-fluid">
+
+    <div class="span6">
+        <div class="well">
+            {{notes|safe}}
+        </div>
+    </div>
+
+    <div class="span6">
+        <div class="well">
+            {{contacts|safe}}
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

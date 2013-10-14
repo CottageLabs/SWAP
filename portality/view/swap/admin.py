@@ -116,6 +116,7 @@ def exportdata(model):
         if 'id' in keys: keys.remove('id')
         if 'created_date' in keys: keys.remove('created_date')
         if 'last_updated' in keys: keys.remove('last_updated')
+        if 'author' in keys: keys.remove('author')
     else:
         keys = []
     for record in records:
@@ -167,7 +168,8 @@ def data(model=None,uuid=None):
         "college": dropdowns('course','college'),
         "campus": dropdowns('course','campus'),
         "region": dropdowns('course','region'),
-        "classification": dropdowns('course','classification')
+        "classification": dropdowns('course','classification'),
+        "universities": dropdowns('progression','degree_institution_name')
     }
 
     if request.method == 'GET':
