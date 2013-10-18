@@ -82,6 +82,19 @@ def download_csv(recordlist,keys):
                 if key == 'address':
                     tidykey = record.get('address_line_1','') + ' ' + record.get('address_line_2','') + ' ' + record.get('city','')
                     tidykey = tidykey.replace('"',"'")
+                elif key == 'applications':
+                    tidykey = ""
+                    firstline = True
+                    for line in record[key]:
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['choice_number'] + ": " + line['start_year'] + " " + line['course_name']
+                        tidykey += " (" + line['course_code']
+                        tidykey += ") at " + line['institution_shortname'] + " (" + line["institution_shortname"] + ") "
+                        tidykey += line['conditions'] + " " + line['decisions']
+
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:

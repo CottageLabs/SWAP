@@ -108,9 +108,9 @@ jQuery(document).ready(function() {
                     overview += 'No courses available for your selections. Please try changing some options to widen your search.';
                     $('#counter').html(overview);
                 } else {
-                    overview += '<a id="gotoresults" href="#" style="color:white;"><b>' + counter + '</b> possible progression routes';
+                    overview += '<a id="gotoresults" href="#" style="color:white;">Results found: <b id="unisubjcount"></b> possible degree courses';
                     if ( !institution.length ) {
-                        overview += ' to <b>' + data.facets.degree_institution_name.terms.length + '</b> universities';
+                        overview += ' at <b>' + data.facets.degree_institution_name.terms.length + '</b> universities';
                     }
                     overview += '</p></a></div>';
                     $('#counter').html(overview);
@@ -170,7 +170,13 @@ jQuery(document).ready(function() {
                         }
                         unisubjbatches[k].availability.push(crs);
                     }
-                }                
+                }  
+
+                var unisubjsize = 0;
+                for (var key in unisubjbatches) {
+                    if (unisubjbatches.hasOwnProperty(key)) unisubjsize++;
+                }
+                $('#unisubjcount').html(unisubjsize);
                 
                 for ( var s in unisubjbatches ) {
                     var parts = s.split('______');
@@ -314,7 +320,7 @@ jQuery(document).ready(function() {
                         {% endfor %}
                     </select></p>
                 </th>
-                <th style="min-width:100px;">
+                <th style="min-width:300px;">
                     <p style="color:white;">Access courses</p>
                 </th>
             </tr>

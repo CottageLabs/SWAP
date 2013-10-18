@@ -3,6 +3,7 @@ import json
 from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, url_for
 from flask.ext.login import current_user
 
+from portality.view.swap.forms import dropdowns
 from portality.core import app
 import portality.models as models
 import portality.util
@@ -63,7 +64,32 @@ def pae(appid):
             cs = crse
         else:
             course.data['course']
-        return render_template('swap/courses/student.html', student=student, course=cs)
+
+        colleges = dropdowns('course','college')        
+
+        unis = [
+            'English University',
+            'European University',
+            'University of Aberdeen',
+            'Robert Gordon University',
+            'University of Abertay, Dundee',
+            'University of Dundee',
+            'University of Highlands & Islands',
+            'University of Stirling',
+            'University of St Andrews',
+            'SRUC',
+            'University of Glasgow',
+            'Glasgow Caledonian University',
+            'University of Strathclyde',
+            'University of West of Scotland',
+            'University of Edinburgh',
+            'Heriot-Watt University',
+            'Edinburgh Napier University',
+            'Queen Margaret University',
+            'The Open University'
+        ]
+
+        return render_template('swap/courses/student.html', student=student, course=cs, colleges=colleges, unis=unis)
 
     elif request.method == 'POST':
         # save the uploaded progression information for the student
