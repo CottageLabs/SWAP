@@ -358,6 +358,9 @@ def index(model=None):
                                     'course_name': rec.get('course_name',''),
                                     'course_code': rec.get('course_code',''),
                                     'institution_shortname': rec.get('institution_shortname',''),
+                                    'initial_university_offer_decision': rec.get('initial_university_offer_decision',''),
+                                    'initial_applicant_decision': rec.get('initial_applicant_decision',''),
+                                    'final_university_decision': rec.get('final_university_decision',''),
                                     'reg_1st_year': rec.get('reg_1st_year',''),
                                     'reg_2nd_year_or_left': rec.get('reg_2nd_year_or_left',''),
                                     'reg_3rd_year_or_left': rec.get('reg_3rd_year_or_left',''),
@@ -366,20 +369,24 @@ def index(model=None):
                                 }
                                 
                                 which = False
-                                if len(student.data.get('progressions',[])) > 0:
+                                if 'progressions' not in student.data: student.data['progressions'] = []
+                                if len(student.data['progressions']) > 0:
                                     c = 0
                                     for prog in student.data['progressions']:
                                         if prog['institution_shortname'] == progn['institution_shortname'] and prog['course_code'] == progn['course_code']:
                                             which = c
                                         c += 1
                                 
-                                if isinstance(which,bool):
-                                    student.data['progressions'].append(progn)
-                                else:
-                                    student.data['progressions'][which] = progn
+                                if len(progn['course_code']) > 0 and len(progn['institution_shortname']) > 0:
+                                    if isinstance(which,bool):
+                                        student.data['progressions'].append(progn)
+                                    else:
+                                        student.data['progressions'][which] = progn
 
-                                student.save()
-                                updates.append('Saved student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
+                                    student.save()
+                                    updates.append('Saved student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
+                                else:
+                                    failures.append('Blank course code or institution shortname for ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data, so did not save this row.')
                             except:
                                 failures.append('Failed to save student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
 
@@ -429,7 +436,10 @@ def _get_students(institution,whatsort):
     matchedstudents = []
     for student in students:
         allowedapps = []
-        apps = student['applications']
+        if whatsort == 'applications':
+            apps = student['applications']
+        else:
+            apps = student['progressions']
         for appn in apps:
             if not isinstance(institution,bool):
                 if appn['institution_shortname'] == institution:
@@ -437,7 +447,10 @@ def _get_students(institution,whatsort):
             else:
                 allowedapps.append(appn)
         if len(allowedapps) > 0:
-            student['applications'] = allowedapps
+            if whatsort == 'applications':
+                student['applications'] = allowedapps
+            else:
+                student['progressions'] = allowedapps
             matchedstudents.append(student)
     return matchedstudents
 
@@ -447,12 +460,7 @@ def _get_students(institution,whatsort):
 
 def _download_applications(recordlist, whatsort, uni):
 
-    # this key list is missing :
-    # initial offer decision by uni
-    # initial decision by applicant
-    # final decision by uni
-    # where should the three above be taken from? are they on ucas data?
-    keys = ['start_year','locale','ucas_number','last_name','first_name','gender','date_of_birth','post_code','college','institution_shortname', 'course_name','course_code','reg_1st_year','reg_2nd_year_or_left','reg_3rd_year_or_left','reg_4th_year_or_left','degree_classification_awarded']
+    keys = ['start_year','locale','ucas_number','last_name','first_name','gender','date_of_birth','post_code','college','institution_shortname', 'course_name','course_code','initial_university_offer_decision','initial_applicant_decision','final_university_decision','reg_1st_year','reg_2nd_year_or_left','reg_3rd_year_or_left','reg_4th_year_or_left','degree_classification_awarded']
 
     # make a csv string of the records, with one line per application
     csvdata = StringIO.StringIO()

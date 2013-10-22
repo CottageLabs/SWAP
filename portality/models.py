@@ -195,11 +195,12 @@ class Course(DomainObject):
         if 'classification' not in self.data:
             self.data['classification'] = ""
 
-
+        if not isinstance(self.data.get('previous_name',""),list):
+            self.data['previous_name'] = self.data.get('previous_name',"").split(",")
 
         old = Course.pull(self.id)
         if old is not None:
-            if old.data['college'] != self.data['college']:
+            if old.data['college'] != self.data['college'] and old.data['college'] not in self.data['previous_name']:
                 self.data['previous_name'].append(old.data['college'])
             # remove any old accounts
             for oc in old.data.get('contacts',[]):
@@ -232,9 +233,8 @@ class Course(DomainObject):
                 account.save()
                 c['password'] = ""
 
-        if not isinstance(self.data.get('previous_name',""),list):
-            self.data['previous_name'] = self.data.get('previous_name',"").split(",")
-        if 'previous_name' not in self.data: self.data['previous_name'] = []
+        for item in self.data['previous_name']:
+            if len(item) == 0: self.data['previous_name'].remove(item)
 
         if 'locale' in self.data and len(self.data['locale']) > 1:
             self.data['locale'] = self.data['locale'][0].upper() + self.data['locale'][1:]
