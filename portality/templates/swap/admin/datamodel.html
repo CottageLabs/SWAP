@@ -242,21 +242,15 @@ input{
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Degree profile grades required</td>
-            		<td><textarea name="degree_profile_grades_required">
-            		{% if record %}{{record.data.degree_profile_grades_required}}{% endif %}
-            		</textarea></td>
+            		<td><textarea name="degree_profile_grades_required">{% if record %}{{record.data.degree_profile_grades_required}}{% endif %}</textarea></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Degree special requirements</td>
-            		<td><textarea name="degree_special_requirements">
-            		{% if record %}{{record.data.degree_special_requirements}}{% endif %}
-            		</textarea></td>
+            		<td><textarea name="degree_special_requirements">{% if record %}{{record.data.degree_special_requirements}}{% endif %}</textarea></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Degree additional information</td>
-            		<td><textarea name="degree_additional_information">
-            		{% if record %}{{record.data.degree_additional_information}}{% endif %}
-            		</textarea></td>
+            		<td><textarea name="degree_additional_information">{% if record %}{{record.data.degree_additional_information}}{% endif %}</textarea></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Access course name</td>

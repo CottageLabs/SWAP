@@ -1076,7 +1076,25 @@ fieldset{
                 </tr>
                 <tr>
                     <td>If the student progressed to an FEC / HEI, which one (if known).</td>
-                    <td><input type="text" name="progress_where" value="{{record.data.progress_where}}"></td>
+                    <td><select name="progress_where">
+                        <option></option>
+                        <optgroup label="Colleges">
+                            {% for val in selections.colleges %}
+                            <option 
+                            {% if val == record.data.progress_where %}selected="selected"{% endif %}
+                            >{{val}}</option>
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Universities">
+                            {% for val in selections.unis %}
+                            <option 
+                            {% if val == record.data.progress_where %}selected="selected"{% endif %}
+                            >{{val}}</option>
+                            {% endfor %}
+                        </optgroup>
+                    </select></td>
+
+
                 </tr>
             </table>
         </div>
@@ -1111,9 +1129,8 @@ fieldset{
                         <th>Starting year</th>
                         <th>Institution shortname</th>
                         <th>Course code</th>
-                        <th>Initial uni decision</th>
-                        <th>Initial applicant decision</th>
-                        <th>Final uni decision</th>
+                        <th>Course name</th>
+                        <th>Decisions</th>
                         <th>Registered 1st year</th>
                         <th>Registered 2nd year or left</th>
                         <th>Registered 3rd year or left</th>
@@ -1127,8 +1144,8 @@ fieldset{
                 		<td>{{app.start_year}}</td>
                 		<td>{{app.institution_shortname}}</td>
                 		<td>{{app.course_code}}</td>
-                		<td>{{app.initial_university_offer_decision}}</td>
-                		<td>{{app.initial_applicant_decision}}</td>
+                		<td>{{app.course_name}}</td>
+                		<td>{{app.decisions}}</td>
                 		<td>{{app.final_university_decision}}</td>
                 		<td>{{app.reg_1st_year}}</td>
                 		<td>{{app.reg_2nd_year_or_left}}</td>

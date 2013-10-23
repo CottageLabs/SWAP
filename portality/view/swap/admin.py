@@ -65,6 +65,29 @@ def student(uuid=None):
     if 'Irish' in nats: nats.remove('Irish')
     if 'Welsh' in nats: nats.remove('Welsh')
     nats = ['Scottish','English','Irish','Welsh'] + nats
+
+    unis = [
+        'English University',
+        'European University',
+        'University of Aberdeen',
+        'Robert Gordon University',
+        'University of Abertay, Dundee',
+        'University of Dundee',
+        'University of Highlands & Islands',
+        'University of Stirling',
+        'University of St Andrews',
+        'SRUC',
+        'University of Glasgow',
+        'Glasgow Caledonian University',
+        'University of Strathclyde',
+        'University of West of Scotland',
+        'University of Edinburgh',
+        'Heriot-Watt University',
+        'Edinburgh Napier University',
+        'Queen Margaret University',
+        'The Open University'
+    ]
+
     selections={
         "colleges": dropdowns('course','college'),
         "campus": dropdowns('course','campus'),
@@ -73,7 +96,8 @@ def student(uuid=None):
         "simd_quintiles": dropdowns('simd','simd_quintile'),
         "archives": dropdowns('archive','name'),
         "studyskills": dropdowns('student','studyskills') + ['SE Humanities', 'East Science', 'Tayside Humanities', 'Tayside Nursing'],
-        "nationalities": nats
+        "nationalities": nats,
+        "unis": unis
     }
 
     if request.method == 'GET':

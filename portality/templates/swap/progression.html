@@ -32,6 +32,14 @@ jQuery(document).ready(function() {
             triggerval = "";
         }
         
+        if ( trigger == 'degree_institution_name' ) {
+            if ( triggerval == "" ) {
+                $('#clear_institution').hide();
+            } else {
+                $('#clear_institution').show();
+            }
+        }
+        
         if ( trigger == 'access_course_college' && $(this).val() != "" && $(this).val() != "not" ) {
             $('#accesscourseq').show();
         }
@@ -90,7 +98,12 @@ jQuery(document).ready(function() {
         if ( qs.length == 0 ) {
             qry.query.bool.must.push({'match_all': {}})
         } else {
-            qry.query.bool.must.push({'query_string': {'query': qs}})
+            var qq = {
+                'query': qs,
+                'fields': ['degree_course_name','degree_additional_information'],
+                'use_dis_max': true
+            };
+            qry.query.bool.must.push({'query_string': qq})
         }
 
         $.ajax({
@@ -228,17 +241,44 @@ jQuery(document).ready(function() {
     $('#addinterest').bind('click',addinterest);
 
 
+    var ac_qry = {
+        'query': {
+            'query_string': {
+                'query': '',
+                'fields': ['degree_course_name','degree_additional_information'],
+                'use_dis_max': true
+            }
+        },
+        'size':1000,
+        'facets': {
+            'degree_course_name': {
+                'terms': {
+                    'field': 'degree_course_name.exact',
+                    'size':1000,
+                    'order':'term' // change to count if relevance turns out to be better
+                },
+            }
+        }
+    };
+    var ac_url = '/query/progression';
     $( "#degree_interests" ).autocomplete({
       source: function( request, response ) {
+        ac_qry.query.query_string.query = '*' + request.term + '*';
         $.ajax({
-          url: "/stream/progression/degree_course_name",
+          url: ac_url,
+          cache:false,
+          async:false,
           dataType: "json",
-          data: {
-              'q': request.term
-          },
+          type: 'POST',
+          data: JSON.stringify(ac_qry),
+          contentType: 'application/json',
           success: function( data ) {
-              response( data );
-          },
+            var results = [];
+            for ( var i in data.facets.degree_course_name.terms ) {
+                results.push(data.facets.degree_course_name.terms[i].term);
+            }
+            response( results )
+          }
         });
       },
       select: function( event, ui ) {
@@ -247,6 +287,12 @@ jQuery(document).ready(function() {
       },
       minLength: 2
     });
+
+    var clear_institution = function(event) {
+        event.preventDefault();
+        $('#degree_institution_name').val("").trigger('change');
+    }
+    $('#clear_institution').bind('click',clear_institution);
 
 });    
 </script>
@@ -292,7 +338,8 @@ jQuery(document).ready(function() {
 <div class="well" style="background-color:#555;">
     <div class="row-fluid" style="padding-top:10px;">
         <div class="span6">
-            <p class="lead" style="color:white;">What are you interested in studying? Add your preferred subject(s) of interest, or choose from the suggestions as you type.</p>
+            <p class="lead" style="color:white;margin-bottom:0px;">What are you interested in studying?</p>
+            <p style="color:white;">Start typing your preferred subject(s), then click to add your word to the search, or choose from the dropdown suggestions. You can add multiple terms. Click the <span style="color:red;">x</span> next to added terms to remove them.</p>
         </div>
         <div class="span6">
             <input type="text" id="degree_interests" style="font-size:1.4em;height:40px;width:300px;"> 
@@ -313,12 +360,15 @@ jQuery(document).ready(function() {
         <thead>
             <tr style="background-color:#66bbff;">
                 <th>
-                    <p style="color:white;">Universities where subjects are available<br><select style="font-size:1.3em;height:40px;width:300px;" id="degree_institution_name">
+                    <p style="color:white;">Universities where subjects are available (select your preference)<br>
+                    <select style="font-size:1.3em;height:40px;width:300px;margin-top:5px;" id="degree_institution_name">
                         <option value="" selected="selected">select ...</option>
                         {% for opt in selections.institutions %}
                             <option>{{ opt }}</option>
                         {% endfor %}
-                    </select></p>
+                    </select>
+                    <a class="btn" id="clear_institution" href="#" title="clear your selection" alt="clear your selection" style="display:none;height:25px;font-size:1.6em;padding-top:10px;margin-top:-3px;"><b>x</b></a>
+                    </p>
                 </th>
                 <th style="min-width:300px;">
                     <p style="color:white;">Access courses</p>

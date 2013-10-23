@@ -35,11 +35,12 @@ def notes(uni):
         
         notes = uninote.data['notes']
         if len(notes) == 0:
-            notes = "<p>There are no additional notes for " + uni + "</p>"
+            notes = "<p>There are no additional notes from " + uni + "</p>"
         else:
             notes = notes.lstrip('\n').rstrip('\n').replace('\n\n\n','\n\n').replace('\n\n','</p><p>').replace('\n','<br>')
             notes = '<p><b>Notes provided by ' + uni + '</b><br>' + notes + '</p>'
-            notes += '</div><div class="well"><p><b>SWAP additional note</b><br>' + swap_note + '</p>'
+
+        notes += '</div><div class="well"><p><b>SWAP additional note</b><br>' + swap_note + '</p>'
             
         contacts = '<p><b>' + uni + ' contacts</b></p><p>' + uninote.data['contacts'].lstrip('\n').rstrip('\n').replace('\n\n\n','\n\n').replace('\n\n','</p><p>').replace('\n','<br>') + '</p>'
 

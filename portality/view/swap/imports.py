@@ -358,9 +358,7 @@ def index(model=None):
                                     'course_name': rec.get('course_name',''),
                                     'course_code': rec.get('course_code',''),
                                     'institution_shortname': rec.get('institution_shortname',''),
-                                    'initial_university_offer_decision': rec.get('initial_university_offer_decision',''),
-                                    'initial_applicant_decision': rec.get('initial_applicant_decision',''),
-                                    'final_university_decision': rec.get('final_university_decision',''),
+                                    'decisions': rec.get('decisions',''),
                                     'reg_1st_year': rec.get('reg_1st_year',''),
                                     'reg_2nd_year_or_left': rec.get('reg_2nd_year_or_left',''),
                                     'reg_3rd_year_or_left': rec.get('reg_3rd_year_or_left',''),
@@ -460,7 +458,7 @@ def _get_students(institution,whatsort):
 
 def _download_applications(recordlist, whatsort, uni):
 
-    keys = ['start_year','locale','ucas_number','last_name','first_name','gender','date_of_birth','post_code','college','institution_shortname', 'course_name','course_code','initial_university_offer_decision','initial_applicant_decision','final_university_decision','reg_1st_year','reg_2nd_year_or_left','reg_3rd_year_or_left','reg_4th_year_or_left','degree_classification_awarded']
+    keys = ['start_year','locale','ucas_number','last_name','first_name','gender','date_of_birth','post_code','college','institution_shortname', 'course_name','course_code','decisions','reg_1st_year','reg_2nd_year_or_left','reg_3rd_year_or_left','reg_4th_year_or_left','degree_classification_awarded']
 
     # make a csv string of the records, with one line per application
     csvdata = StringIO.StringIO()
