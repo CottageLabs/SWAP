@@ -1,4 +1,4 @@
-import json, time
+import json, time, string
 from datetime import datetime
 
 from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, url_for, send_file
@@ -170,9 +170,9 @@ def exportdata(model):
                 else:
                     csvdata.write('"false"')
             elif isinstance(record[key],list):
-                csvdata.write('"' + ",".join(record[key]) + '"')
+                csvdata.write('"' + _fixify(",".join(record[key])) + '"')
             else:
-                csvdata.write('"' + record[key].replace('"',"'") + '"')
+                csvdata.write('"' + _fixify(record[key]) + '"')
     # dump to the browser as a csv attachment
     csvdata.seek(0)
     return send_file(
@@ -281,8 +281,13 @@ def archives():
     )
 
 
-
-
+def _fixify(strng):
+    newstr = ''
+    allowed = string.lowercase + string.uppercase + "@!%&*()_-+=;:~#./?[]{}, '" + '0123456789'
+    for part in strng:
+        if part in allowed or part == '\n':
+            newstr += part
+    return newstr
 
 
 
