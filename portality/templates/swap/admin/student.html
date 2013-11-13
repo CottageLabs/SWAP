@@ -400,7 +400,7 @@ fieldset{
                 		    <option></option>
                 		    {% for opt in selections.studyskills %}
                 		    <option
-                		    {% if record %}{% if record.data.nationality == opt %} selected="selected"{% endif %}{% endif %}
+                		    {% if record %}{% if record.data.studyskills == opt %} selected="selected"{% endif %}{% endif %}
                 		    >{{opt}}</option>
                 		    {% endfor %}
                 		</select></td>
