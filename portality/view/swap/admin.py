@@ -88,6 +88,12 @@ def student(uuid=None):
         'The Open University'
     ]
 
+    ss = dropdowns('student','studyskills')
+    if 'SE Humanities' not in ss: ss = ss + ['SE Humanities']
+    if 'East Science' not in ss: ss = ss + ['East Science']
+    if 'Tayside Humanities' not in ss: ss = ss + ['Tayside Humanities']
+    if 'Tayside Nursing' not in ss: ss = ss + ['Tayside Nursing']
+
     selections={
         "colleges": dropdowns('course','college'),
         "campus": dropdowns('course','campus'),
@@ -95,7 +101,7 @@ def student(uuid=None):
         "simd_deciles": dropdowns('simd','simd_decile'),
         "simd_quintiles": dropdowns('simd','simd_quintile'),
         "archives": dropdowns('archive','name'),
-        "studyskills": dropdowns('student','studyskills') + ['SE Humanities', 'East Science', 'Tayside Humanities', 'Tayside Nursing'],
+        "studyskills":  ss,
         "nationalities": nats,
         "unis": unis
     }

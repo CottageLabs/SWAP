@@ -1,7 +1,10 @@
 
 from datetime import datetime
-import cStringIO as StringIO
 
+#import cStringIO as StringIO
+#import string
+
+import StringIO
 import json
 
 from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, send_file
@@ -43,6 +46,15 @@ def index():
         keys = [ i for i in keys if i not in ['query','submit','selected']]
         
         return download_csv(students,keys)
+
+
+def fixify(strng):
+    newstr = ''
+    allowed = string.lowercase + string.uppercase + "@!%&*()_-+=;:~#./?[]{}, '" + '0123456789'
+    for part in strng:
+        if part in allowed or part == '\n':
+            newstr += part
+    return newstr
 
 
 def download_csv(recordlist,keys):
