@@ -1,10 +1,9 @@
 
 from datetime import datetime
 
-#import cStringIO as StringIO
-#import string
+import cStringIO as StringIO
+import string
 
-import StringIO
 import json
 
 from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, send_file
@@ -90,9 +89,9 @@ def download_csv(recordlist,keys):
                 firstkey = False
             else:
                 csvdata.write(',')
-            if key in record.keys():
+            if key in record.keys() or key == 'address':
                 if key == 'address':
-                    tidykey = record.get('address_line_1','') + ' ' + record.get('address_line_2','') + ' ' + record.get('city','')
+                    tidykey = record.get('address_line_1','') + '\n' + record.get('address_line_2','') + '\n' + record.get('city','')
                     tidykey = tidykey.replace('"',"'")
                 elif key == 'applications':
                     tidykey = ""
@@ -115,7 +114,7 @@ def download_csv(recordlist,keys):
                             tidykey = "false"
                     else:
                         tidykey = record[key].replace('"',"'")
-                csvdata.write('"' + tidykey + '"')
+                csvdata.write('"' + fixify(tidykey) + '"')
             else:
                 csvdata.write('""')
     # dump to the browser as a csv attachment

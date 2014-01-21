@@ -44,7 +44,7 @@ class Student(DomainObject):
                 self.data['simd_decile'] = 'unknown'
                 self.data['simd_quintile'] = 'unknown'
 
-        if 'college' in self.data and 'locale' not in self.data:
+        if 'college' in self.data:
             c = Course().pull_by_ccc(self.data['college'],self.data['campus'],self.data.get('course',False))
             if c is not None:
                 self.data['locale'] = c.data.get('locale',"")
@@ -96,8 +96,30 @@ class Student(DomainObject):
         if len(applications) > 0: self.data['applications'] = applications
         if len(progressions) > 0: self.data['progressions'] = progressions
 
+        # clean tickboxes
+        tickboxes = [
+            'registered',
+            'attended',
+            'parents_with_hnc',
+            'siblings_with_hnc',
+            'parents_with_hnd',
+            'siblings_with_hnd',
+            'parents_with_degree',
+            'siblings_with_degree',
+            'other_qualifications',
+            'previous_level6_qualifications',
+            'registered_disabled'
+        ]
+        for k in tickboxes:
+            if k in self.data.keys():
+                del self.data[k]
+
         for key in request.form.keys():
-            if key in ['nationality','first_name','last_name'] and len(request.form[key]) > 1:
+            if request.form[key] == "on":
+                self.data[key] = True
+            elif request.form[key] == "off":
+                self.data[key] = False
+            elif key in ['nationality','first_name','last_name'] and len(request.form[key]) > 1:
                 self.data[key] = request.form[key][0].upper() + request.form[key][1:]
             elif not key.startswith('application_') and not key.startswith('progression_') and key not in ['submit']:
                 self.data[key] = request.form[key]
