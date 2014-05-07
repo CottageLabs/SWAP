@@ -3,7 +3,7 @@ from flask import Flask, request, abort, render_template
 from flask.views import View
 from flask.ext.login import login_user, current_user
 
-import datetime from datetime
+from datetime import datetime
 
 import portality.models as models
 from portality.core import app, login_manager
