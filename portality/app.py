@@ -3,6 +3,8 @@ from flask import Flask, request, abort, render_template
 from flask.views import View
 from flask.ext.login import login_user, current_user
 
+import datetime from datetime
+
 import portality.models as models
 from portality.core import app, login_manager
 
@@ -41,7 +43,7 @@ def load_account_for_login_manager(userid):
 @app.context_processor
 def set_current_context():
     """ Set some template context globals. """
-    return dict(current_user=current_user, app=app, adminsettings=models.Account.pull(app.config['SUPER_USER'][0]).data.get('settings',{}))
+    return dict(current_user=current_user, year=datetime.now().year, app=app, adminsettings=models.Account.pull(app.config['SUPER_USER'][0]).data.get('settings',{}))
 
 
 @app.before_request
