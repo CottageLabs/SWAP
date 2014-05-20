@@ -52,6 +52,16 @@ class Student(DomainObject):
                 self.data['classification'] = c.data.get('classification',"")
                 self.data['previous_name'] = c.data.get('previous_name',"")
 
+        if 'date_of_birth' in self.data and not self.data.get('ageonentry',False):
+            # calculate age on 1st September of current year
+            year = datetime.now().year
+            # if already after 1st September of current year, add 1
+            if datetime.now().month >= 9: year += 1
+            ayear = datetime(year, 9, 1)
+            difference = ayear - datetime.strptime(self.data['date_of_birth'], '%d/%m/%Y')
+            age = (difference.days + difference.seconds/86400.0)/365.2425
+            self.data['ageonentry'] = int(age)
+
         if len(self.data.get('other_english',"")) > 1 or len(self.data.get('other_maths',"")) > 1:
             self.data['other_qualifications'] = True
         else:

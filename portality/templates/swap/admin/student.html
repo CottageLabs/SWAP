@@ -238,6 +238,17 @@ fieldset{
                 		></td>
                     </tr>
         	        <tr>
+                        <td style="text-align:right;padding:6px 10px 0 100px;">Age on entry</td>
+                		<td><input type="text" name="ageonentry"
+                		{% if record %} value="{{record.data.ageonentry}}"{% endif %}
+                		></td>
+
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Address</td>
+                		<td><input type="text" name="address_line_1" tabindex=12
+                		{% if record %} value="{{record.data.address_line_1}}"{% endif %}
+                		></td>
+                    </tr>
+        	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Gender</td>
                 		<td><select name="gender" tabindex=4>
                 		    <option></option>
@@ -249,9 +260,9 @@ fieldset{
                 		    >Female</option>
                 		</select></td>
 
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">Address</td>
-                		<td><input type="text" name="address_line_1" tabindex=12
-                		{% if record %} value="{{record.data.address_line_1}}"{% endif %}
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">...</td>
+                		<td><input type="text" name="address_line_2" tabindex=13
+                		{% if record %} value="{{record.data.address_line_2}}"{% endif %}
                 		></td>
                     </tr>
         	        <tr>
@@ -265,9 +276,9 @@ fieldset{
                 		    {% endfor %}
                 		</select></td>
 
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">...</td>
-                		<td><input type="text" name="address_line_2" tabindex=13
-                		{% if record %} value="{{record.data.address_line_2}}"{% endif %}
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Town / city</td>
+                		<td><input type="text" name="city" tabindex=14
+                		{% if record %} value="{{record.data.city}}"{% endif %}
                 		></td>
                     </tr>
         	        <tr>
@@ -281,9 +292,9 @@ fieldset{
                 		    {% endfor %}
                 		</select></td>
 
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">Town / city</td>
-                		<td><input type="text" name="city" tabindex=14
-                		{% if record %} value="{{record.data.city}}"{% endif %}
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
+                		<td><input type="text" name="post_code" data-required="true" tabindex=15
+                		{% if record %} value="{{record.data.post_code}}"{% endif %}
                 		></td>
                     </tr>
         	        <tr>
@@ -297,12 +308,13 @@ fieldset{
                 		    {% endfor %}
                 		</select></td>
 
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
-                		<td><input type="text" name="post_code" data-required="true" tabindex=15
-                		{% if record %} value="{{record.data.post_code}}"{% endif %}
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">Nationality</td>
+                		<td><input type="text" id="nationalities" name="nationality" tabindex=16
+                		{% if record %} value="{{record.data.nationality}}"{% endif %}
                 		></td>
+
                     </tr>
-        	        <tr>
+                    <tr>
         	            <td style="text-align:right;padding:6px 10px 0 0;">
 	                        <p>Miles travelled to college? (one way)</p>
         	            </td>
@@ -312,12 +324,12 @@ fieldset{
                 	        >
         	            </td>
 
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">Nationality</td>
-                		<td><input type="text" id="nationalities" name="nationality" tabindex=16
-                		{% if record %} value="{{record.data.nationality}}"{% endif %}
+	                    <td style="text-align:right;padding:6px 10px 0 100px;">UCAS Number</td>
+                		<td><input type="text" name="ucas_number" tabindex=18
+                		{% if record %} value="{{record.data.ucas_number}}"{% endif %}
                 		></td>
-
                     </tr>
+
                     <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">
 	                        Agree to <br>
@@ -330,15 +342,6 @@ fieldset{
                 		    >Yes</option>
                 		</select></td>
 
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">UCAS Number</td>
-                		<td><input type="text" name="ucas_number" tabindex=18
-                		{% if record %} value="{{record.data.ucas_number}}"{% endif %}
-                		></td>
-                    </tr>
-
-                    <tr>
-                        <td style="text-align:right;padding:6px 10px 0 100px;">Age on entry</td>
-                		<td><input type="text" name="ageonentry" ></td>
                 		<td></td>
                 		<td></td>
                     </tr>

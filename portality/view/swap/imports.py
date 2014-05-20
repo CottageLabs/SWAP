@@ -97,20 +97,51 @@ def index(model=None):
                         except:
                             probperson = False
                         
-                        if probperson:
+
+                        if probappn:
+                            # there should be a student already in this case
+                            if student is not None:
+                                try:
+                                    # get the appn data from the rows - 0 is column A of spreadsheet
+                                    choice_number = rec[0]
+                                    institution_code = rec[1]
+                                    institution_shortname = rec[2]
+                                    course_code = rec[3]
+                                    decisions = rec[5]
+                                    conditions = rec[6]
+                                    course_name = rec[7]
+                                    start_year = rec[8]
+
+
+                                    appnset.append({
+                                        "choice_number": choice_number,
+                                        "institution_code": institution_code,
+                                        "institution_shortname": institution_shortname,
+                                        "course_code": course_code,
+                                        "decisions": decisions,
+                                        "conditions": conditions,
+                                        "course_name": course_name,
+                                        "start_year": start_year
+                                    })
+                                                                        
+                                except:
+                                    # failed to add the appn data to the student
+                                    failures.append('Failed to read what appeared to be application data out of row ' + str(counter))
+
+                        elif probperson:
                             # when hitting a person row, save the previous person
                             # if there was one, then reset back to none
                             if student is not None:
                                 # TODO: test if appnset is different from apps for person
                                 oldappns = student.data.get('applications',[])
-                                print oldappns, appnset
-                                print len(oldappns), len(appnset)
-                                print student.id
+                                #print oldappns, appnset
+                                #print len(oldappns), len(appnset)
+                                #print student.id
                                 if len(oldappns) != len(appnset):
                                     changed = True
                                 else:
                                     check = zip(oldappns,appnset)
-                                    print check
+                                    #print check
                                     changed = any(x != y for x, y in check)
                                 if changed:
                                     student.data['applications'] = appnset
@@ -262,38 +293,19 @@ def index(model=None):
                                 if counter > 2:
                                     failures.append('Failed to read what appeared to be person details out of row ' + str(counter))
 
-                        elif probappn:
-                            # there should be a student already in this case
-                            if student is not None:
-                                try:
-                                    # get the appn data from the rows - 0 is column A of spreadsheet
-                                    choice_number = rec[0]
-                                    institution_code = rec[1]
-                                    institution_shortname = rec[2]
-                                    course_code = rec[3]
-                                    decisions = rec[5]
-                                    conditions = rec[6]
-                                    course_name = rec[7]
-                                    start_year = rec[8]
-
-
-                                    appnset.append({
-                                        "choice_number": choice_number,
-                                        "institution_code": institution_code,
-                                        "institution_shortname": institution_shortname,
-                                        "course_code": course_code,
-                                        "decisions": decisions,
-                                        "conditions": conditions,
-                                        "course_name": course_name,
-                                        "start_year": start_year
-                                    })
-                                except:
-                                    # failed to add the appn data to the student
-                                    failures.append('Failed to read what appeared to be application data out of row ' + str(counter))
                             else:
                                 # there was no student for this appn, what to do?
                                 failures.append('There did not appear to be a student record to append the application data from row ' + str(counter) + ' to')
                                 
+                                
+                            # if this is the last line of the file, save any remaining student
+                            if counter == len(records):
+                                try:
+                                    student.save()
+                                    updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a>')
+                                except:
+                                    pass
+
                     flash('Processed ' + str(counter) + ' rows of data')
                     return render_template('swap/admin/import.html', model=model, failures=failures, updates=updates, stayedsame=stayedsame)
 
