@@ -11,6 +11,8 @@ from email.MIMEBase import MIMEBase
 from email.MIMEText import MIMEText
 from email.Utils import COMMASPACE, formatdate
 from email import Encoders
+
+from portality.core import app
          
 
 '''def send_mail(to, fro, subject, text, files=[],server="localhost"):
