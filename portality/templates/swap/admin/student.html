@@ -309,10 +309,44 @@ fieldset{
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Nationality</td>
-                		<td><input type="text" id="nationalities" name="nationality" tabindex=16
-                		{% if record %} value="{{record.data.nationality}}"{% endif %}
-                		></td>
-
+                                {% set found = False %}
+                		<td><select name="nationality" tabindex=16>
+                                    <option></option>{% if record %}{% if record.data.nationality == "" %}{% set found = True %}{% endif %}{% endif %}
+                                    <option{% if record %}{% if record.data.nationality == "Scottish" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Scottish</option>
+                                    <option{% if record %}{% if record.data.nationality == "English" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>English</option>
+                                    <option{% if record %}{% if record.data.nationality == "Welsh" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Welsh</option>
+                                    <option{% if record %}{% if record.data.nationality == "Irish" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Irish</option>
+                                    <option{% if record %}{% if record.data.nationality == "Northern Irish" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Northern Irish</option>
+                                    <option{% if record %}{% if record.data.nationality == "Polish" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Polish</option>
+                                    <option{% if record %}{% if record.data.nationality == "French" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>French</option>
+                                    <option{% if record %}{% if record.data.nationality == "Italian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Italian</option>
+                                    <option{% if record %}{% if record.data.nationality == "German" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>German</option>
+                                    <option{% if record %}{% if record.data.nationality == "Belgian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Belgian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Spanish" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Spanish</option>
+                                    <option{% if record %}{% if record.data.nationality == "Portuguese" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Portuguese</option>
+                                    <option{% if record %}{% if record.data.nationality == "Latvian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Latvian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Estonian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Estonian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Lithuanian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Lithuanian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Greek" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Greek</option>
+                                    <option{% if record %}{% if record.data.nationality == "Indian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Indian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Pakistani" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Pakistani</option>
+                                    <option{% if record %}{% if record.data.nationality == "Bangladeshi" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Bangladeshi</option>
+                                    <option{% if record %}{% if record.data.nationality == "African country" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>African country</option>
+                                    <option{% if record %}{% if record.data.nationality == "Asian (other than countries listed)" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Asian (other than countries listed)</option>
+                                    <option{% if record %}{% if record.data.nationality == "European (other than countries listed)" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>European (other than countries listed)</option>
+                                    <option{% if record %}{% if record.data.nationality == "Slovenian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Slovenian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Czech" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Czech</option>
+                                    <option{% if record %}{% if record.data.nationality == "Slovakian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Slovakian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Hungarian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Hungarian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Romanian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Romanian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Bulgarian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Bulgarian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Dutch" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Dutch</option>
+                                    <option{% if record %}{% if record.data.nationality == "Austrian" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Austrian</option>
+                                    <option{% if record %}{% if record.data.nationality == "Other" %}{% set found = True %} selected="selected"{% endif %}{% endif %}>Other</option>
+                                    {% if record and not found %}
+                                    <option selected="selected">{{record.data.nationality}}</option>
+                                    {% endif %}
+                                </select></td>
                     </tr>
                     <tr>
         	            <td style="text-align:right;padding:6px 10px 0 0;">
@@ -409,7 +443,11 @@ fieldset{
                 		</select></td>
 
                         <td style="text-align:right;padding:6px 10px 0 100px;">registered <input type="checkbox" name="registered"{% if record.data.registered %} checked="checked"{% endif %}></td>
-                        <td style="padding:6px 0 0 10px;">attended <input type="checkbox" name="attended"{% if record.data.attended %} checked="checked"{% endif %}></td>
+                        <td style="padding:6px 0 0 10px;">
+                            attended <input type="checkbox" name="attended"{% if record.data.attended %} checked="checked"{% endif %}> 
+                            &nbsp;&nbsp;&nbsp;
+                            withdrawn <input type="checkbox" name="withdrawn"{% if record.data.withdrawn %} checked="checked"{% endif %}>
+                        </td>
 
                     </tr>
 

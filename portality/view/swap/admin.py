@@ -51,6 +51,9 @@ def settings():
 @blueprint.route('/student/<uuid>', methods=['GET','POST','DELETE'])
 def student(uuid=None):
     if uuid is None:
+        currentcount = models.Student.query(terms={"archive"+app.config['FACET_FIELD']:"current"}).get('hits',{}).get('total',0)
+        if currentcount == 0:
+            flash('There are presently no records in the current archive, so the list below is defaulting to show all records. If there is more than one historical archive with records in it, you can choose which to view by selecting from the archive dropdown. Once there is at least one record in the current archive, the below list will auto-filter to current by default.')
         return render_template('swap/admin/students.html')
 
     if uuid == "new":
@@ -271,7 +274,7 @@ def archives():
                     ir.data["archive"] = b.data["name"]
                     ir.save()
                 time.sleep(1)
-                flash(str(lena) + ' records moved from archive ' + a.data["name"] + ' to archive ' + b.data["name"] + ', which now contains ' + str(len(b)) + ' records. Archive ' + a.data["name"] + ' still exists, but is now empty. Feel free to delete it if you wish, or use it to put more records in.')
+                flash(str(lena) + ' records moved from archive ' + a.data["name"] + ' to archive ' + b.data["name"] + ', which now contains ' + str(len(b)) + ' records. Archive ' + a.data["name"] + ' still exists, but is now empty.')
         elif action == "Delete":
             a = models.Archive.pull_by_name(request.values['delete'])
             length = len(a)
@@ -282,7 +285,7 @@ def archives():
 
     return render_template(
         'swap/admin/archive.html', 
-        currentcount=models.Student.query().get('hits',{}).get('total',0),
+        currentcount=models.Student.query(terms={"archive"+app.config['FACET_FIELD']:"current"}).get('hits',{}).get('total',0),
         archives=dropdowns('archive','name')
     )
 

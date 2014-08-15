@@ -112,12 +112,6 @@ jQuery(document).ready(function() {
     // but for some reason stupid browsers now leave it there
     $('input[placeholder]').bind("focus",function() { $(this).removeAttr('placeholder'); });
 
-    // provide autocomplete nationalities
-    $('#nationalities').autocomplete({
-        'source': {{selections.nationalities|tojson|safe}},
-        'minLength': 0
-    });
-
     var pchelp = function(event) {
         event.preventDefault();
         $('.pchelp').toggle();
@@ -344,7 +338,40 @@ input.bigfield{
         	            </td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Your nationality</td>
-                		<td><input id="nationalities" type="text" name="nationality" tabindex=16></td>
+                		<td><select name="nationality" tabindex=16>
+                                    <option></option>
+                                    <option>Scottish</option>
+                                    <option>English</option>
+                                    <option>Welsh</option>
+                                    <option>Irish</option>
+                                    <option>Northern Irish</option>
+                                    <option>Polish</option>
+                                    <option>French</option>
+                                    <option>Italian</option>
+                                    <option>German</option>
+                                    <option>Belgian</option>
+                                    <option>Spanish</option>
+                                    <option>Portugese</option>
+                                    <option>Lativan</option>
+                                    <option>Estonian</option>
+                                    <option>Lithuanian</option>
+                                    <option>Greek</option>
+                                    <option>Indian</option>
+                                    <option>Pakistani</option>
+                                    <option>Bangladeshi</option>
+                                    <option>African country</option>
+                                    <option>Asian (other than countries listed)</option>
+                                    <option>European (other than countries listed)</option>
+                                    <option>Slovenian</option>
+                                    <option>Czech</option>
+                                    <option>Slovakian</option>
+                                    <option>Hungarian</option>
+                                    <option>Romanian</option>
+                                    <option>Bulgarian</option>
+                                    <option>Dutch</option>
+                                    <option>Austrian</option>
+                                    <option>Other</option>
+                                </select></td>
                     </tr>
                     <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">
