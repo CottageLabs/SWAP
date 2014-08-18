@@ -140,10 +140,21 @@ def student(uuid=None):
 def exportdata(model):
     # get all the records of this type of model
     klass = getattr(models, model[0].capitalize() + model[1:] )
-    records = [i['_source'] for i in klass.query(size=10000000).get('hits',{}).get('hits',[])]
+    if request.values.get('degree_institution_name',False):
+        q = {
+            "query": {
+                "term": {
+                    "degree_institution_name.exact": request.values['degree_institution_name']
+                }
+            },
+            "size": 100000
+        }
+        records = [i['_source'] for i in klass.query(q=q).get('hits',{}).get('hits',[])]
+    else:
+        records = [i['_source'] for i in klass.query(size=10000000).get('hits',{}).get('hits',[])]
     # make a csv string of the records
     csvdata = StringIO.StringIO()
-    firstrecord = True
+    firstrecord = True        
     if len(records) != 0:
         keys = sorted(records[0].keys())
         if 'id' in keys: keys.remove('id')
@@ -152,6 +163,9 @@ def exportdata(model):
         if 'author' in keys: keys.remove('author')
     else:
         keys = []
+    if model == 'progression':
+        keys.insert(0, 'swap_id')
+        keys.insert(0, 'swap_delete')
     for record in records:
         # for the first one, put the keys on the first line, otherwise just newline
         if firstrecord:
@@ -173,7 +187,11 @@ def exportdata(model):
                 firstkey = False
             else:
                 csvdata.write(',')
-            if isinstance(record[key],bool):
+            if key == 'swap_id':
+                csvdata.write('"' + record['id'] + '"')
+            elif key == 'swap_delete':
+                csvdata.write('""')
+            elif isinstance(record[key],bool):
                 if record[key]:
                     csvdata.write('"true"')
                 else:
@@ -202,7 +220,9 @@ def data(model=None,uuid=None):
         "campus": dropdowns('course','campus'),
         "region": dropdowns('course','region'),
         "classification": dropdowns('course','classification'),
-        "universities": dropdowns('progression','degree_institution_name')
+        "degree_institution_name": dropdowns('progression','degree_institution_name'),
+        "access_course_name": dropdowns('progression','access_course_name'),
+        "access_course_college": dropdowns('progression','access_course_college')
     }
 
     if request.method == 'GET':

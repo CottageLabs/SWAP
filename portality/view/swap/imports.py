@@ -47,7 +47,7 @@ def index(model=None):
 
         else:
     
-            try:
+            if 1==1:
                 records = []
                 if "csv" in request.files.get('upfile').filename:
                     upfile = request.files.get('upfile')
@@ -404,6 +404,49 @@ def index(model=None):
                     return render_template('swap/admin/import.html', model=model, failures=failures, updates=updates)
 
 
+                elif model.lower() == 'progression':
+                    if request.values.get('overwrite',False):
+                        models.Progression().delete_all()
+                        flash('Deleted all previous progression records.')
+                    new = 0
+                    updates = 0
+                    deletes = 0
+                    counter = 0
+                    for rec in records:
+                        counter += 1
+                        prog = None
+                        rid = None
+                        if 'SWAP_ID' in rec:
+                            rid = rec['SWAP_ID']
+                            del rec['SWAP_ID']
+                        elif 'swap_id' in rec:
+                            rid = rec['swap_id']
+                            del rec['swap_id']
+                        if rid is not None: prog = models.Progression.pull(rid)
+                        if prog is None:
+                            new += 1
+                            prog = models.Progression()
+                            if 'swap_delete' in rec: del rec['swap_delete']
+                            prog.data = rec
+                            prog.save()
+                        else:
+                            deleteit = False
+                            if 'swap_delete' in rec:
+                                if rec['swap_delete'].lower() == 'delete': deleteit = True
+                                del rec['swap_delete']
+                            if deleteit:
+                                deletes += 1
+                                prog.delete()
+                            else:
+                                updates += 1
+                                prog.data = rec
+                                prog.data['id'] = rid
+                                prog.save()
+
+                    flash('Processed ' + str(counter) + ' rows of progression records, updated ' + str(updates) + ' records, created ' + str(new) + ' new records, deleted ' + str(deletes) + ' records')
+                    return render_template('swap/admin/import.html', model=model)
+
+
                 else:
                     klass = getattr(models, model[0].capitalize() + model[1:] )
                     klass().delete_all()
@@ -415,7 +458,7 @@ def index(model=None):
                 flash(str(len(records)) + " records have been imported, there are now " + str(checklen) + " records.")
                 return render_template('swap/admin/import.html', model=model)
 
-            except:
+            else:
                 flash("There was an error importing your records. Please try again.")
                 return render_template('swap/admin/import.html', model=model)
 

@@ -107,6 +107,15 @@ jQuery(document).ready(function() {
         <p>Your upload file must be a comma separated value list (.csv) &mdash; software such as MS Excel can save spreadsheets as this type &mdash; or a JSON file.</p>
 
         <form action="" method="post" enctype="multipart/form-data">
+        {% if model == 'progression' %}
+        <div class="well">
+        <p>By default, when uploading a file of progression records, any with a swap_id will overwrite the version already in the database, 
+        whilst any without a swap_id will create a new record. Any records with a swap_id and swap_delete of "delete" will be deleted.
+        Alternatively you can choose to delete ALL progression records in the database, so that only the records in the file to be 
+        uploaded will exist once the process is complete:</p> 
+        <p><input type="checkbox" name="overwrite"> Delete all progression records before uploading the new form</p>
+        </div>
+        {% endif %}
         <p><input type="file" name="upfile"></p>
         <p><input class="btn" type="submit" name="submit" value="Import" /></p>
         </form>

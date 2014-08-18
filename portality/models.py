@@ -110,6 +110,7 @@ class Student(DomainObject):
         tickboxes = [
             'registered',
             'attended',
+            'withdrawn',
             'parents_with_hnc',
             'siblings_with_hnc',
             'parents_with_hnd',
@@ -121,8 +122,7 @@ class Student(DomainObject):
             'registered_disabled'
         ]
         for k in tickboxes:
-            if k in self.data.keys():
-                del self.data[k]
+            self.data[k] = False
 
         for key in request.form.keys():
             if request.form[key] == "on":

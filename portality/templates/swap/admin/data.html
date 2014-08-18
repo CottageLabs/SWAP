@@ -75,6 +75,13 @@ jQuery(document).ready(function($) {
         facets: []
     };
 
+    var unibulk = function() {
+        $('#unibulkbutton').remove();
+        $('.bulkload').after('<a class="btn btn-warning" style="width:305px;margin-left:3px;" id="unibulkbutton" href="/admin/data/progression/export?degree_institution_name=' + $(this).attr('href') + '">Export ' + $(this).attr('href') + ' progressions</a>');
+    }
+    var postadd = function() {
+        $('.facetview_filterchoice[rel="degree_institution_name.exact"]').bind('click',unibulk);
+    }
     optsets.progression = {
         search_url: '/query/progression?',
         datatype: 'JSON',
@@ -108,7 +115,8 @@ jQuery(document).ready(function($) {
             {'field':'degree_institution_name.exact', 'display': 'institution', 'order':'term','size':50}, 
             {'field':'access_course_college.exact', 'display': 'college', 'order':'term','size':50},
             {'field':'access_course_name.exact', 'display': 'access course name', 'order':'term','size':50}
-        ]
+        ],
+        post_search_callback: postadd
     };
 
     optsets.uninote = {
@@ -158,6 +166,9 @@ jQuery(document).ready(function($) {
         opts.facets = optsets[type]['facets'];
         opts.sort = optsets[type]['sort'];
         opts.result_display = optsets[type]['resdisplay'];
+        if ( type == 'progression' ) {
+            opts.post_search_callback = optsets[type]['post_search_callback'];
+        }
         var p = $('#facetview').parent();
         $('#facetview').remove();
         p.append('<div id="facetview"></div>');

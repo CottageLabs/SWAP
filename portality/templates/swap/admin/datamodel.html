@@ -24,7 +24,7 @@ jQuery(document).ready(function($) {
     });
 
     $('#uninotes').autocomplete({
-        'source':selections.universities,
+        'source':selections.degree_institution_name,
         'minLength':0
     });
 
@@ -236,7 +236,7 @@ input{
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Degree institution name</td>
-            		<td><input type="text" name="degree_institution_name"
+            		<td><input type="text" class="suggests" name="degree_institution_name"
             		{% if record %} value="{{record.data.degree_institution_name}}"{% endif %}
             		></td>
                 </tr>
@@ -254,13 +254,13 @@ input{
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Access course name</td>
-            		<td><input type="text" name="access_course_name"
+            		<td><input type="text" class="suggests" name="access_course_name"
             		{% if record %} value="{{record.data.access_course_name}}"{% endif %}
             		></td>
                 </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Access course college</td>
-            		<td><input type="text" name="access_course_college"
+            		<td><input type="text" class="suggests" name="access_course_college"
             		{% if record %} value="{{record.data.access_course_college}}"{% endif %}
             		></td>
                 </tr>
