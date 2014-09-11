@@ -810,7 +810,7 @@ search box - the end user will not know they are happening.
                             }
                         }
                     }
-                    if (thevalue && thevalue.toString().length) {
+                    if (thevalue) {
                         display[lineitem][object]['pre']
                             ? line += display[lineitem][object]['pre'] : false;
                         if ( typeof(thevalue) == 'object' ) {

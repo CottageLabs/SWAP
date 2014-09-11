@@ -65,6 +65,15 @@ def download_csv(recordlist,keys):
             keys.remove(k)
             keys = [k] + keys
 
+    if 'withdrawn' in keys:
+        i = keys.index('withdrawn') + 1
+        keys.insert(i,'exitreason')
+        keys.insert(i,'courseexit')
+        
+    if 'date_of_birth' in keys:
+        i = keys.index('date_of_birth') + 1
+        keys.insert(i,'ageonentry')
+
     # make a csv string of the records
     csvdata = StringIO.StringIO()
     firstrecord = True
@@ -105,7 +114,6 @@ def download_csv(recordlist,keys):
                         tidykey += " (" + line['course_code']
                         tidykey += ") at " + line['institution_shortname'] + " (" + line["institution_shortname"] + ") "
                         tidykey += line['conditions'] + " " + line['decisions']
-
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:

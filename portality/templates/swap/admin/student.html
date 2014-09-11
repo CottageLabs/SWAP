@@ -269,11 +269,17 @@ fieldset{
 	                    <td style="text-align:right;padding:6px 10px 0 0;">College</td>
                 		<td><select name="college" data-required="true" tabindex=5 class="collegeselector">
                 		    <option></option>
+                                    {% set found = False %}
                 		    {% for opt in selections.colleges %}
                 		        <option
-                		        {% if record %}{% if record.data.college == opt %} selected="selected"{% endif %}{% endif %}
+                		        {% if record %}{% if record.data.college == opt %}{% set found = True %} selected="selected"{% endif %}{% endif %}
                 		        >{{ opt }}</option>
                 		    {% endfor %}
+                                    {% if record and not found %}
+                                        {% if record.data.college %}
+                                        <option selected="selected">{{record.data.college}}</option>
+                                        {% endif %}
+                                    {% endif %}
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Town / city</td>
@@ -285,11 +291,17 @@ fieldset{
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Campus</td>
                 		<td><select name="campus" tabindex=6 class="campusselector">
                 		    <option></option>
+                                    {% set found = False %}
                 		    {% for opt in selections.campus %}
                 		        <option
-                		        {% if record %}{% if record.data.campus == opt %} selected="selected"{% endif %}{% endif %}
+                		        {% if record %}{% if record.data.campus == opt %}{% set found = True %} selected="selected"{% endif %}{% endif %}
                 		        >{{ opt }}</option>
                 		    {% endfor %}
+                                    {% if record and not found %}
+                                        {% if record.data.campus %}
+                                        <option selected="selected">{{record.data.campus}}</option>
+                                        {% endif %}
+                                    {% endif %}
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Post code</td>
@@ -301,11 +313,17 @@ fieldset{
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Course</td>
                 		<td><select name="course" tabindex=7 class="courseselector">
                 		    <option></option>
+                                    {% set found = False %}
                 		    {% for opt in selections.courses %}
                 		        <option
-                		        {% if record %}{% if record.data.course == opt %} selected="selected"{% endif %}{% endif %}
+                		        {% if record %}{% if record.data.course == opt %}{% set found = True %} selected="selected"{% endif %}{% endif %}
                 		        >{{ opt }}</option>
                 		    {% endfor %}
+                                    {% if record and not found %}
+                                        {% if record.data.course %}
+                                        <option selected="selected">{{record.data.course}}</option>
+                                        {% endif %}
+                                    {% endif %}
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Nationality</td>

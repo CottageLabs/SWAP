@@ -209,9 +209,9 @@ def index(model=None):
                                     'query':{
                                         'bool':{
                                             'must':[
-                                                {'term':
+                                                '''{'term':
                                                     {'archive'+app.config['FACET_FIELD']:'current'}
-                                                }
+                                                }'''
                                             ]
                                         }
                                     }
@@ -334,9 +334,9 @@ def index(model=None):
                         'query':{
                             'bool':{
                                 'must':[
-                                    {'term':
+                                    '''{'term':
                                         {'archive'+app.config['FACET_FIELD']:'current'}
-                                    }
+                                    }'''
                                 ]
                             }
                         }
@@ -346,7 +346,7 @@ def index(model=None):
                         counter += 1
                         student = None
                         try:
-                            qry['query']['bool']['must'] = [{'term':{'archive'+app.config['FACET_FIELD']:'current'}}]
+                            qry['query']['bool']['must'] = [] #{'term':{'archive'+app.config['FACET_FIELD']:'current'}}
                             if len(rec.get('ucas_number',"")) > 1:
                                 qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:rec['ucas_number']}})
                             else:
@@ -469,9 +469,9 @@ def _get_students(institution,whatsort):
         'query':{
             'bool':{
                 'must':[
-                    {'term':
+                    '''{'term':
                         {'archive'+app.config['FACET_FIELD']:'current'}
-                    }
+                    }'''
                 ]
             }
         },
@@ -480,6 +480,7 @@ def _get_students(institution,whatsort):
     }
     if not isinstance(institution,bool):
         if whatsort == 'applications':
+            qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:'current'}})
             qry['query']['bool']['must'].append({'term':{'applications.institution_shortname'+app.config['FACET_FIELD']:institution}})
         else:
             qry['query']['bool']['must'].append({'term':{'progressions.institution_shortname'+app.config['FACET_FIELD']:institution}})

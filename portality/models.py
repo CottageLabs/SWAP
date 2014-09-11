@@ -130,9 +130,16 @@ class Student(DomainObject):
             elif request.form[key] == "off":
                 self.data[key] = False
             elif key in ['nationality','first_name','last_name'] and len(request.form[key]) > 1:
-                self.data[key] = request.form[key][0].upper() + request.form[key][1:]
+                self.data[key] = strip(request.form[key])[0].upper() + strip(request.form[key])[1:]
             elif not key.startswith('application_') and not key.startswith('progression_') and key not in ['submit']:
                 self.data[key] = request.form[key]
+        
+        if "college" not in self.data:
+            self.data["college"] = ""
+        if "course" not in self.data:
+            self.data["course"] = ""
+        if "campus" not in self.data:
+            self.data["campus"] = ""
 
         self.save()
 
