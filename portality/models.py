@@ -130,7 +130,7 @@ class Student(DomainObject):
             elif request.form[key] == "off":
                 self.data[key] = False
             elif key in ['nationality','first_name','last_name'] and len(request.form[key]) > 1:
-                self.data[key] = strip(request.form[key])[0].upper() + strip(request.form[key])[1:]
+                self.data[key] = request.form[key].strip()[0].upper() + request.form[key].strip()[1:]
             elif not key.startswith('application_') and not key.startswith('progression_') and key not in ['submit']:
                 self.data[key] = request.form[key]
         
@@ -432,7 +432,7 @@ class Everything(DomainObject):
 
     @classmethod
     def target(cls):
-        t = 'http://' + str(app.config['ELASTIC_SEARCH_HOST']).lstrip('http://').rstrip('/') + '/'
+        t = 'http://' + str(app.config['ELASTIC_SEARCH_HOST']).replace('http://','').rstrip('/') + '/'
         t += app.config['ELASTIC_SEARCH_DB'] + '/'
         return t
 
