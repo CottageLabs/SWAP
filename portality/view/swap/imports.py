@@ -136,7 +136,7 @@ def index(model=None):
                                 oldappns = student.data.get('applications',[])
                                 #print oldappns, appnset
                                 #print len(oldappns), len(appnset)
-                                #print student.id
+                                print student.id
                                 if len(oldappns) != len(appnset):
                                     changed = True
                                 else:
@@ -194,6 +194,10 @@ def index(model=None):
                                     elif parts[1].lower() == 'dec':
                                         mon = "12"
                                     
+                                    if len(str(parts[0])) == 1:
+                                        parts[0] = '0' + str(parts[0])
+                                    if len(str(mon)) == 1:
+                                        mon = '0' + str(mon)
                                     if len(str(parts[2])) == 2:
                                         if parts[2] > 50:
                                             year = str("19" + str(parts[2]))
@@ -321,6 +325,81 @@ def index(model=None):
                             rec['previous_name'] = []
                         r.data = rec
                         r.save()
+
+
+
+
+                elif model.lower() == 'college':
+                    failures = []
+                    updates = []
+                    counter = 0
+                    # query the student index for a matching student
+                    qry = {
+                        'query':{
+                            'bool':{
+                                'must':[
+                                ]
+                            }
+                        }
+                    }
+                    for rec in records:
+                        # look for the student in the index
+                        counter += 1
+                        student = None
+                        try:
+                            qry['query']['bool']['must'] = [] #{'term':{'archive'+app.config['FACET_FIELD']:'current'}}
+                            if len(rec.get('last_name',"")) > 1:
+                                qry['query']['bool']['must'].append({'match':{'last_name':{'query':rec['last_name'], 'fuzziness':0.8}}})
+                            if len(rec.get('first_name',"")) > 1:
+                                qry['query']['bool']['must'].append({'match':{'first_name':{'query':rec['first_name'], 'fuzziness':0.8}}})
+                            q = models.Student().query(q=qry)
+                            if q.get('hits',{}).get('total',0) > 1 and len(rec.get('date_of_birth',"")) > 1:
+                                # tidy the date of birth and test for EN/US format, then narrow the search
+                                # convert date of birth format if necessary
+                                try:
+                                    dob = rec['date_of_birth']
+                                    if '-' in date_of_birth: dob = dob.replace('-','/')
+                                    parts = date_of_birth.split('/')
+                                    tryflip = true
+                                    if parts[1] > 12:
+                                        parts = [parts[1],parts[0],parts[2]]
+                                        tryflip = false
+                                    if len(str(parts[2])) == 2:
+                                        if parts[2] > 50:
+                                            parts[2] = str("19" + str(parts[2]))
+                                        else:
+                                            parts[2] = str("20" + str(parts[2]))    
+                                    dob = str(parts[0]) + '/' + str(parts[1]) + '/' + str(parts[2])
+                                    qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
+                                    q = models.Student().query(q=qry)
+                                    if  q.get('hits',{}).get('total',0) == 0 and tryflip:
+                                        dob = str(parts[1]) + '/' + str(parts[0]) + '/' + str(parts[2])
+                                        del qry['query']['bool']['must'][-1]
+                                        qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
+                                        q = models.Student().query(q=qry)
+                                except:
+                                    pass
+                            sid = q['hits']['hits'][0]['_source']['id']
+                            student = models.Student.pull(sid)
+                        except:
+                            failures.append('Could not find student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
+
+                        if student is not None:
+                            try:
+                                student.data['completedunits'] = rec.get('completedunits','')
+                                student.data['profilegrades'] = rec.get('profilegrades',''), # TODO: why is this and courseexit an empty list?
+                                student.data['courseexit'] = rec.get('courseexit',''),
+                                student.data['exitreason'] = rec.get('exitreason','')
+                                student.data['progress'] = rec.get('progress','')
+                                student.data['progresswhere'] = rec.get('progresswhere','')
+                                student.save()
+                                updates.append('Saved student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
+                            except:
+                                failures.append('Failed to save student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
+
+                    flash('Processed ' + str(counter) + ' rows of data')
+                    return render_template('swap/admin/import.html', model=model, failures=failures, updates=updates)
+
 
 
 
@@ -458,7 +537,7 @@ def index(model=None):
                 flash(str(len(records)) + " records have been imported, there are now " + str(checklen) + " records.")
                 return render_template('swap/admin/import.html', model=model)
 
-            else:
+            else: # should be an exception handler
                 flash("There was an error importing your records. Please try again.")
                 return render_template('swap/admin/import.html', model=model)
 

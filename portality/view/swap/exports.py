@@ -48,12 +48,17 @@ def index():
 
 
 def fixify(strng):
-    newstr = ''
-    allowed = string.lowercase + string.uppercase + "@!%&*()_-+=;:~#./?[]{}, '" + '0123456789'
-    for part in strng:
-        if part in allowed or part == '\n':
-            newstr += part
-    return newstr
+    if isinstance(strng, (int, long)):
+        return str(strng)
+    else:
+        newstr = ''
+        allowed = string.lowercase + string.uppercase + "@!%&*()_-+=;:~#./?[]{}, '" + '0123456789'
+        for part in strng:
+            if part == '"':
+                newstr += "'"
+            elif part in allowed or part == '\n':
+                newstr += part
+        return newstr
 
 
 def download_csv(recordlist,keys):
@@ -121,7 +126,7 @@ def download_csv(recordlist,keys):
                         else:
                             tidykey = "false"
                     else:
-                        tidykey = record[key].replace('"',"'")
+                        tidykey = record[key]
                 csvdata.write('"' + fixify(tidykey) + '"')
             else:
                 csvdata.write('""')

@@ -1083,7 +1083,7 @@ fieldset{
 	    <div class="span12">
 	        <div class="well">
 	            <h1>College courses data <small>what this student achieved on courses at college</small></h1>
-	            <p style="text-align:right;"><a class="btn" href="/courses">Go to the courses interface</a></p>
+	            <p style="text-align:right;"><a class="btn" href="/admin/import/college">Go to the college data importer</a></p>
 	        </div>
 	    </div>
 	</div>
@@ -1135,19 +1135,19 @@ fieldset{
                 </tr>
                 <tr>
                     <td>If the student progressed to an FEC / HEI, which one (if known).</td>
-                    <td><select name="progress_where">
+                    <td><select name="progresswhere">
                         <option></option>
                         <optgroup label="Colleges">
                             {% for val in selections.colleges %}
                             <option 
-                            {% if val == record.data.progress_where %}selected="selected"{% endif %}
+                            {% if val == record.data.progresswhere %}selected="selected"{% endif %}
                             >{{val}}</option>
                             {% endfor %}
                         </optgroup>
                         <optgroup label="Universities">
                             {% for val in selections.unis %}
                             <option 
-                            {% if val == record.data.progress_where %}selected="selected"{% endif %}
+                            {% if val == record.data.progresswhere %}selected="selected"{% endif %}
                             >{{val}}</option>
                             {% endfor %}
                         </optgroup>
