@@ -387,8 +387,8 @@ def index(model=None):
                         if student is not None:
                             try:
                                 student.data['completedunits'] = rec.get('completedunits','')
-                                student.data['profilegrades'] = rec.get('profilegrades',''), # TODO: why is this and courseexit an empty list?
-                                student.data['courseexit'] = rec.get('courseexit',''),
+                                student.data['profilegrades'] = rec.get('profilegrades','')
+                                student.data['courseexit'] = rec.get('courseexit','')
                                 student.data['exitreason'] = rec.get('exitreason','')
                                 student.data['progress'] = rec.get('progress','')
                                 student.data['progresswhere'] = rec.get('progresswhere','')
