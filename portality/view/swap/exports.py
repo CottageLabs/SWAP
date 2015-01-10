@@ -70,6 +70,16 @@ def download_csv(recordlist,keys):
             keys.remove(k)
             keys = [k] + keys
 
+    if 'progression' in keys:
+        i = keys.index('progression') + 1
+        keys.insert(i,'completedunits')
+        keys.insert(i,'profilegrades')
+        keys.insert(i,'courseexit')
+        keys.insert(i,'exitreason')
+        keys.insert(i,'progress')
+        keys.insert(i,'progresswhere')
+        keys.remove('progression')
+
     if 'withdrawn' in keys:
         i = keys.index('withdrawn') + 1
         keys.insert(i,'exitreason')
@@ -105,7 +115,10 @@ def download_csv(recordlist,keys):
                 csvdata.write(',')
             if key in record.keys() or key == 'address':
                 if key == 'address':
-                    tidykey = record.get('address_line_1','') + '\n' + record.get('address_line_2','') + '\n' + record.get('city','')
+                    tidykey = record.get('address_line_1','') + '\n'
+                    if record.get('address_line_2',''):
+                        tidykey += record['address_line_2']
+                    tidykey += record.get('city','')
                     tidykey = tidykey.replace('"',"'")
                 elif key == 'applications':
                     tidykey = ""
@@ -122,9 +135,9 @@ def download_csv(recordlist,keys):
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:
-                            tidykey = "true"
+                            tidykey = "yes"
                         else:
-                            tidykey = "false"
+                            tidykey = "no"
                     else:
                         tidykey = record[key]
                 csvdata.write('"' + fixify(tidykey) + '"')

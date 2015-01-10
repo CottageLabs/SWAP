@@ -56,11 +56,52 @@ def student(uuid=None):
             flash('There are presently no records in the current archive, so the list below is defaulting to show all records. If there is more than one historical archive with records in it, you can choose which to view by selecting from the archive dropdown. Once there is at least one record in the current archive, the below list will auto-filter to current by default.')
         return render_template('swap/admin/students.html')
 
+    mentors = []
+    mentees = []
+    
     if uuid == "new":
         student = None
     else:
         student = models.Student.pull(uuid)
-        if student is None: abort(404)
+        if student is None:
+            abort(404)
+        else:
+            # get mentors and mentees
+            wantsmentors = student.data.get('mentorrequest',[])
+            q = {
+                'query': {
+                    'bool': {
+                        'must': [
+                            {
+                                'term': {
+                                    'archive.exact': 'current'
+                                }
+                            }
+                        ],
+                        'must_not': [
+                            {
+                                'term': {
+                                    'id.exact': student.id
+                                }
+                            }
+                        ]
+                    }
+                },
+                'size': 1000
+            }
+            if wantsmentors:
+                q['query']['bool']['must'].append({'terms':{'mentoroffer.exact':wantsmentors}})
+                ms = models.Student.query(q=q)
+                for rec in ms.get('hits',{}).get('hits',[]):
+                    mentors.append({'id': rec['_source']['id'], 'name': rec['_source']['first_name'] + ' ' + rec['_source']['last_name'] + ' (' + rec['_source']['date_of_birth'] + ')' })
+                
+            wantsmentees = student.data.get('mentoroffer',[])
+            if wantsmentees:
+                if len(q['query']['bool']['must']) > 1: q['query']['bool']['must'] = [q['query']['bool']['must'][0]]
+                q['query']['bool']['must'].append({'terms':{'mentorrequest.exact':wantsmentees}})
+                ms = models.Student.query(q=q)
+                for rec in ms.get('hits',{}).get('hits',[]):
+                    mentees.append({'id': rec['_source']['id'], 'name': rec['_source']['first_name'] + ' ' + rec['_source']['last_name'] + ' (' + rec['_source']['date_of_birth'] + ')' })
 
     nats = dropdowns('student','nationality')
     if 'Scottish' in nats: nats.remove('Scottish')
@@ -106,7 +147,9 @@ def student(uuid=None):
         "archives": dropdowns('archive','name'),
         "studyskills":  ss,
         "nationalities": nats,
-        "unis": unis
+        "unis": unis,
+        "availablementors": mentors,
+        "availablementees": mentees
     }
 
     if request.method == 'GET':

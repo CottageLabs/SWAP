@@ -1,4 +1,4 @@
-import os, requests, json, uuid
+import os, requests, json, uuid, time
 from flask import Flask
 
 from portality import default_settings
@@ -41,6 +41,7 @@ def initialise_index(app):
                 }))
                 print 'default archive named "current" has been created'
     if len(app.config.get('SUPER_USER',[])) != 0:
+        time.sleep(1)
         un = app.config['SUPER_USER'][0]
         ia = i + '/account/' + un
         ae = requests.get(ia)

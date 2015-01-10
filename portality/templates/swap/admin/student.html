@@ -860,17 +860,39 @@ fieldset{
                     <td>
                         <select name="disability" multiple="multiple" class="select2this">
                             <option></option>
-                            <option>No known disability</option>
-                            <option>Multiple disabilities</option>
-                            <option>Dyslexia</option>
-                            <option>Autistic Spectrum</option>
-                            <option>Mental Health</option>
-                            <option>Personal care support</option>
-                            <option>Unseen disability e.g. asthma, cancer, HIV, diabetes</option>
-                            <option>Wheelchair user/mobility difficulties</option>
-                            <option>Deaf/hearing impairment</option>
-                            <option>Blind/partially sighted</option>
-                            <option>Other</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "No known disability" %} selected="selected"{% endif %}{% endif %}
+                            >No known disability</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Multiple disabilities" %} selected="selected"{% endif %}{% endif %}
+                            >Multiple disabilities</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Dyslexia" %} selected="selected"{% endif %}{% endif %}
+                            >Dyslexia</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Autistic Spectrum" %} selected="selected"{% endif %}{% endif %}
+                            >Autistic Spectrum</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Mental Health" %} selected="selected"{% endif %}{% endif %}
+                            >Mental Health</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Personal care support" %} selected="selected"{% endif %}{% endif %}
+                            >Personal care support</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Unseen disability e.g. asthma, cancer, HIV, diabetes" %} selected="selected"{% endif %}{% endif %}
+                            >Unseen disability e.g. asthma, cancer, HIV, diabetes</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Wheelchair user/mobility difficulties" %} selected="selected"{% endif %}{% endif %}
+                            >Wheelchair user/mobility difficulties</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Deaf/hearing impairment" %} selected="selected"{% endif %}{% endif %}
+                            >Deaf/hearing impairment</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Blind/partially sighted" %} selected="selected"{% endif %}{% endif %}
+                            >Blind/partially sighted</option>
+                            <option
+                            {% if record %}{% if record.data.disability == "Other" %} selected="selected"{% endif %}{% endif %}
+                            >Other</option>
                         </select>
                         <br><input type="checkbox" name="registered_disabled"
                         {% if record %}{% if record.data.registered_disabled %} checked="checked"{% endif %}{% endif %}
@@ -913,6 +935,138 @@ fieldset{
 </div>
 
 
+    
+    
+    
+    
+<div class="part mentoring">
+
+	<div class="row-fluid">
+	    <div class="span12">
+	        <div class="well">
+	            <h2>Mentoring</h2>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="row-fluid">
+	    <div class="span12">		
+            <table class="table table-bordered">
+                <tr>
+                    <td style="text-align:right;padding:6px 10px 0 0;">Interested in being matched with a mentor for help with:</td>
+                    <td>
+                        <select name="mentorrequest" multiple="multiple" class="select2this" placeholder="select all that apply">
+                            <option></option>
+                            <option
+                            {% if record %}{% if record.data.mentorrequest == "Dealing with money / finances" %} selected="selected"{% endif %}{% endif %}
+                            >Dealing with money / finances</option>
+                            <option
+                            {% if record %}{% if record.data.mentorrequest == "Family issues" %} selected="selected"{% endif %}{% endif %}
+                            >Family issues</option>
+                            <option
+                            {% if record %}{% if record.data.mentorrequest == "Time management skills" %} selected="selected"{% endif %}{% endif %}
+                            >Time management skills / tips</option>
+                            <option
+                            {% if record %}{% if record.data.mentorrequest == "Academic issues (including university course choices)" %} selected="selected"{% endif %}{% endif %}
+                            >Academic issues (including university course choices)</option>
+                            <option
+                            {% if record %}{% if record.data.mentorrequest == "Social issues" %} selected="selected"{% endif %}{% endif %}
+                            >Social issues</option>
+                            <option
+                            {% if record %}{% if record.data.mentorrequest == "General support" %} selected="selected"{% endif %}{% endif %}
+                            >General support</option>
+                            <option
+                            {% if record %}{% if record.data.mentorrequest == "Other" %} selected="selected"{% endif %}{% endif %}
+                            >Other</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;padding:6px 10px 0 0;">Interested in becoming a mentor to offer help with:</td>
+                    <td>
+                        <select name="mentoroffer" multiple="multiple" class="select2this" placeholder="select all that apply">
+                            <option></option>
+                            <option
+                            {% if record %}{% if record.data.mentoroffer == "Dealing with money / finances" %} selected="selected"{% endif %}{% endif %}
+                            >Dealing with money / finances</option>
+                            <option
+                            {% if record %}{% if record.data.mentoroffer == "Family issues" %} selected="selected"{% endif %}{% endif %}
+                            >Family issues</option>
+                            <option
+                            {% if record %}{% if record.data.mentoroffer == "Time management skills" %} selected="selected"{% endif %}{% endif %}
+                            >Time management skills / tips</option>
+                            <option
+                            {% if record %}{% if record.data.mentoroffer == "Academic issues (including university course choices)" %} selected="selected"{% endif %}{% endif %}
+                            >Academic issues (including university course choices)</option>
+                            <option
+                            {% if record %}{% if record.data.mentoroffer == "Social issues" %} selected="selected"{% endif %}{% endif %}
+                            >Social issues</option>
+                            <option
+                            {% if record %}{% if record.data.mentoroffer == "General support" %} selected="selected"{% endif %}{% endif %}
+                            >General support</option>
+                            <option
+                            {% if record %}{% if record.data.mentoroffer == "Other" %} selected="selected"{% endif %}{% endif %}
+                            >Other</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;padding:6px 10px 0 0;">Mentor training attended on dates:</td>
+                    <td>
+                        <input type="text" name="mentortraining1" class="datepicker" {% if record %}{% if record.data %}{% if record.data.mentortraining1 %} value="{{ record.data.mentortraining1 }}"{% endif %}{% endif %}{% endif %}> <br>
+                        <input type="text" name="mentortraining2" class="datepicker" {% if record %}{% if record.data %}{% if record.data.mentortraining2 %} value="{{ record.data.mentortraining2 }}"{% endif %}{% endif %}{% endif %}> <br>
+                        <input type="text" name="mentortraining3" class="datepicker" {% if record %}{% if record.data %}{% if record.data.mentortraining3 %} value="{{ record.data.mentortraining3 }}"{% endif %}{% endif %}{% endif %}> 
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;padding:6px 10px 0 0;">Mentoring notes:</td>
+                    <td>
+                        <textarea name="mentornotes" class="bigfield">
+                        {% if record %}{% if record.data %}{% if record.data.mentornotes %}{{ record.data.mentornotes }}{% endif %}{% endif %}{% endif %}
+                        </textarea>
+                    </td>
+                </tr>
+                {% if record %}{% if record.data %}
+                    {% if record.data.mentorrequest %}
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">Mentor assigned to this student: </td>
+                        <td>
+                            <select name="mentorassigned">
+                                <option></option>
+                                {% for mentor in selections.availablementors %}
+                                <option{% if record.data.mentorassigned %}{% if record.data.mentorassigned == mentor.id %} selected="selected"{% endif %}{% endif %} value="{{mentor.id}}">{{ mentor.name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if record.data.mentorassigned %}
+                            <br><a href="/admin/student/{{ record.data.mentorassigned }}">View mentor record</a>
+                            {% endif %}
+                        </td>
+                    </tr>    
+                    {% endif %}
+                    {% if record.data.mentoroffer %}
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">Mentee assigned to this student: </td>
+                        <td>
+                            <select name="menteeassigned">
+                                <option></option>
+                                {% for mentee in selections.availablementees %}
+                                <option{% if record.data.menteeassigned %}{% if record.data.menteeassigned == mentee.id %} selected="selected"{% endif %}{% endif %} value="{{mentee.id}}">{{ mentee.name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if record.data.menteeassigned %}
+                            <br><a href="/admin/student/{{ record.data.menteeassigned }}">View mentee record</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endif %}{% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+
+    
+    
 
 
 
@@ -1098,7 +1252,7 @@ fieldset{
                 </tr>
                 <tr>
                     <td>Profile grades:</td>
-                    <td><textarea name="profilegrades">{{record.data.profilegrades}}</textarea></td>
+                    <td><input type="text" name="profilegrades" value="{{record.data.profilegrades}}"></td>
                 </tr>
                 <tr>
                     <td>If this student withdrew from their course of study, the date on which they left.</td>

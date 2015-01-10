@@ -24,7 +24,12 @@
                 {% endif %}
             </div>
             <div class="span6">
-                <p>New password: <input type="text" style="margin-bottom:0px;" data-path="password"> <input class="btn" type="submit" value="save"></p>
+                {% if current_user.do_admin or current_user.is_super %}
+                <form method="POST">
+                <p>New password: <input name="password" type="text" style="margin-bottom:0px;"> <input class="btn" type="submit" value="save"></p>
+                <p>Delete account: <input class="btn btn-danger" type="submit" name="submit" value="delete"></p>
+                </form>
+                {% endif %}                
                 {% if account.data.course %}
                     <p><input name="course" type="text" value="{{account.data.course}}" disabled="disabled"></p>
                 {% endif %}

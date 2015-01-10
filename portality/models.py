@@ -64,8 +64,8 @@ class Student(DomainObject):
             if not self.data.get('ageonentry',False):
                 # calculate age on 1st September of current year
                 year = datetime.now().year
-                # if already after 1st September of current year, add 1
-                if datetime.now().month >= 9: year += 1
+                # if before 1st September of current year, subtract 1
+                if datetime.now().month < 9: year -= 1
                 ayear = datetime(year, 9, 1)
                 difference = ayear - datetime.strptime(self.data['date_of_birth'], '%d/%m/%Y')
                 age = (difference.days + difference.seconds/86400.0)/365.2425

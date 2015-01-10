@@ -343,21 +343,24 @@ def index(model=None):
                         }
                     }
                     for rec in records:
+                        rc = {}
+                        for k in rec:
+                            rc[k.lower().strip()] = rec[k]
                         # look for the student in the index
                         counter += 1
                         student = None
                         try:
                             qry['query']['bool']['must'] = [] #{'term':{'archive'+app.config['FACET_FIELD']:'current'}}
-                            if len(rec.get('last_name',"")) > 1:
-                                qry['query']['bool']['must'].append({'match':{'last_name':{'query':rec['last_name'], 'fuzziness':0.8}}})
-                            if len(rec.get('first_name',"")) > 1:
-                                qry['query']['bool']['must'].append({'match':{'first_name':{'query':rec['first_name'], 'fuzziness':0.8}}})
+                            if len(rc.get('last_name',"")) > 1:
+                                qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'], 'fuzziness':0.8}}})
+                            if len(rc.get('first_name',"")) > 1:
+                                qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'], 'fuzziness':0.8}}})
                             q = models.Student().query(q=qry)
-                            if q.get('hits',{}).get('total',0) > 1 and len(rec.get('date_of_birth',"")) > 1:
+                            if q.get('hits',{}).get('total',0) > 1 and len(rc.get('date_of_birth',"")) > 1:
                                 # tidy the date of birth and test for EN/US format, then narrow the search
                                 # convert date of birth format if necessary
                                 try:
-                                    dob = rec['date_of_birth']
+                                    dob = rc['date_of_birth']
                                     if '-' in date_of_birth: dob = dob.replace('-','/')
                                     parts = date_of_birth.split('/')
                                     tryflip = true
@@ -382,20 +385,20 @@ def index(model=None):
                             sid = q['hits']['hits'][0]['_source']['id']
                             student = models.Student.pull(sid)
                         except:
-                            failures.append('Could not find student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
+                            failures.append('Could not find student ' + rc.get('first_name',"") + " " + rc.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
 
                         if student is not None:
                             try:
-                                student.data['completedunits'] = rec.get('completedunits','')
-                                student.data['profilegrades'] = rec.get('profilegrades','')
-                                student.data['courseexit'] = rec.get('courseexit','')
-                                student.data['exitreason'] = rec.get('exitreason','')
-                                student.data['progress'] = rec.get('progress','')
-                                student.data['progresswhere'] = rec.get('progresswhere','')
+                                student.data['completedunits'] = rc.get('completedunits','')
+                                student.data['profilegrades'] = rc.get('profilegrades','')
+                                student.data['courseexit'] = rc.get('courseexit','')
+                                student.data['exitreason'] = rc.get('exitreason','')
+                                student.data['progress'] = rc.get('progress','')
+                                student.data['progresswhere'] = rc.get('progresswhere','')
                                 student.save()
-                                updates.append('Saved student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
+                                updates.append('Saved student ' + rc.get('first_name',"") + " " + rc.get('last_name',"") + ' progression data.')
                             except:
-                                failures.append('Failed to save student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' progression data.')
+                                failures.append('Failed to save student ' + rc.get('first_name',"") + " " + rc.get('last_name',"") + ' progression data.')
 
                     flash('Processed ' + str(counter) + ' rows of data')
                     return render_template('swap/admin/import.html', model=model, failures=failures, updates=updates)

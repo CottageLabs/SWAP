@@ -1,8 +1,6 @@
 import uuid, json, time
-from copy import deepcopy
 
-from flask import Blueprint, request, url_for, flash, redirect, abort
-from flask import render_template
+from flask import Blueprint, request, url_for, flash, redirect, abort, make_response, render_template
 from flask.ext.login import login_user, logout_user, current_user
 from flask.ext.wtf import Form, TextField, TextAreaField, SelectField, BooleanField, PasswordField, HiddenField, validators, ValidationError
 
@@ -54,27 +52,31 @@ def index():
 def username(username):
     acc = models.Account.pull(username)
 
-    if request.method == 'DELETE':
+    if ( request.method == 'POST' and request.values.get('submit','') == 'delete' ) or request.method == 'DELETE':
         if not auth.user.update(acc,current_user):
             abort(401)
         if acc: acc.delete()
-        return ''
+        flash('Account deleted')
+        time.sleep(1)
+        return redirect('/account')
     elif request.method == 'POST':
         if not auth.user.update(acc,current_user):
             abort(401)
-        info = request.json
+        info = request.json if request.json else request.values
         if info.get('id',False):
             if info['id'] != username:
                 acc = models.Account.pull(info['id'])
             else:
                 info['api_key'] = acc.data['api_key']
-        acc.data = info
+        for k, v in info.items():
+            if k not in ['submit']:
+                acc.data[k] = v
         if 'password' in info and not info['password'].startswith('sha1'):
             acc.set_password(info['password'])
         acc.save()
-        resp = make_response( json.dumps(acc.data, sort_keys=True, indent=4) )
-        resp.mimetype = "application/json"
-        return resp
+        time.sleep(1)
+        flash('Account updated')
+        return redirect('/account/' + username)
     else:
         if not acc:
             abort(404)
