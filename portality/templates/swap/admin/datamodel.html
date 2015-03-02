@@ -227,6 +227,15 @@ input{
                 </tr>
 
             {% elif model == "progression" %}
+    	        <tr>
+                    <td style="text-align:right;padding:6px 10px 0 100px;">SWAP locale</td>
+            		<td><select name="locale">
+            		    <option></option>
+            		    <option {% if record %}{% if record.data.locale %}{% if record.data.locale.lower() == "east" %} selected="selected"{% endif %}{% endif %}{% endif %}>East</option>
+            		    <option {% if record %}{% if record.data.locale %}{% if record.data.locale.lower() == "west" %} selected="selected"{% endif %}{% endif %}{% endif %}>West</option>
+            		</select>
+            		</td>
+                </tr>
 
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">Degree course name</td>

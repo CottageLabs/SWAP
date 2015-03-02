@@ -56,26 +56,26 @@ jQuery(document).ready(function() {
                     'must': []
                 }
             },
-            'size':1000,
+            'size':10000,
             'sort':['degree_course_name.exact'],
             'facets': {
                 'degree_institution_name': {
                     'terms': {
                         'field': 'degree_institution_name.exact' 
                     },
-                    'size':1000
+                    'size':10000
                 },
                 'access_course_name': {
                     'terms': {
                         'field': 'access_course_name.exact' 
                     },
-                    'size':1000
+                    'size':10000
                 },
                 'access_course_college': {
                     'terms': {
                         'field': 'access_course_college.exact' 
                     },
-                    'size':1000
+                    'size':10000
                 }
             }
         }
@@ -83,6 +83,10 @@ jQuery(document).ready(function() {
         institution.length != 0 ? qry.query.bool.must.push({'term':{'degree_institution_name.exact':institution}}) : false;
         accesscourse.length != 0 ? qry.query.bool.must.push({'term':{'access_course_name.exact':accesscourse}}) : false;
         college.length != 0 ? qry.query.bool.must.push({'term':{'access_course_college.exact':college}}) : false;
+        
+        {% if locale %}
+        qry.query.bool.must.push({'term':{'locale.exact':'{{locale}}'}});
+        {% endif %}
 
         // add any interest terms
         var qs = '';
@@ -93,7 +97,7 @@ jQuery(document).ready(function() {
             } else {
                 firsti = false;
             }
-            qs += '*' + $(this).text().replace(' &','').replace(' with','').replace(' and','').replace('x ','').replace(/ \(.*\)/gi,'').replace(/ /g,'* AND *') + '*';
+            qs += '*' + $(this).text().replace(' &','').replace(' with','').replace(' and','').replace('x ','').replace(/BSc/g,'').replace(/\//g,'').replace(/ \(.*\)/gi,'').replace(/ /g,'* AND *') + '*';
         });
         if ( qs.length == 0 ) {
             qry.query.bool.must.push({'match_all': {}})
@@ -243,27 +247,36 @@ jQuery(document).ready(function() {
 
     var ac_qry = {
         'query': {
-            'query_string': {
-                'query': '',
-                'fields': ['degree_course_name','degree_additional_information'],
-                'use_dis_max': true
+            'bool': {
+                'must': [
+                    {
+                        'query_string': {
+                            'query': '',
+                            'fields': ['degree_course_name','degree_additional_information'],
+                            'use_dis_max': true
+                        }
+                    }
+                ]
             }
         },
-        'size':1000,
+        'size':10000,
         'facets': {
             'degree_course_name': {
                 'terms': {
                     'field': 'degree_course_name.exact',
-                    'size':1000,
+                    'size':10000,
                     'order':'term' // change to count if relevance turns out to be better
                 },
             }
         }
     };
+    {% if locale %}
+    ac_qry.query.bool.must.push({'term':{'locale.exact':'{{locale}}'}});
+    {% endif %}
     var ac_url = '/query/progression';
     $( "#degree_interests" ).autocomplete({
       source: function( request, response ) {
-        ac_qry.query.query_string.query = '*' + request.term + '*';
+        ac_qry.query.bool.must[0].query_string.query = '*' + request.term + '*';
         $.ajax({
           url: ac_url,
           cache:false,

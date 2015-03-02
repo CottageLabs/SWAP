@@ -156,6 +156,36 @@ class Student(DomainObject):
 class Progression(DomainObject):
     __type__ = "progression"
 
+    @classmethod
+    def delete_east(cls):
+        qry = {
+            'query': {
+                'term': {
+                    'locale.exact': 'East'
+                }
+            },
+            'fields': [],
+            'size': 100000
+        }
+        res = cls.query(q=qry)
+        for rec in res.get('hits',{}).get('hits',[]):
+            requests.delete(cls.target() + rec['_id'])
+
+    @classmethod
+    def delete_west(cls):
+        qry = {
+            'query': {
+                'term': {
+                    'locale.exact': 'West'
+                }
+            },
+            'fields': [],
+            'size': 100000
+        }
+        res = cls.query(q=qry)
+        for rec in res.get('hits',{}).get('hits',[]):
+            requests.delete(cls.target() + rec['_id'])
+
 
 class Uninote(DomainObject):
     __type__ = "uninote"

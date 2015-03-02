@@ -134,14 +134,10 @@ def index(model=None):
                             if student is not None:
                                 # TODO: test if appnset is different from apps for person
                                 oldappns = student.data.get('applications',[])
-                                #print oldappns, appnset
-                                #print len(oldappns), len(appnset)
-                                print student.id
                                 if len(oldappns) != len(appnset):
                                     changed = True
                                 else:
                                     check = zip(oldappns,appnset)
-                                    #print check
                                     changed = any(x != y for x, y in check)
                                 if changed:
                                     student.data['applications'] = appnset
@@ -225,12 +221,13 @@ def index(model=None):
                                 if len(ucas_number) > 1:
                                     qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:ucas_number}})
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) > 0:
+                                    if q.get('hits',{}).get('total',0) == 1:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
                                     
                                 # if ucas number did not find it,
-                                # use combinations of lastname, dob and postcode
+                                # use combinations of first part of firstname, lastname, dob and postcode
+                                fnqry = {'match':{'first_name':{'query':first_name.split(' ')[0], 'fuzziness':0.8}}}
                                 lnqry = {'match':{'last_name':{'query':last_name, 'fuzziness':0.8}}}
                                 dobqry = {'term':{'date_of_birth'+app.config['FACET_FIELD']:date_of_birth}}
                                 pcqry = [
@@ -243,6 +240,8 @@ def index(model=None):
                                     qry['query']['bool']['must'] = []
                                     if len(last_name) > 1:
                                         qry['query']['bool']['must'].append(lnqry)
+                                    if len(first_name) > 1:
+                                        qry['query']['bool']['must'].append(fnqry)
                                     if len(date_of_birth) > 1:
                                         qry['query']['bool']['must'].append(dobqry)
                                     if len(post_code) > 1:
@@ -250,18 +249,22 @@ def index(model=None):
                                         qry['query']['bool']['minimum_should_match'] = 1
 
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) > 0:
+                                    if q.get('hits',{}).get('total',0) == 1:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
-
+                                if last_name == 'Whatley':
+                                    print qry
+                                    print student
                                 # if still not found, ignore the dob
                                 if student is None:
                                     qry['query']['bool']['must'] = []
                                     if len(last_name) > 1:
                                         qry['query']['bool']['must'].append(lnqry)
+                                    if len(first_name) > 1:
+                                        qry['query']['bool']['must'].append(fnqry)
 
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) > 0:
+                                    if q.get('hits',{}).get('total',0) == 1:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
 
@@ -273,8 +276,23 @@ def index(model=None):
                                         del qry['query']['bool']['minimum_should_match']
                                     if len(last_name) > 1:
                                         qry['query']['bool']['must'].append(lnqry)
+                                    if len(first_name) > 1:
+                                        qry['query']['bool']['must'].append(fnqry)
                                     if len(date_of_birth) > 1:
                                         qry['query']['bool']['must'].append(dobqry)
+
+                                    q = models.Student().query(q=qry)
+                                    if q.get('hits',{}).get('total',0) == 1:
+                                        sid = q['hits']['hits'][0]['_source']['id']
+                                        student = models.Student.pull(sid)
+
+                                # if still not found, try only first and last name
+                                if student is None:
+                                    qry['query']['bool']['must'] = []
+                                    if len(last_name) > 1:
+                                        qry['query']['bool']['must'].append(lnqry)
+                                    if len(first_name) > 1:
+                                        qry['query']['bool']['must'].append(fnqry)
 
                                     q = models.Student().query(q=qry)
                                     if q.get('hits',{}).get('total',0) == 1:
@@ -297,23 +315,38 @@ def index(model=None):
                                 if counter > 2:
                                     failures.append('Failed to read what appeared to be person details out of row ' + str(counter))
 
-                            else:
-                                # there was no student for this appn, what to do?
-                                failures.append('There did not appear to be a student record to append the application data from row ' + str(counter) + ' to')
+                        else:
+                            # there was no student for this appn, what to do?
+                            failures.append('There did not appear to be a student record to append the application data from row ' + str(counter) + ' to')
                                 
                                 
-                            # if this is the last line of the file, save any remaining student
-                            if counter == len(records):
-                                try:
-                                    student.save()
-                                    updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a>')
-                                except:
-                                    pass
+                        # if this is the last line of the file, save any remaining student
+                        if counter == len(records):
+                            try:
+                                if student is not None:
+                                    oldappns = student.data.get('applications',[])
+                                    if len(oldappns) != len(appnset):
+                                        changed = True
+                                    else:
+                                        check = zip(oldappns,appnset)
+                                        changed = any(x != y for x, y in check)
+                                    if changed:
+                                        student.data['applications'] = appnset
+                                        student.save()
+                                        updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a>')
+                                    else:
+                                        stayedsame.append('Found <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a> - no change.')
+                                    student = None
+                                    appnset = []                                
+                            except:
+                                pass
 
                     flash('Processed ' + str(counter) + ' rows of data')
                     return render_template('swap/admin/import.html', model=model, failures=failures, updates=updates, stayedsame=stayedsame)
 
 
+                
+                
                 elif model.lower() == 'course':
                     klass = getattr(models, model[0].capitalize() + model[1:] )
                     klass().delete_all()
@@ -490,6 +523,12 @@ def index(model=None):
                     if request.values.get('overwrite',False):
                         models.Progression().delete_all()
                         flash('Deleted all previous progression records.')
+                    if request.values.get('overwrite_east',False):
+                        models.Progression().delete_east()
+                        flash('Deleted all previous East progression records.')
+                    if request.values.get('overwrite_west',False):
+                        models.Progression().delete_west()
+                        flash('Deleted all previous West progression records.')
                     new = 0
                     updates = 0
                     deletes = 0

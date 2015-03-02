@@ -43,7 +43,7 @@ jQuery(document).ready(function() {
         {% if current_user.swap_locale %}
         if ( $('#default_swap').length == 0 ) {
             $('body').append('<div id="default_swap" style="display:none;"></div>');
-            $('.facetview_filterchoice[href="{{current_user.swap_locale}}"]').trigger('click');
+            $('.facetview_filterchoice[href="{{current_user.swap_locale}}"][rel="locale.exact"]').trigger('click');
         } else {
             $(".tablesorter").tablesorter({
                 "headers":{0:{"sorter":false}}

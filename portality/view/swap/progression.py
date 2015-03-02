@@ -13,14 +13,54 @@ blueprint = Blueprint('progression', __name__)
 
 # a forms overview page at the top level, can list forms or say whatever needs said about forms, or catch closed forms
 @blueprint.route('/')
-def progression():
+@blueprint.route('/<locale>')
+@blueprint.route('/<locale>')
+def progression(locale=''):
+    #if locale == '': locale = 'East'
+    qry = {
+        'query':{
+            'bool':{
+                'must':[
+                    {
+                        'match_all': {}
+                    }
+                ]
+            }
+        },
+        'size': 0,
+        'facets':{}
+    }
+
+    if locale.lower() == 'east':
+        locale = 'East'
+        qry['query']['bool']['must'].append({
+            'term':{
+                'locale'+app.config['FACET_FIELD']: locale
+            }
+        })
+    elif locale.lower() == 'west':
+        locale = 'West'
+        qry['query']['bool']['must'].append({
+            'term':{
+                'locale'+app.config['FACET_FIELD']: locale
+            }
+        })
+
+    keys = ['access_course_college','access_course_name','degree_course_name','degree_institution_name']
+    res = {}
+    for key in keys:
+        qry['facets'][key] = {"terms":{"field":key+app.config['FACET_FIELD'],"order":'term', "size":100000}}
+        r = models.Progression().query(q=qry)
+        res[key] = [i.get('term','') for i in r.get('facets',{}).get(key,{}).get("terms",[])]
+    
     return render_template(
         'swap/progression.html',
+        locale=locale,
         selections={
-            "colleges": dropdowns('progression','access_course_college'),
-            "accesscourses": dropdowns('progression','access_course_name'),
-            "degrees": dropdowns('progression','degree_course_name'),
-            "institutions": dropdowns('progression','degree_institution_name'),
+            "colleges": res['access_course_college'],
+            "accesscourses": res['access_course_name'],
+            "degrees": res['degree_course_name'],
+            "institutions": res['degree_institution_name']
         }
     )
         
