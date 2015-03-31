@@ -1,4 +1,4 @@
-import json, csv, time
+import json, csv, time, string
 import cStringIO as StringIO
 from datetime import datetime
 
@@ -11,6 +11,17 @@ from portality.view.swap.forms import dropdowns as dropdowns
 
 
 blueprint = Blueprint('imports', __name__)
+
+
+def clean(strn):
+    newstr = ''
+    allowed = string.lowercase + string.uppercase + "@!%&*()_-+=;:~#./?[]{}, '" + '0123456789'
+    for part in strn:
+        if part == '\n':
+            newstr += '  '
+        elif part in allowed:
+            newstr += part
+    return newstr
 
 
 # restrict everything in admin to logged in users who can do admin
@@ -548,7 +559,8 @@ def index(model=None):
                             new += 1
                             prog = models.Progression()
                             if 'swap_delete' in rec: del rec['swap_delete']
-                            prog.data = rec
+                            for k in rec.keys():
+                                prog[k] = clean(rec[k])
                             prog.save()
                         else:
                             deleteit = False
@@ -560,7 +572,8 @@ def index(model=None):
                                 prog.delete()
                             else:
                                 updates += 1
-                                prog.data = rec
+                                for k in rec.keys():
+                                    prog[k] = clean(rec[k])
                                 prog.data['id'] = rid
                                 prog.save()
 
