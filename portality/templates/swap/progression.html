@@ -202,9 +202,13 @@ jQuery(document).ready(function() {
                     var hit = unisubjbatches[s];
                     results += '<tr><td><p><b>' + crs + '</b> at <b>' + inst + '</b></p>';
                     results += '<p>Grades required: <b>' + hit.metadata.degree_profile_grades_required + '</b></p>';
-                    results += '<p>' + hit.metadata.degree_special_requirements + '</p>';
-                    results += '<p>' + hit.metadata.degree_additional_information + '</p>';
-                    results += '<p><a target="_blank" href="/progression/notes/' + inst + '">View additional university notes</a> (opens in a new window)</p>';
+                    if ( hit.metadata.degree_special_requirements ) {
+                        results += '<p>' + hit.metadata.degree_special_requirements + '</p>';
+                    }
+                    if ( hit.metadata.degree_additional_information ) {
+                        results += '<p>' + hit.metadata.degree_additional_information + '</p>';
+                    }
+                    results += '<p><a target="_blank" href="/progression/notes/' + inst + '">View additional university notes</a> (if any) (opens in a new window)</p>';
                     results += '</td>';
                     if ( hit.availability.length ) {
                         results += '<td>';

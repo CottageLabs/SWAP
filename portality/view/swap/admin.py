@@ -234,15 +234,18 @@ def exportdata(model):
                 csvdata.write('"' + record['id'] + '"')
             elif key == 'swap_delete':
                 csvdata.write('""')
-            elif isinstance(record[key],bool):
-                if record[key]:
-                    csvdata.write('"true"')
+            elif key in record:
+                if isinstance(record[key],bool):
+                    if record[key]:
+                        csvdata.write('"true"')
+                    else:
+                        csvdata.write('"false"')
+                elif isinstance(record[key],list):
+                    csvdata.write('"' + _fixify(",".join(record[key])) + '"')
                 else:
-                    csvdata.write('"false"')
-            elif isinstance(record[key],list):
-                csvdata.write('"' + _fixify(",".join(record[key])) + '"')
+                    csvdata.write('"' + _fixify(record[key]) + '"')
             else:
-                csvdata.write('"' + _fixify(record[key]) + '"')
+                csvdata.write("")
     # dump to the browser as a csv attachment
     csvdata.seek(0)
     return send_file(

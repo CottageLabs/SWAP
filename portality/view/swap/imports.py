@@ -21,7 +21,7 @@ def clean(strn):
             newstr += '  '
         elif part in allowed:
             newstr += part
-    return newstr
+    return newstr.strip()
 
 
 # restrict everything in admin to logged in users who can do admin
