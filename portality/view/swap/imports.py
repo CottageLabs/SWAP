@@ -225,14 +225,15 @@ def index(model=None):
                                                 }'''
                                             ]
                                         }
-                                    }
+                                    },
+                                    'sort': {'created_date.exact': 'desc'}
                                 }
 
                                 # run query with ucas number search if available
                                 if len(ucas_number) > 1:
                                     qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:ucas_number}})
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) == 1:
+                                    if q.get('hits',{}).get('total',0) != 0:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
                                     
@@ -260,7 +261,7 @@ def index(model=None):
                                         qry['query']['bool']['minimum_should_match'] = 1
 
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) == 1:
+                                    if q.get('hits',{}).get('total',0) != 0:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
                                 if last_name == 'Whatley':
@@ -293,7 +294,7 @@ def index(model=None):
                                         qry['query']['bool']['must'].append(dobqry)
 
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) == 1:
+                                    if q.get('hits',{}).get('total',0) != 0:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
 
@@ -306,7 +307,7 @@ def index(model=None):
                                         qry['query']['bool']['must'].append(fnqry)
 
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) == 1:
+                                    if q.get('hits',{}).get('total',0) != 0:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
 
