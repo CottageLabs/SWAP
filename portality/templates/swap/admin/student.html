@@ -615,6 +615,14 @@ fieldset{
                             <input style="margin-top:8px;" type="checkbox" name="previous_level6_qualifications"{% if record %}{% if record.data.previous_level6_qualifications %} checked="checked"{% endif %}{% endif %}>
                         </td>
                     </tr>
+                    <tr>
+                        <td style="text-align:right;padding:6px 10px 0 0;">
+                            <p>When last in full time education</p>
+                        </td>
+                		<td><input type="text" class="datepicker" name="last_ft_education" data-trigger="keyup change focusout"
+                		{% if record %}{% if record.data.last_ft_education %} value="{{record.data.last_ft_education}}"{% endif %}{% endif %}
+                		></td>
+                    </tr>
                         
                 </tbody>
             </table>
@@ -1343,7 +1351,6 @@ fieldset{
                         <th>Institution shortname</th>
                         <th>Course code</th>
                         <th>Course name</th>
-                        <th>Decisions</th>
                         <th>Registered 1st year</th>
                         <th>Registered 2nd year or left</th>
                         <th>Registered 3rd year or left</th>
@@ -1358,8 +1365,6 @@ fieldset{
                 		<td>{{app.institution_shortname}}</td>
                 		<td>{{app.course_code}}</td>
                 		<td>{{app.course_name}}</td>
-                		<td>{{app.decisions}}</td>
-                		<td>{{app.final_university_decision}}</td>
                 		<td>{{app.reg_1st_year}}</td>
                 		<td>{{app.reg_2nd_year_or_left}}</td>
                 		<td>{{app.reg_3rd_year_or_left}}</td>

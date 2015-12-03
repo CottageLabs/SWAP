@@ -36,6 +36,9 @@ def index():
 
     elif request.method == 'POST':
         keys = request.form.keys()
+        if 'applications_UF' in keys:
+            if 'bool' not in query['query'].keys(): query['query'] = {'bool':{'must':[]}}
+            query['query']['bool']['must'].append({'term':{'applications.decisions':'UF'}})
         s = models.Student.query(q=query)
         students = []
         for i in s.get('hits',{}).get('hits',[]): 
@@ -62,6 +65,12 @@ def fixify(strng):
 
 
 def download_csv(recordlist,keys):
+    if 'applications_UF' in keys:
+        keys.remove('applications_UF')
+        applications_UF = True
+    else:
+        applications_UF = False
+    
     # re-order some of the keys
     keyorder = ['first_name','last_name','date_of_birth', 'gender','college','campus','course','travel','email','home_phone','mobile_phone','address','post_code','nationality']
 
@@ -69,6 +78,16 @@ def download_csv(recordlist,keys):
         if k in keys:
             keys.remove(k)
             keys = [k] + keys
+
+    if 'mentoring' in keys:
+        i = keys.index('mentoring') + 1
+        keys.insert(i,'mentorrequest')
+        keys.insert(i,'mentoroffer')
+        keys.insert(i,'mentortraining1')
+        keys.insert(i,'mentortraining2')
+        keys.insert(i,'mentortraining3')
+        keys.insert(i,'mentornotes')
+        keys.remove('mentoring')
 
     if 'progression' in keys:
         i = keys.index('progression') + 1
@@ -79,7 +98,7 @@ def download_csv(recordlist,keys):
         keys.insert(i,'progress')
         keys.insert(i,'progresswhere')
         keys.remove('progression')
-
+    
     if 'withdrawn' in keys:
         i = keys.index('withdrawn') + 1
         keys.insert(i,'exitreason')
@@ -124,20 +143,32 @@ def download_csv(recordlist,keys):
                     tidykey = ""
                     firstline = True
                     for line in record[key]:
+                        if ( applications_UF and 'UF' in line['decisions'] ) or not applications_UF:
+                            if firstline:
+                                firstline = False
+                            else:
+                                tidykey += '\n'
+                            tidykey += line['choice_number'] + ": " + line['start_year'] + " " + line['course_name']
+                            tidykey += " (" + line['course_code']
+                            tidykey += ") at " + line['institution_shortname'] + " (" + line["institution_shortname"] + ") "
+                            tidykey += line['conditions'] + " " + line['decisions']
+                elif key == 'uniprogression':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
                         if firstline:
                             firstline = False
                         else:
                             tidykey += '\n'
-                        tidykey += line['choice_number'] + ": " + line['start_year'] + " " + line['course_name']
-                        tidykey += " (" + line['course_code']
-                        tidykey += ") at " + line['institution_shortname'] + " (" + line["institution_shortname"] + ") "
-                        tidykey += line['conditions'] + " " + line['decisions']
+                        # TODO check the fields that should be in here and stick them into the field, like the applications above
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:
                             tidykey = "yes"
                         else:
                             tidykey = "no"
+                    elif isinstance(record[key],list):
+                        tidykey = ",".join(record[key])
                     else:
                         tidykey = record[key]
                 csvdata.write('"' + fixify(tidykey) + '"')
@@ -153,97 +184,4 @@ def download_csv(recordlist,keys):
     )
 
 
-'''
-@blueprint.route('/', methods=['GET','POST'])
-def index():
-    query = json.loads(request.values.get('query','{"query":{"match_all":{}}}'))
-    if 'size' in request.values: query['size'] = request.values['size']
-    selected = json.loads(request.values.get('selected','[]'))
-
-    if request.method == 'GET':
-        return render_template('swap/exports/index.html', query=json.dumps(query), selected=json.dumps(selected))
-
-    elif request.method == 'POST':
-        keys = request.form.keys()
-        s = models.Student.query(q=query)
-        students = []
-        for i in s.get('hits',{}).get('hits',[]): 
-            if (selected and i['_source']['id'] in selected) or not selected:
-                students.append(i['_source'])
-        
-        keys.remove('query')
-        keys.remove('submit')
-        keys.remove('selected')
-        
-        return download_csv(students,keys)
-
-
-def download_csv(recordlist,keys):
-    # make a csv string of the records
-    csvdata = StringIO.StringIO()
-    firstrecord = True
-    for record in recordlist:
-        # make sure this record has all the keys we would expect
-        for key in keys:
-            if key not in record.keys():
-                record[key] = ""
-        # for the first one, put the keys on the first line, otherwise just newline
-        if firstrecord:
-            fk = True
-            for key in sorted(record.keys()):
-                if key in keys: # ignore keys that have not been selected by the user
-                    if fk:
-                        fk = False
-                    else:
-                        csvdata.write(',')
-                    csvdata.write('"' + key + '"')
-            csvdata.write('\n')
-            firstrecord = False
-        else:
-            csvdata.write('\n')
-        # and then add each record as a line with the keys as chosen by the user
-        firstkey = True
-        for key in sorted(record.keys()):
-            if key in keys:
-                if firstkey:
-                    firstkey = False
-                else:
-                    csvdata.write(',')
-                if key in ['applications','interests','qualifications','experience']:
-                    tidykey = ""
-                    firstline = True
-                    for line in record[key]:
-                        if firstline:
-                            firstline = False
-                        else:
-                            tidykey += '\n'
-                        if key == 'applications':
-                            tidykey += line['level'] + " " + line['subject'] + " at " + line['institution']
-                        elif key == 'interests':
-                            tidykey += line['title'] + " - " + line['brief_description']
-                        elif key =='qualifications':
-                            tidykey += line['year'] + " grade " + line['grade'] + " in " + line['level'] + " " + line['subject']
-                        elif key == 'experience':
-                            tidykey += line['date_from'] + " to " + line['date_to'] + " " + line['title'] + " - " + line['brief_description']
-                elif key in ['address']:
-                    pass # TODO: need specific handling to turn individual address tick to all address fields (but not post_code)
-                else:
-                    if isinstance(record[key],bool):
-                        if record[key]:
-                            tidykey = "true"
-                        else:
-                            tidykey = "false"
-                    else:
-                        tidykey = record[key].replace('"',"'")
-                csvdata.write('"' + tidykey + '"')
-
-    # dump to the browser as a csv attachment
-    csvdata.seek(0)
-    return send_file(
-        csvdata, 
-        mimetype='text/csv',
-         attachment_filename="swap_export_" + datetime.now().strftime("%d%m%Y%H%M") + ".csv",
-        as_attachment=True
-    )
-'''
 
