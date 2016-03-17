@@ -62,11 +62,11 @@ class Student(DomainObject):
                     year = str("20" + str(parts[2]))
                 self.data['date_of_birth'] = str(parts[0]) + '/' + str(parts[1]) + '/' + str(year)
             if not self.data.get('ageonentry',False):
-                # calculate age on 1st September of current year
+                # calculate age on 1st August of current year
                 year = datetime.now().year
-                # if before 1st September of current year, subtract 1
-                if datetime.now().month < 9: year -= 1
-                ayear = datetime(year, 9, 1)
+                # if before 1st August of current year, subtract 1
+                if datetime.now().month < 8: year -= 1
+                ayear = datetime(year, 8, 1)
                 difference = ayear - datetime.strptime(self.data['date_of_birth'], '%d/%m/%Y')
                 age = (difference.days + difference.seconds/86400.0)/365.2425
                 self.data['ageonentry'] = int(age)

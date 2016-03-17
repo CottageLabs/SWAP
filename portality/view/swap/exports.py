@@ -143,7 +143,7 @@ def download_csv(recordlist,keys):
                     tidykey = ""
                     firstline = True
                     for line in record[key]:
-                        if ( applications_UF and 'UF' in line['decisions'] ) or not applications_UF:
+                        if ( applications_UF and 'UF' in line['decisions'] ) or (applications_UF and line['decisions'] == 'UF') or not applications_UF:
                             if firstline:
                                 firstline = False
                             else:
@@ -160,7 +160,18 @@ def download_csv(recordlist,keys):
                             firstline = False
                         else:
                             tidykey += '\n'
-                        # TODO check the fields that should be in here and stick them into the field, like the applications above
+                            tidykey += line['start_year'] + " " + line['course_name'] + " (" + line['institution_shortname'] + " " + line['course_code'] + ") "
+                            if line.get('degree_classification_awarded',False):
+                                tidykey += "awarded " + line['degree_classification_awarded']
+                            elif line.get('reg_4th_year_or_left',False):
+                                tidykey += "4th year " + line['reg_4th_year_or_left']
+                            elif line.get('reg_3rd_year_or_left',False):
+                                tidykey += "3rd year " + line['reg_3rd_year_or_left']
+                            elif line.get('reg_2nd_year_or_left',False):
+                                tidykey += "2nd year " + line['reg_2nd_year_or_left']
+                            elif line.get('reg_1st_year',False):
+                                tidykey += "1st year registered"
+                            # TODO what if also have first_year_result and other year results? How to show them?
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:

@@ -493,13 +493,15 @@ def index(model=None):
                             try:
                                 # this is missing initial uni decision, initial student decision, final uni decision
                                 progn = {
-                                    'start_year': rec.get('start_year',''),
+                                    'starting_year': rec.get('start_year',''),
                                     'course_name': rec.get('course_name',''),
                                     'course_code': rec.get('course_code',''),
                                     'institution_shortname': rec.get('institution_shortname',''),
                                     'decisions': rec.get('decisions',''),
                                     'reg_1st_year': rec.get('reg_1st_year',''),
-                                    'reg_2nd_year_or_left': rec.get('reg_2nd_year_or_left',''),
+                                    '1st_year_result': rec.get('1st_year_result',''),
+                                    'reg_2nd_year': rec.get('reg_2nd_year',''),
+                                    '2nd_year_result': rec.get('2nd_year_result',''),
                                     'reg_3rd_year_or_left': rec.get('reg_3rd_year_or_left',''),
                                     'reg_4th_year_or_left': rec.get('reg_4th_year_or_left',''),
                                     'degree_classification_awarded': rec.get('degree_classification_awarded','')

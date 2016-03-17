@@ -107,8 +107,9 @@ def student(uuid=None):
     if 'Scottish' in nats: nats.remove('Scottish')
     if 'English' in nats: nats.remove('English')
     if 'Irish' in nats: nats.remove('Irish')
+    if 'Northern Irish' in nats: nats.remove('Northern Irish')
     if 'Welsh' in nats: nats.remove('Welsh')
-    nats = ['Scottish','English','Irish','Welsh'] + nats
+    nats = ['Scottish','English','Irish','Northern Irish','Welsh'] + nats.sort()
 
     unis = [
         'English University',
