@@ -155,7 +155,9 @@ def download_csv(recordlist,keys):
                 elif key == 'uniprogression':
                     tidykey = ""
                     firstline = True
+                    print record
                     for line in record.get('progressions',[]):
+                        print line
                         if firstline:
                             firstline = False
                         else:
