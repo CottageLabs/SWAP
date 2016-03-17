@@ -103,13 +103,13 @@ def student(uuid=None):
                 for rec in ms.get('hits',{}).get('hits',[]):
                     mentees.append({'id': rec['_source']['id'], 'name': rec['_source']['first_name'] + ' ' + rec['_source']['last_name'] + ' (' + rec['_source']['date_of_birth'] + ')' })
 
-    nats = dropdowns('student','nationality')
+    nats = dropdowns('student','nationality') # should add a sort to this
     if 'Scottish' in nats: nats.remove('Scottish')
     if 'English' in nats: nats.remove('English')
     if 'Irish' in nats: nats.remove('Irish')
     if 'Northern Irish' in nats: nats.remove('Northern Irish')
     if 'Welsh' in nats: nats.remove('Welsh')
-    nats = ['Scottish','English','Irish','Northern Irish','Welsh'] + nats.sort()
+    nats = ['Scottish','English','Irish','Northern Irish','Welsh'] + nats
 
     unis = [
         'English University',
