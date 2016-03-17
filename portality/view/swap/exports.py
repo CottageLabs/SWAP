@@ -132,7 +132,7 @@ def download_csv(recordlist,keys):
                 firstkey = False
             else:
                 csvdata.write(',')
-            if key in record.keys() or key == 'address':
+            if key in record.keys() or key == 'address' or key == 'uniprogression':
                 if key == 'address':
                     tidykey = record.get('address_line_1','') + '\n'
                     if record.get('address_line_2',''):
@@ -155,9 +155,7 @@ def download_csv(recordlist,keys):
                 elif key == 'uniprogression':
                     tidykey = ""
                     firstline = True
-                    print record
                     for line in record.get('progressions',[]):
-                        print line
                         if firstline:
                             firstline = False
                         else:
