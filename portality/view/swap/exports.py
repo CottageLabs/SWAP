@@ -39,7 +39,6 @@ def index():
         if 'applications_UF' in keys:
             if 'bool' not in query['query'].keys(): query['query'] = {'bool':{'must':[]}}
             query['query']['bool']['must'].append({'term':{'applications.decisions.exact':'UF'}})
-        print(query)
         s = models.Student.query(q=query)
         students = []
         for i in s.get('hits',{}).get('hits',[]): 
@@ -109,6 +108,8 @@ def download_csv(recordlist,keys):
         i = keys.index('date_of_birth') + 1
         keys.insert(i,'ageonentry')
 
+    print recordlist
+    print keys
     # make a csv string of the records
     csvdata = StringIO.StringIO()
     firstrecord = True
@@ -161,18 +162,23 @@ def download_csv(recordlist,keys):
                             firstline = False
                         else:
                             tidykey += '\n'
-                            tidykey += line['start_year'] + " " + line['course_name'] + " (" + line['institution_shortname'] + " " + line['course_code'] + ") "
+                            tidykey += line.get('starting_year',line.get('start_year','')) + " " + line['course_name'] + " (" + line['institution_shortname'] + " " + line['course_code'] + ") "
                             if line.get('degree_classification_awarded',False):
                                 tidykey += "awarded " + line['degree_classification_awarded']
                             elif line.get('reg_4th_year_or_left',False):
                                 tidykey += "4th year " + line['reg_4th_year_or_left']
                             elif line.get('reg_3rd_year_or_left',False):
                                 tidykey += "3rd year " + line['reg_3rd_year_or_left']
-                            elif line.get('reg_2nd_year_or_left',False):
-                                tidykey += "2nd year " + line['reg_2nd_year_or_left']
+                            elif line.get('reg_2nd_year',False):
+                                if line.get('2nd_year_result',False):
+                                    tidykey += '2nd year ' + line['2nd_year_result']
+                                else:
+                                    tidykey += "2nd year " + line['reg_2nd_year']
                             elif line.get('reg_1st_year',False):
-                                tidykey += "1st year registered"
-                            # TODO what if also have first_year_result and other year results? How to show them?
+                                if line.get('1st_year_result',False):
+                                    tidykey += '1st year ' + line['1st_year_result']
+                                else:
+                                    tidykey += "1st year registered"
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:
