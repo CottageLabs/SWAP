@@ -79,6 +79,12 @@ def download_csv(recordlist,keys):
             keys.remove(k)
             keys = [k] + keys
 
+    progressionkeys = ['starting_year','course_name','course_code','institution_shortname','decisions','reg_1st_year','1st_year_result','reg_2nd_year','2nd_year_result','reg_3rd_year_or_left','reg_4th_year_or_left','degree_classification_awarded']
+    if 'uniprogression' in keys:
+        keys.remove('uniprogression')
+        for ky in progressionkeys:
+            keys.append(ky)
+
     if 'mentoring' in keys:
         i = keys.index('mentoring') + 1
         keys.insert(i,'mentorrequest')
@@ -132,7 +138,7 @@ def download_csv(recordlist,keys):
                 firstkey = False
             else:
                 csvdata.write(',')
-            if key in record.keys() or key == 'address' or key == 'uniprogression':
+            if key in record.keys() or key == 'address' or key in progressionkeys:
                 if key == 'address':
                     tidykey = record.get('address_line_1','') + '\n'
                     if record.get('address_line_2',''):
@@ -152,7 +158,7 @@ def download_csv(recordlist,keys):
                             tidykey += " (" + line['course_code']
                             tidykey += ") at " + line['institution_shortname'] + " (" + line["institution_shortname"] + ") "
                             tidykey += line['conditions'] + " " + line['decisions']
-                elif key == 'uniprogression':
+                elif key == 'starting_year':
                     tidykey = ""
                     firstline = True
                     for line in record.get('progressions',[]):
@@ -160,23 +166,106 @@ def download_csv(recordlist,keys):
                             firstline = False
                         else:
                             tidykey += '\n'
-                        tidykey += line.get('starting_year',line.get('start_year','')) + " " + line['course_name'] + " (" + line['institution_shortname'] + " " + line['course_code'] + ") "
-                        if line.get('degree_classification_awarded',False):
-                            tidykey += "awarded " + line['degree_classification_awarded']
-                        elif line.get('reg_4th_year_or_left',False):
-                            tidykey += "4th year " + line['reg_4th_year_or_left']
-                        elif line.get('reg_3rd_year_or_left',False):
-                            tidykey += "3rd year " + line['reg_3rd_year_or_left']
-                        elif line.get('reg_2nd_year',False):
-                            if line.get('2nd_year_result',False):
-                                tidykey += '2nd year ' + line['2nd_year_result']
-                            else:
-                                tidykey += "2nd year " + line['reg_2nd_year']
-                        elif line.get('reg_1st_year',False):
-                            if line.get('1st_year_result',False):
-                                tidykey += '1st year ' + line['1st_year_result']
-                            else:
-                                tidykey += "1st year registered"
+                        tidykey += line.get('starting_year',line.get('start_year',''))
+                elif key == 'course_name':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['course_name']
+                elif key == 'course_code':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['course_code']
+                elif key == 'institution_shortname':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['institution_shortname']
+                elif key == 'decisions':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['decisions']
+                elif key == 'reg_1st_year':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['reg_1st_year']
+                elif key == '1st_year_result':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['1st_year_result']
+                elif key == 'reg_2nd_year':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['reg_2nd_year']
+                elif key == '2nd_year_result':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['2nd_year_result']
+                elif key == 'reg_3rd_year_or_left':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['reg_3rd_year_or_left']
+                elif key == 'reg_4th_year_or_left':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['reg_4th_year_or_left']
+                elif key == 'degree_classification_awarded':
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['degree_classification_awarded']
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:
