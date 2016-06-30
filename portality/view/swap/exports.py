@@ -57,8 +57,11 @@ def fixify(strng,unquote=True):
         newstr = ''
         allowed = string.lowercase + string.uppercase + "@!%&*()_-+=;:~#./?[]{}, '" + '0123456789'
         for part in strng:
-            if part == '"' and unquote:
-                newstr += "'"
+            if part == '"':
+                if unquote:
+                    newstr += "'"
+                else:
+                    newstr += part
             elif part in allowed or part == '\n':
                 newstr += part
         return newstr
