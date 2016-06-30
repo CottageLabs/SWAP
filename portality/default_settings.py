@@ -1,4 +1,8 @@
+from datetime import timedelta
+
 SECRET_KEY = "default-key" # make this something secret in your overriding app.cfg
+REMEMBER_COOKIE_DURATION = timedelta(minutes=60)
+PERMANENT_SESSION_LIFETIME = timedelta(minutes=60)
 
 # contact info
 ADMIN_NAME = "SWAP"

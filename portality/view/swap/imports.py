@@ -516,7 +516,7 @@ def index(model=None):
                                             which = c
                                         c += 1
                                 
-                                if len(progn['course_code']) > 0 and len(progn['institution_shortname']) > 0:
+                                if len(progn['institution_shortname']) > 0:
                                     if isinstance(which,bool):
                                         student.data['progressions'].append(progn)
                                     else:

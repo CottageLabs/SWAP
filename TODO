@@ -1,0 +1,31 @@
+
+Mark to send me the ISO standards letter and the forms that he’s sending to LEAPs.
+
+Revise the online reg form asap too - ask about this
+  I think we agreed 2 days, to add a controlled list of quals on the reg form and backend admin to manage it, like LEAPS
+
+Reporting
+
+showing trends across the years would be useful so graphs of the years and how they changed, such as male-female split over years, would be good.
+Destinations across the years - a bar chart that shows destination stacks over each year.
+Think of first in family going to HE, how does that change over the years.
+Choices of virtually everything on the export chart is just about what they would need to show everything, and it would be great to show that over years.
+Imaging showing marked differences in ethnicity.
+Start with one chart, above the map. Select what it should show from a dropdown. Then also be able to create another chart.
+Could the map show people moving about across the years at the same time too, so it can be seen how many people in a different year go to / from where.
+Then so they can make a pdf printout. 
+See stats report forwarded by Lesley
+
+
+
+Mark to filter UF export so that there are separate cells for university course and university - DONE, inst_shortname, coursecode, then other info fields added 
+Mark to set the database so that we are required to log-in every time we leave the website - DONE, with 1 hour delay
+ 
+We briefly discussed if I could incorporate the HN progression into the University progression and so I tried 
+uploading them to see what the data looked like, but I got “Blank course code or institution shortname for 
+Kelly Beattie progression data, so did not save this row.” Does the database have to recognise the institution  - 
+should I set up codes for the 5 colleges?  I’ve attached the spreadsheet so that you can see what I’m trying to upload.
+- DONE removed check for course_code on imports L519, which should allow the HN data to appear
+ 
+
+

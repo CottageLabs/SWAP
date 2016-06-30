@@ -114,6 +114,11 @@ def download_csv(recordlist,keys):
         i = keys.index('date_of_birth') + 1
         keys.insert(i,'ageonentry')
 
+    if 'applications' in keys:
+        i = keys.index('applications') + 1
+        keys.insert(i,'applications_course')
+        keys.insert(i,'applications_info')
+
     # make a csv string of the records
     csvdata = StringIO.StringIO()
     firstrecord = True
@@ -146,18 +151,22 @@ def download_csv(recordlist,keys):
                     tidykey += record.get('city','')
                     tidykey = tidykey.replace('"',"'")
                 elif key == 'applications':
-                    tidykey = ""
+                    au = ''
+                    ac = ''
+                    ai = ''
                     firstline = True
                     for line in record[key]:
                         if ( applications_UF and 'UF' in line['decisions'] ) or (applications_UF and line['decisions'] == 'UF') or not applications_UF:
                             if firstline:
                                 firstline = False
                             else:
-                                tidykey += '\n'
-                            tidykey += line['choice_number'] + ": " + line['start_year'] + " " + line['course_name']
-                            tidykey += " (" + line['course_code']
-                            tidykey += ") at " + line['institution_shortname'] + " (" + line["institution_shortname"] + ") "
-                            tidykey += line['conditions'] + " " + line['decisions']
+                                au += '\n'
+                                ac += '\n'
+                                ai += '\n'
+                            au += line['institution_shortname']
+                            ac += line['course_code']
+                            ai += line['course_name'] + " (" + line['start_year'] + ") " + line['conditions'] + line['decisions']
+                    tidykey = au + '","' + ac + '","' + ai
                 elif key == 'starting_year':
                     tidykey = ""
                     firstline = True
