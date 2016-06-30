@@ -50,14 +50,14 @@ def index():
         return download_csv(students,keys)
 
 
-def fixify(strng):
+def fixify(strng,unquote=True):
     if isinstance(strng, (int, long)):
         return str(strng)
     else:
         newstr = ''
         allowed = string.lowercase + string.uppercase + "@!%&*()_-+=;:~#./?[]{}, '" + '0123456789'
         for part in strng:
-            if part == '"':
+            if part == '"' and unquote:
                 newstr += "'"
             elif part in allowed or part == '\n':
                 newstr += part
@@ -116,8 +116,8 @@ def download_csv(recordlist,keys):
 
     if 'applications' in keys:
         i = keys.index('applications') + 1
-        keys.insert(i,'applications_course')
         keys.insert(i,'applications_info')
+        keys.insert(i,'applications_course')
 
     # make a csv string of the records
     csvdata = StringIO.StringIO()
@@ -139,6 +139,7 @@ def download_csv(recordlist,keys):
         # and then add each record as a line with the keys as chosen by the user
         firstkey = True
         for key in keys:
+            unquote = True
             if firstkey:
                 firstkey = False
             else:
@@ -151,6 +152,7 @@ def download_csv(recordlist,keys):
                     tidykey += record.get('city','')
                     tidykey = tidykey.replace('"',"'")
                 elif key == 'applications':
+                    unquote = False
                     au = ''
                     ac = ''
                     ai = ''
@@ -285,7 +287,7 @@ def download_csv(recordlist,keys):
                         tidykey = ",".join(record[key])
                     else:
                         tidykey = record[key]
-                csvdata.write('"' + fixify(tidykey) + '"')
+                csvdata.write('"' + fixify(tidykey,unquote) + '"')
             else:
                 csvdata.write('""')
     # dump to the browser as a csv attachment
