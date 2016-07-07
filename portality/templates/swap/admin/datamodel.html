@@ -5,6 +5,9 @@
     <a class="btn {% if model=="progression" %}btn-success{% endif %}" data-type="progression" href="/admin/data/progression">Progression</a>
     <a class="btn {% if model=="uninote" %}btn-success{% endif %}" data-type="uninote" href="/admin/data/uninote">Uni notes</a>
     <a class="btn {% if model=="simd" %}btn-success{% endif %}" data-type="simd" href="/admin/data/simd">SIMD</a>
+    <a class="btn {% if model=="subject" %}btn-success{% endif %}" data-type="subject" href="/admin/data/subject">Subjects</a>
+    <a class="btn {% if model=="level" %}btn-success{% endif %}" data-type="level" href="/admin/data/level">Levels</a>
+    <a class="btn {% if model=="grade" %}btn-success{% endif %}" data-type="grade" href="/admin/data/grade">Grades</a>
     {% if record %}<a class="btn btn-primary" href="/admin/data/{{ model }}/new">Add new {{model}}</a>{% endif %}
 {% endblock %}
 
@@ -296,6 +299,15 @@ input{
                     <td style="text-align:right;padding:6px 10px 0 100px;">Contact information<br>(Separate each contact<br>by a blank line)</td>
             		<td><textarea name="contacts" style="min-width:600px;width:100%;min-height:300px;">{% if record %}{{record.data.contacts}}{% endif %}</textarea></td>
                 </tr>
+
+            {% elif model in ["subject","level","grade"] %}
+
+    	        <tr>
+                <td style="text-align:right;padding:6px 10px 0 100px;">Name</td>
+            		<td><input id="uninotes" type="text" name="name"
+            		{% if record %} value="{{record.data.name}}"{% endif %}
+            		></td>
+              </tr>
 
             {% endif %}
 

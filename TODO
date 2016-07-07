@@ -1,5 +1,17 @@
 
-Mark to send me the ISO standards letter and the forms that he’s sending to LEAPs.
+Still TODO: update admin area student form to show new quals data if the record is of the new style, 
+otherwise show old style. Also add section to new style in the admin area for SWAP to indicate if 
+Maths and Englisth at Level 6 exams have been taken.
+
+Do reg form before reporting, try to finish by Monday
+Then reporting asap after KL trip
+Discuss with SWAP during 3rd week of July
+Meet and finish by last week of July
+Invoice before end of July
+Invoice in August for ongoing running of service
+
+
+Mark to send me the ISO standards letter and the forms that he’s sending to LEAPs. - EMAIL TO SWAP
 
 Revise the online reg form asap too - ask about this
   I think we agreed 2 days, to add a controlled list of quals on the reg form and backend admin to manage it, like LEAPS
@@ -19,6 +31,10 @@ See stats report forwarded by Lesley
 
 
 Mark to filter UF export so that there are separate cells for university course and university - DONE, inst_shortname, coursecode, then other info fields added 
+  Don't show conditions if filtering by UF
+  Make sure there is a spacing between condition and offer, appears to not have a space at the moment
+  break out the subject into its own cell as well
+  
 Mark to set the database so that we are required to log-in every time we leave the website - DONE, with 1 hour delay
  
 We briefly discussed if I could incorporate the HN progression into the University progression and so I tried 

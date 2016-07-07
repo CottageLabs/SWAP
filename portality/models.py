@@ -361,6 +361,35 @@ class Course(DomainObject):
 
 
 
+class Subject(DomainObject):
+    __type__ = 'subject'
+    
+    def save_from_form(self, request):
+        for key in request.form.keys():
+            if key not in ['submit']:
+                val = request.form[key]
+                self.data[key] = val        
+        self.save()
+
+class Level(DomainObject):
+    __type__ = 'level'
+
+    def save_from_form(self, request):
+        for key in request.form.keys():
+            if key not in ['submit']:
+                val = request.form[key]
+                self.data[key] = val        
+        self.save()
+
+class Grade(DomainObject):
+    __type__ = 'grade'
+
+    def save_from_form(self, request):
+        for key in request.form.keys():
+            if key not in ['submit']:
+                val = request.form[key]
+                self.data[key] = val        
+        self.save()
 
 
 

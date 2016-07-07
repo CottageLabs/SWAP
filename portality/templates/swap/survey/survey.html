@@ -414,8 +414,149 @@ input.bigfield{
 	</div>
 
 	<div class="row-fluid">
+	    <div class="span12">
+	        <div class="well">
+							<h3>Education to Date: School Qualifications including any non-UK Qualifications</h3>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="row-fluid">
 	    <div class="span12">		
-            <p><strong>Does any member of your family have any of the following qualifications?</strong></p>
+	        <table class="multi manyrows">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Level of qualification</th>
+                        <th>Grade</th>
+                        <th>Date</th>
+                        <th>Full time / Part time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                		<td><select name="school_qualification_subject" class="select2this">
+                		    <option></option>
+                		    {% for opt in selections.subjects %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td><select name="school_qualification_level">
+                		    <option></option>
+                		    {% for opt in selections.levels %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td><select name="school_qualification_grade">
+                		    <option></option>
+                		    {% for opt in selections.grades %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td>
+											<input type="text" class="datepicker" name="school_qualification_date" data-trigger="keyup change focusout">
+                		</td>
+                		<td><select name="school_qualification_ftpt" class="select2this">
+                		    <option></option>
+                		    <option>Full time</option>
+                		    <option>Part time</option>
+                		</select></td>
+                    </tr>
+                </tbody>
+	        </table>
+	    </div>
+	</div>
+
+	<div class="row-fluid">
+	    <div class="span12">
+					<p>
+						<input type="checkbox" name="no_school_quals">
+						I do not hold any qualifications from school
+					</p>
+			</div>
+	</div>
+
+	<div class="row-fluid">
+	    <div class="span12">
+	        <div class="well">
+							<h3>Post School Qualifications including college, university or work-based</h3>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table class="multi manyrows">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Level of qualification</th>
+                        <th>Grade</th>
+                        <th>Date</th>
+                        <th>Full time / Part time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                		<td><select name="post_qualification_subject" class="select2this">
+                		    <option></option>
+                		    {% for opt in selections.subjects %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td><select name="post_qualification_level">
+                		    <option></option>
+                		    {% for opt in selections.levels %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td><select name="post_qualification_grade">
+                		    <option></option>
+                		    {% for opt in selections.grades %}
+                		        <option>{{ opt }}</option>
+                		    {% endfor %}
+                		</select></td>
+                		<td>
+											<input type="text" class="datepicker" name="post_qualification_date" data-trigger="keyup change focusout">
+                		</td>
+                		<td><select name="post_qualification_ftpt" class="select2this">
+                		    <option></option>
+                		    <option>Full time</option>
+                		    <option>Part time</option>
+                		</select></td>
+                    </tr>
+                </tbody>
+	        </table>
+	    </div>
+	</div>
+
+	<div class="row-fluid">
+	    <div class="span12">
+					<p>
+						<input type="checkbox" name="no_post_school_quals">
+						I have not achieved any qualifications post school
+					</p>
+			</div>
+	</div>
+
+	<div class="row-fluid">
+	    <div class="span12">		
+	        <table>
+	            <tbody>
+									<tr>
+											<td style="text-align:right;padding:6px 10px 0 0;">
+													Around what date were you last in full time education
+											</td>
+											<td><input type="text" class="datepicker" name="last_ft_education" data-trigger="keyup change focusout"></td>
+									</tr>
+							</tbody>
+					</table>
+			</div>
+	</div>
+
+	<div class="row-fluid">
+	    <div class="span12">		
+          <p><strong>Does any member of your family have any of the following qualifications?</strong></p>
 	        <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -441,147 +582,7 @@ input.bigfield{
                         <td><input type="checkbox" name="siblings_with_degree"></td>
                     </tr>
                 </tbody>
-	        </table>
-	        	        
-	        <p><strong>Do you have any of the following qualifications from SCHOOL? 
-	        If so, please enter how many you have of each.</strong></p>
-	        <table>
-	            <tbody>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">O grade / Standard grade / GCSE<br>(grades A-C / 1-3)</td>
-                		<td>
-                	        <select name="o_standard_gcse">
-                                <option></option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10</option>
-                                <option>11</option>
-                                <option>12</option>
-                                <option>13</option>
-                                <option>14</option>
-                                <option>15</option>
-                                <option>16</option>
-                                <option>17</option>
-                                <option>18</option>
-                                <option>19</option>
-                                <option>20</option>
-                	        </select>
-                		</td>
-                    </tr>
-                    <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Intermediate 2</td>
-                		<td>
-                	        <select name="intermediate_2">
-                                <option></option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10</option>
-                                <option>11</option>
-                                <option>12</option>
-                                <option>13</option>
-                                <option>14</option>
-                                <option>15</option>
-                                <option>16</option>
-                                <option>17</option>
-                                <option>18</option>
-                                <option>19</option>
-                                <option>20</option>
-                	        </select>
-                		</td>
-                    </tr>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Highers / A levels<br>(grades A-C)</td>
-                		<td>
-                	        <select name="highers_alevels">
-                                <option></option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10</option>
-                                <option>11</option>
-                                <option>12</option>
-                                <option>13</option>
-                                <option>14</option>
-                                <option>15</option>
-                                <option>16</option>
-                                <option>17</option>
-                                <option>18</option>
-                                <option>19</option>
-                                <option>20</option>
-                	        </select>
-                		</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:right;padding:6px 10px 0 0;">
-                            When last in full time education
-                        </td>
-                        <td><input type="text" class="datepicker" name="last_ft_education" data-trigger="keyup change focusout"></td>
-                    </tr>
-                    <tr style="height:20px;">
-                    </tr>
-        	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">If you have any other sorts of school qualification
-	                    <br> (e.g. Matura, High School Diploma, Syltbetig), 
-	                    <br>please list them</td>
-                		<td>
-                		    <textarea name="other_school_qualifications" class="bigfield"></textarea>
-                		</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:right;padding:6px 10px 0 0;">
-                            <p>Have you attended any educational programmes <br>or courses SINCE YOU LEFT SCHOOL, 
-                            <br>e.g. in the community, college or through work? <br>If so, please list them</p>
-                        </td>
-                        <td style="text-align:right;padding:6px 10px 0 0;">
-                            <textarea name="qualifications_after_school" class="bigfield"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:right;padding:6px 10px 0 0;">
-                            <p>Do you have any previous qualifications at grade 3/grade C 
-                            <br>or above in Maths? If so please list 
-                            <br>qualifications and grades. (Examined qualifications only, 
-                            <br>no need to mention individual modules.)</p>
-                        </td>
-                        <td>
-                            <textarea name="other_maths" class="bigfield"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:right;padding:6px 10px 0 0;">
-                            <p>Do you have any previous qualifications at grade 3/grade C 
-                            <br>or above in English? If so please list 
-                            <br>qualifications and grades. (Examined qualifications only, 
-                            <br>no need to mention individual modules.)</p>
-                        </td>
-                        <td>
-                            <textarea name="other_english" class="bigfield"></textarea>
-                        </td>
-                    </tr>
-                        
-                </tbody>
-            </table>
-            
+	        </table>            
 	    </div>
 	</div>
 
@@ -1019,6 +1020,12 @@ input.bigfield{
 <div class="part submit">
 
 	<div class="row-fluid" style="margin-top:30px;">
+			<div class="span6">
+				<p>
+					<input type="checkbox" name="confirm_true" data-required="true">
+					I confirm that the information given on this form is true, complete and accurate and no information has been omitted.
+				</p>
+			</div>
 	    <div class="span6">
 	        <div class="alert alert-success">
             	<input id="triggersave" class="btn btn-success span2" style="margin-left:100px;" type="submit" name="submit" value="Submit your registration" />

@@ -140,6 +140,61 @@ jQuery(document).ready(function($) {
         facets: []
     };
 
+    optsets.subject = {
+        search_url: '/query/subject?',
+        datatype: 'JSON',
+        resdisplay: [
+            [
+                {
+                    "pre": '<a href="/admin/data/subject/',
+                    "field": "id",
+                    "post": '">'
+                },
+                {
+                    "field": "name",
+                    "post": '</a>'
+                }
+            ]
+        ],
+        facets: []
+    };
+    optsets.level = {
+        search_url: '/query/level?',
+        datatype: 'JSON',
+        resdisplay: [
+            [
+                {
+                    "pre": '<a href="/admin/data/level/',
+                    "field": "id",
+                    "post": '">'
+                },
+                {
+                    "field": "name",
+                    "post": '</a>'
+                }
+            ]
+        ],
+        facets: []
+    };
+    optsets.grade = {
+        search_url: '/query/grade?',
+        datatype: 'JSON',
+        resdisplay: [
+            [
+                {
+                    "pre": '<a href="/admin/data/grade/',
+                    "field": "id",
+                    "post": '">'
+                },
+                {
+                    "field": "name",
+                    "post": '</a>'
+                }
+            ]
+        ],
+        facets: []
+    };
+  
     var opts = {
         search_url: optsets.course.search_url,
         datatype: optsets.course.datatype,

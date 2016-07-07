@@ -55,6 +55,9 @@ def student():
                     "colleges": dropdowns('course','college'),
                     "campus": dropdowns('course','campus'),
                     "courses": dropdowns('course','course'),
+                    "subjects": dropdowns('subject','name'),
+                    "levels": dropdowns('level','name'),
+                    "grades": dropdowns('grade','name'),
                     "nationalities": nats
                 },
                 data={}
