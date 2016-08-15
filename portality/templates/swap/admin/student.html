@@ -580,11 +580,11 @@ fieldset{
                     {% if record %}
                         {% for qual in record.data.school_qualifications %}
                     <tr>
-                		<td><input type="hidden" name="school_qualification_subject" value="{{qual.subject}}"><input type="text" disabled="disabled" value="{{qual.subject}}" style="width:170px;"></td>
+                		<td><input type="hidden" name="school_qualification_subject" value="{{qual.subject}}"><input type="text" disabled="disabled" value="{{qual.subject}}" style="width:140px;"></td>
                 		<td><input type="hidden" name="school_qualification_level" value="{{qual.level}}"><input type="text" disabled="disabled" value="{{qual.level}}" style="width:140px;"></td>
-                		<td><input type="hidden" name="school_qualification_grade" value="{{qual.grade}}"><input type="text" disabled="disabled" value="{{qual.grade}}"></td>
-                		<td><input type="hidden" name="school_qualification_date" value="{{qual.date}}"><input type="text" disabled="disabled" value="{{qual.date}}"></td>
-                		<td><input type="hidden" name="school_qualification_ftpt" value="{{qual.ftpt}}"><input type="text" disabled="disabled" value="{{qual.ftpt}}"></td>
+                		<td><input type="hidden" name="school_qualification_grade" value="{{qual.grade}}"><input type="text" disabled="disabled" value="{{qual.grade}}" style="width:140px;"></td>
+                		<td><input type="hidden" name="school_qualification_date" value="{{qual.date}}"><input type="text" disabled="disabled" value="{{qual.date}}" style="width:140px;"></td>
+                		<td><input type="hidden" name="school_qualification_ftpt" value="{{qual.ftpt}}"><input type="text" disabled="disabled" value="{{qual.ftpt}}" style="width:140px;"></td>
                     </tr>
 
                         {% endfor %}
@@ -597,21 +597,21 @@ fieldset{
 	        <table class="multi">
                 <tbody>                    
                     <tr>
-                		<td><select name="school_qualification_subject" class="needselect2">
+                		<td><select name="school_qualification_subject" class="needselect2" style="width:140px;">
                 		    <option></option>
                 		    {% for opt in selections.school_subjects %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><select name="school_qualification_level" style="width:150px;">
+                		<td><select name="school_qualification_level" style="width:140px;">
                 		    <option></option>
                 		    {% for opt in selections.school_levels %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><input type="text" name="school_qualification_grade"></td>
-                		<td><input type="text" name="school_qualification_date" class="datepicker"></td>
-                		<td><select name="school_qualification_ftpt">
+                		<td><input type="text" name="school_qualification_grade" style="width:140px;"></td>
+                		<td><input type="text" name="school_qualification_date" class="datepicker" style="width:140px;"></td>
+                		<td><select name="school_qualification_ftpt" style="width:140px;">
                 		    <option></option>
                 		    <option>Full time</option>
                 		    <option>Part time</option>										
@@ -642,11 +642,11 @@ fieldset{
                     {% if record %}
                         {% for qual in record.data.post_school_qualifications %}
                     <tr>
-                		<td><input type="hidden" name="post_school_qualification_subject" value="{{qual.subject}}"><input type="text" disabled="disabled" value="{{qual.subject}}" style="width:170px;"></td>
+                		<td><input type="hidden" name="post_school_qualification_subject" value="{{qual.subject}}"><input type="text" disabled="disabled" value="{{qual.subject}}" style="width:140px;"></td>
                 		<td><input type="hidden" name="post_school_qualification_level" value="{{qual.level}}"><input type="text" disabled="disabled" value="{{qual.level}}" style="width:140px;"></td>
-                		<td><input type="hidden" name="post_school_qualification_grade" value="{{qual.grade}}"><input type="text" disabled="disabled" value="{{qual.grade}}"></td>
-                		<td><input type="hidden" name="post_school_qualification_date" value="{{qual.date}}"><input type="text" disabled="disabled" value="{{qual.date}}"></td>
-                		<td><input type="hidden" name="post_school_qualification_ftpt" value="{{qual.ftpt}}"><input type="text" disabled="disabled" value="{{qual.ftpt}}"></td>
+                		<td><input type="hidden" name="post_school_qualification_grade" value="{{qual.grade}}"><input type="text" disabled="disabled" value="{{qual.grade}}" style="width:140px;"></td>
+                		<td><input type="hidden" name="post_school_qualification_date" value="{{qual.date}}"><input type="text" disabled="disabled" value="{{qual.date}}" style="width:140px;"></td>
+                		<td><input type="hidden" name="post_school_qualification_ftpt" value="{{qual.ftpt}}"><input type="text" disabled="disabled" value="{{qual.ftpt}}" style="width:140px;"></td>
                     </tr>
 
                         {% endfor %}
@@ -659,16 +659,16 @@ fieldset{
 	        <table class="multi">
                 <tbody>                    
                     <tr>
-                		<td><input type="text" name="post_school_qualification_subject" class="needselect2"></td>
-                		<td><select name="post_school_qualification_level" style="width:150px;">
+                		<td><input type="text" name="post_school_qualification_subject" class="needselect2" style="width:140px;"></td>
+                		<td><select name="post_school_qualification_level" style="width:140px;">
                 		    <option></option>
                 		    {% for opt in selections.post_school_levels %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><input type="text" name="post_school_qualification_grade"></td>
-                		<td><input type="text" name="post_school_qualification_date" class="datepicker"></td>
-                		<td><select name="post_school_qualification_ftpt">
+                		<td><input type="text" name="post_school_qualification_grade" style="width:140px;"></td>
+                		<td><input type="text" name="post_school_qualification_date" class="datepicker" style="width:140px;"></td>
+                		<td><select name="post_school_qualification_ftpt" style="width:140px;">
                 		    <option></option>
                 		    <option>Full time</option>
                 		    <option>Part time</option>										
