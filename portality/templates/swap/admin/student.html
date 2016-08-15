@@ -153,11 +153,11 @@ jQuery(document).ready(function() {
 						} else if ( name === 'school_qualification_ftpt' || name === 'post_school_qualification_ftpt' ) {
 							var selector = '<select name="' + name + '" class="needselect2">';
 							selector += '<option></option>';
-							selector += '<option
-							if (val === 'Full time') selector += ' checked';
+							selector += '<option';
+							if (val === 'Full time') selector += ' selected="selected"';
 							selector += '>Full time</option>';
 							selector += '<option
-							if (val === 'Part time') selector += ' checked';
+							if (val === 'Part time') selector += ' selected="selected"';
 							selector += '>Part time</option>';
 							selector += '</select>';
 							$(this).append(selector);
