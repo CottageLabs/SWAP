@@ -107,6 +107,71 @@ jQuery(document).ready(function() {
         $(row).find('textarea').html("");
     }
 
+    // fit a static row remover for old content
+    $('table.multidisplay').find('tbody').children('tr').each(function() {
+				{% if current_user.do_admin %}
+        var adder = '<a class="btn btn-warning static-delete-row" style="margin:-10px 2px 0 0;" href="#">delete</a>';
+				{% else %}
+				var adder;
+      	adder = '<a class="btn btn-warning static-delete-row" style="margin:-10px 2px 0 0;" href="#">delete</a>';
+				{% endif %}
+        adder += '<a class="btn edit-row" style="margin:-10px 2px 0 0;';
+        if ( !$(this).parents('table').hasClass('editablerows') ) { adder += 'visibility:hidden;'; }
+        adder += '" href="#">edit</a>';
+        $(this).children('td').first().prepend(adder).children('select, input').addClass('narrow');
+    });
+    var staticdeleterow = function(event) {
+        event.preventDefault();
+        var row = $(this).closest('tr').clone(true).get(0);
+        $(this).closest('tr').remove();
+    }
+    $('.static-delete-row').bind('click',staticdeleterow);
+
+    var sels = {{ selections|tojson|safe }};
+    // add an edit row that allows a qualifications row to become editable
+    var editrow = function(event) {
+        event.preventDefault();
+        $(this).parent().parent().children('td').each(function() {
+            var val = $(this).children('input').first().val();
+            var name = $(this).children('input').first().attr('name');
+            $(this).children('input[type="hidden"]').remove();
+            $(this).children('input[type="text"]').remove();
+					  if ( name === 'school_qualification_subject' || name === 'school_qualification_level' || name === 'post_school_qualification_level') {
+	            var seltype = name.replace('_qualification','') + 's';
+							var selector = '<select name="' + name + '" class="needselect2">';
+							selector += '<option></option>';
+							var selchoices = sels[seltype];
+							for ( var t in selchoices ) {
+									selector += '<option';
+									if ( selchoices[t] == val ) {
+											selector += ' selected="selected"';
+									}
+									selector += '>' + selchoices[t] + '</option>';
+							}
+							selector += '</select>';
+							$(this).append(selector);
+						} else if ( name === 'school_qualification_ftpt' || name === 'post_school_qualification_ftpt' ) {
+							var selector = '<select name="' + name + '" class="needselect2">';
+							selector += '<option></option>';
+							selector += '<option
+							if (val === 'Full time') selector += ' checked';
+							selector += '>Full time</option>';
+							selector += '<option
+							if (val === 'Part time') selector += ' checked';
+							selector += '>Part time</option>';
+							selector += '</select>';
+							$(this).append(selector);
+						} else if ( name === 'school_qualification_date' || name === 'post_school_qualification_date' ) {
+							var selector = '<input type="text" name="' + name + '" class="datepicker">';
+							$(this).append(selector);
+						} else {
+							var selector = '<input type="text" name="' + name + '">';
+							$(this).append(selector);
+						}
+        })
+    }
+    $('.edit-row').bind('click',editrow);
+
     // add / remove rows to list items
     $('table.multi').find('tbody').children('tr').each(function() {
         $(this).children('td').first().prepend('<a class="btn btn-warning delete-row" style="margin:-10px 2px 0 0;" href="#">delete</a>').children('select, input').addClass('narrow');
