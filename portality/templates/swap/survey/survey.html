@@ -474,22 +474,17 @@ input.bigfield{
                     <tr>
                 		<td><select name="school_qualification_subject">
                 		    <option></option>
-                		    {% for opt in selections.subjects %}
+                		    {% for opt in selections.school_subjects %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
                 		<td><select name="school_qualification_level" style="width:150px;">
                 		    <option></option>
-                		    {% for opt in selections.levels %}
+                		    {% for opt in selections.school_levels %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><select name="school_qualification_grade" style="width:100px;">
-                		    <option></option>
-                		    {% for opt in selections.grades %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
+                		<td><input type="text" name="school_qualification_grade" style="width:100px;"></td>
                 		<td>
 											<input type="text" class="datepicker" name="school_qualification_date" data-trigger="keyup change focusout">
                 		</td>
@@ -535,28 +530,18 @@ input.bigfield{
                 </thead>
                 <tbody>
                     <tr>
-                		<td><select name="post_qualification_subject">
+                		<td><input type="text" name="post_school_qualification_subject"></td>
+                		<td><select name="post_school_qualification_level" style="width:150px;">
                 		    <option></option>
-                		    {% for opt in selections.subjects %}
+                		    {% for opt in selections.post_school_levels %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><select name="post_qualification_level" style="width:150px;">
-                		    <option></option>
-                		    {% for opt in selections.levels %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
-                		<td><select name="post_qualification_grade" style="width:100px;">
-                		    <option></option>
-                		    {% for opt in selections.grades %}
-                		        <option>{{ opt }}</option>
-                		    {% endfor %}
-                		</select></td>
+                		<td><input type="text" name="post_school_qualification_grade" style="width:100px;"></td>
                 		<td>
-											<input type="text" class="datepicker" name="post_qualification_date" data-trigger="keyup change focusout">
+											<input type="text" class="datepicker" name="post_school_qualification_date" data-trigger="keyup change focusout">
                 		</td>
-                		<td><select name="post_qualification_ftpt" style="width:100px;">
+                		<td><select name="post_school_qualification_ftpt" style="width:100px;">
                 		    <option></option>
                 		    <option>Full time</option>
                 		    <option>Part time</option>

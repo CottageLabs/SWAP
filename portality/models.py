@@ -80,12 +80,39 @@ class Student(DomainObject):
 
 
     def save_from_form(self, request):
-        # these lists are not actually used yet, because applications and progressions 
-        # are not editable via the student admin form. They can only be added via the 
-        # import functionality, which puts them in the correct place directly.
         applications = []
         progressions = []
-        
+        schoolquals = []
+        postschoolquals = []
+
+        for k,v in enumerate(request.form.getlist('school_qualification_subject')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    schoolqual = {
+                        "subject": v,
+                        "level": request.form.getlist('school_qualification_level')[k],
+                        "grade": request.form.getlist('school_qualification_grade')[k],
+                        "date": request.form.getlist('school_qualification_date')[k],
+                        "ftpt": request.form.getlist('school_qualification_ftpt')[k],
+                    }
+                    schoolquals.append(schoolqual)
+                except:
+                    pass
+
+        for k,v in enumerate(request.form.getlist('post_school_qualification_subject')):
+            if v is not None and len(v) > 0 and v != " ":
+                try:
+                    postschoolqual = {
+                        "subject": v,
+                        "level": request.form.getlist('post_school_qualification_level')[k],
+                        "grade": request.form.getlist('post_school_qualification_grade')[k],
+                        "date": request.form.getlist('post_school_qualification_date')[k],
+                        "ftpt": request.form.getlist('post_school_qualification_ftpt')[k],
+                    }
+                    postschoolquals.append(postschoolqual)
+                except:
+                    pass
+
         for k,v in enumerate(request.form.getlist('application_institution_code')):
             if v is not None and len(v) > 0 and v != " ":
                 try:
@@ -114,6 +141,8 @@ class Student(DomainObject):
 
         if len(applications) > 0: self.data['applications'] = applications
         if len(progressions) > 0: self.data['progressions'] = progressions
+        if len(schoolquals) > 0: self.data['school_qualifications'] = schoolquals
+        if len(postschoolquals) > 0: self.data['post_school_qualifications'] = postschoolquals
 
         # clean tickboxes
         tickboxes = [
@@ -126,10 +155,22 @@ class Student(DomainObject):
             'siblings_with_hnd',
             'parents_with_degree',
             'siblings_with_degree',
-            'other_qualifications',
-            'previous_level6_qualifications',
             'registered_disabled'
         ]
+        old_qual_tickboxes = [
+            'other_qualifications',
+            'previous_level6_qualifications'          
+        ]
+        new_qual_tickboxes = [
+            'no_school_quals',
+            'no_post_school_quals',
+            'maths_level6_taken',
+            'english_level6_taken'
+        ]
+        if 'other_qualifications' in request.form.keys() or 'previous_level6_qualifications' in request.form.keys():
+            tickboxes = tickboxes + old_qual_tickboxes
+        else:
+            tickboxes = tickboxes + new_qual_tickboxes
         for k in tickboxes:
             self.data[k] = False
 
@@ -140,7 +181,7 @@ class Student(DomainObject):
                 self.data[key] = False
             elif key in ['nationality','first_name','last_name'] and len(request.form[key]) > 1:
                 self.data[key] = request.form[key].strip()[0].upper() + request.form[key].strip()[1:]
-            elif not key.startswith('application_') and not key.startswith('progression_') and key not in ['submit']:
+            elif not key.startswith('application_') and not key.startswith('progression_') and not key.startswith('school_qualification_') and not key.startswith('post_school_qualification_') and key not in ['submit']:
                 self.data[key] = request.form[key]
         
         if "college" not in self.data:
@@ -150,6 +191,26 @@ class Student(DomainObject):
         if "campus" not in self.data:
             self.data["campus"] = ""
 
+        old_qual_keys = [
+            'o_standard_gcse',
+            'intermediate2',
+            'highers_alevels',
+            'other_school_qualifications',
+            'qualifications_after_school',
+            'other_maths',
+            'other_english',
+            'other_qualifications',
+            'previous_level6_qualifications'
+        ]
+        if 'school_qualifications' not in self.data and 'post_school_qualifications' not in self.data:
+            old = False
+            for k in old_qual_keys:
+                if k in self.data:
+                    old = True
+            if not old:
+                self.data['school_qualfications'] = []
+                self.data['post_school_qualifications'] = []
+                
         self.save()
 
 
@@ -361,8 +422,8 @@ class Course(DomainObject):
 
 
 
-class Subject(DomainObject):
-    __type__ = 'subject'
+class Schoolsubject(DomainObject):
+    __type__ = 'schoolsubject'
     
     def save_from_form(self, request):
         for key in request.form.keys():
@@ -371,8 +432,8 @@ class Subject(DomainObject):
                 self.data[key] = val        
         self.save()
 
-class Level(DomainObject):
-    __type__ = 'level'
+class Schoollevel(DomainObject):
+    __type__ = 'schoollevel'
 
     def save_from_form(self, request):
         for key in request.form.keys():
@@ -381,8 +442,8 @@ class Level(DomainObject):
                 self.data[key] = val        
         self.save()
 
-class Grade(DomainObject):
-    __type__ = 'grade'
+class Postschoollevel(DomainObject):
+    __type__ = 'postschoollevel'
 
     def save_from_form(self, request):
         for key in request.form.keys():

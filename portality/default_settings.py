@@ -65,7 +65,7 @@ MAPPINGS['simd'] = {'simd':MAPPINGS["student"]["student"]}
 MAPPINGS['progression'] = {'progression':MAPPINGS["student"]["student"]}
 MAPPINGS['uninote'] = {'uninote':MAPPINGS["student"]["student"]}
 MAPPINGS['archive'] = {'archive':MAPPINGS["student"]["student"]}
-MAPPINGS['subject'] = {'subject':MAPPINGS["student"]["student"]}
-MAPPINGS['level'] = {'level':MAPPINGS["student"]["student"]}
-MAPPINGS['grade'] = {'grade':MAPPINGS["student"]["student"]}
+MAPPINGS['schoolsubject'] = {'schoolsubject':MAPPINGS["student"]["student"]}
+MAPPINGS['schoollevel'] = {'schoollevel':MAPPINGS["student"]["student"]}
+MAPPINGS['postschoollevel'] = {'postschoollevel':MAPPINGS["student"]["student"]}
 

@@ -300,11 +300,11 @@ input{
             		<td><textarea name="contacts" style="min-width:600px;width:100%;min-height:300px;">{% if record %}{{record.data.contacts}}{% endif %}</textarea></td>
                 </tr>
 
-            {% elif model in ["subject","level","grade"] %}
+            {% elif model in ["schoolsubject","schoollevel","postschoollevel"] %}
 
     	        <tr>
                 <td style="text-align:right;padding:6px 10px 0 100px;">Name</td>
-            		<td><input id="uninotes" type="text" name="name"
+            		<td><input type="text" name="name"
             		{% if record %} value="{{record.data.name}}"{% endif %}
             		></td>
               </tr>
