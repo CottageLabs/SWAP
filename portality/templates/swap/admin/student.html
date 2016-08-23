@@ -573,7 +573,7 @@ fieldset{
 	    </div>
 	</div>
 
-	{% if not record or 'school_qualifications' in record %}
+	{% if not record or 'school_qualifications' in record.data or 'no_school_quals' in record.data %}
 	<div class="row-fluid">
 	    <div class="span12">		
 						<h3>School qualifications</h3>
