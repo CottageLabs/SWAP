@@ -139,6 +139,13 @@ def student(uuid=None):
     if 'Tayside Humanities' not in ss: ss = ss + ['Tayside Humanities']
     if 'Tayside Nursing' not in ss: ss = ss + ['Tayside Nursing']
 
+    schoollevels = dropdowns('schoollevel','name')
+    if 'Intermediate 1' in schoollevels: schoollevels.remove('Intermediate 1')
+    if 'Intermediate 2' in schoollevels: schoollevels.remove('Intermediate 2')
+    if 'Standard Grade' in schoollevels: schoollevels.remove('Standard Grade')
+    if 'Higher Grade' in schoollevels: schoollevels.remove('Higher Grade')
+    schoollevels = ['Intermediate 1','Intermediate 2','Standard Grade','Higher Grade'] + schoollevels
+
     selections={
         "colleges": dropdowns('course','college'),
         "campus": dropdowns('course','campus'),
@@ -147,7 +154,7 @@ def student(uuid=None):
         "simd_quintiles": dropdowns('simd','simd_quintile'),
         "archives": dropdowns('archive','name'),
         "school_subjects": dropdowns('schoolsubject','name'),
-        "school_levels": dropdowns('schoollevel','name'),
+        "school_levels": schoollevels,
         "post_school_levels": dropdowns('postschoollevel','name'),
         "studyskills":  ss,
         "nationalities": nats,
