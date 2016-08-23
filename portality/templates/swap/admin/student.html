@@ -149,7 +149,7 @@ jQuery(document).ready(function() {
             $(this).children('input[type="text"]').remove();
 					  if ( name === 'school_qualification_subject' || name === 'school_qualification_level' || name === 'post_school_qualification_level') {
 	            var seltype = name.replace('_qualification','') + 's';
-							var selector = '<select name="' + name + '" class="needselect2">';
+							var selector = '<select name="' + name + '" class="needselect2" style="width:140px;">';
 							selector += '<option></option>';
 							var selchoices = sels[seltype];
 							for ( var t in selchoices ) {
@@ -162,7 +162,7 @@ jQuery(document).ready(function() {
 							selector += '</select>';
 							$(this).append(selector);
 						} else if ( name === 'school_qualification_ftpt' || name === 'post_school_qualification_ftpt' ) {
-							var selector = '<select name="' + name + '" class="needselect2">';
+							var selector = '<select name="' + name + '" class="needselect2" style="width:140px;">';
 							selector += '<option></option>';
 							selector += '<option';
 							if (val === 'Full time') selector += ' selected="selected"';
@@ -173,10 +173,10 @@ jQuery(document).ready(function() {
 							selector += '</select>';
 							$(this).append(selector);
 						} else if ( name === 'school_qualification_date' || name === 'post_school_qualification_date' ) {
-							var selector = '<input type="text" name="' + name + '" class="datepicker">';
+							var selector = '<input type="text" name="' + name + '" class="datepicker" style="width:140px;">';
 							$(this).append(selector);
 						} else {
-							var selector = '<input type="text" name="' + name + '">';
+							var selector = '<input type="text" name="' + name + '" style="width:140px;">';
 							$(this).append(selector);
 						}
         })
