@@ -1,10 +1,4 @@
 
-Still TODO: update admin area student form to show new quals data if the record is of the new style, 
-otherwise show old style. Also add section to new style in the admin area for SWAP to indicate if 
-Maths and Englisth at Level 6 exams have been taken. Update student save_from_form to take the new dat format. 
-Update student admin display to show new or old values.
-
-
 Mark to send me the ISO standards letter and the forms that he’s sending to LEAPs. - EMAIL TO SWAP
 
 Reporting

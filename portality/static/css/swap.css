@@ -67,7 +67,7 @@ input.parsley-success, textarea.parsley-success, select.parsley-success {
     background-color: #DFF0D8 !important;
     border: 1px solid #D6E9C6 !important;
 }
-input.parsley-error, textarea.parsley-error, select.parsley-error {
+input.parsley-error, textarea.parsley-error, select.parsley-error, p.parsley-error {
     color: #B94A48 !important;
     background-color: #F2DEDE !important;
     border: 1px solid #EED3D7 !important;

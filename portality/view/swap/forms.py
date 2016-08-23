@@ -48,6 +48,12 @@ def student():
         if 'Irish' in nats: nats.remove('Irish')
         if 'Welsh' in nats: nats.remove('Welsh')
         nats = ['Scottish','English','Irish','Welsh'] + nats
+        schoollevels = dropdowns('schoollevel','name')
+        if 'Intermediate 1' in schoollevels: schoollevels.remove('Intermediate 1')
+        if 'Intermediate 2' in schoollevels: schoollevels.remove('Intermediate 2')
+        if 'Standard Grade' in schoollevels: schoollevels.remove('Standard Grade')
+        if 'Higher Grade' in schoollevels: schoollevels.remove('Higher Grade')
+        schoollevels = ['Intermediate 1','Intermediate 2','Standard Grade','Higher Grade'] + schoollevels
         response = make_response(
             render_template(
                 'swap/survey/survey.html', 
@@ -56,7 +62,7 @@ def student():
                     "campus": dropdowns('course','campus'),
                     "courses": dropdowns('course','course'),
                     "school_subjects": dropdowns('schoolsubject','name'),
-                    "school_levels": dropdowns('schoollevel','name'),
+                    "school_levels": schoollevels,
                     "post_school_levels": dropdowns('postschoollevel','name'),
                     "nationalities": nats
                 },
