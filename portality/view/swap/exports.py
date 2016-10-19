@@ -280,6 +280,15 @@ def download_csv(recordlist,keys):
                         else:
                             tidykey += '\n'
                         tidykey += line['degree_classification_awarded']
+                elif key in ['school_qualifications','post_school_qualifications']:
+                    tidykey = ""
+                    firstline = True
+                    for line in record[key]:
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line['date'] + " grade " + line['grade'] + " in " + line['level'] + " " + line['subject'] + " (" + line['ftpt'] + ")"
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:
@@ -298,7 +307,7 @@ def download_csv(recordlist,keys):
     return send_file(
         csvdata, 
         mimetype='text/csv',
-         attachment_filename="swap_export_" + datetime.now().strftime("%d%m%Y%H%M") + ".csv",
+        attachment_filename="swap_export_" + datetime.now().strftime("%d%m%Y%H%M") + ".csv",
         as_attachment=True
     )
 
