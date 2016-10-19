@@ -233,7 +233,7 @@ def index(model=None):
                                 if len(ucas_number) > 1:
                                     qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:ucas_number}})
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) != 0:
+                                    if q.get('hits',{}).get('total',0) == 1:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
                                     
@@ -294,7 +294,7 @@ def index(model=None):
                                         qry['query']['bool']['must'].append(dobqry)
 
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) != 0:
+                                    if q.get('hits',{}).get('total',0) == 1:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
 
@@ -307,9 +307,18 @@ def index(model=None):
                                         qry['query']['bool']['must'].append(fnqry)
 
                                     q = models.Student().query(q=qry)
-                                    if q.get('hits',{}).get('total',0) != 0:
+                                    if q.get('hits',{}).get('total',0) == 1:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
+                                    elif q.get('hits',{}).get('total',0) != 0 and len(ucas_number) > 1:
+                                        tsid = False
+                                        for st in [i['_source'] for i in q['hits']['hits']]:
+                                            if st['ucas_number'] != ucas_number:
+                                                if tsid == False:
+                                                    tsid = st['id']
+                                                else:
+                                                    tsid = False
+                                        if tsid != False: sid = tsid
 
                                 # if no student found, write a failure note
                                 if student is None and counter > 2:
