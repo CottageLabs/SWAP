@@ -264,9 +264,6 @@ def index(model=None):
                                     if q.get('hits',{}).get('total',0) != 0:
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
-                                if last_name == 'Whatley':
-                                    print qry
-                                    print student
                                 # if still not found, ignore the dob
                                 if student is None:
                                     qry['query']['bool']['must'] = []
@@ -299,6 +296,7 @@ def index(model=None):
                                         student = models.Student.pull(sid)
 
                                 # if still not found, try only first and last name
+                                # but only accept if just one found, or ucas number 
                                 if student is None:
                                     qry['query']['bool']['must'] = []
                                     if len(last_name) > 1:
@@ -318,7 +316,9 @@ def index(model=None):
                                                     tsid = st['id']
                                                 else:
                                                     tsid = False
-                                        if tsid != False: sid = tsid
+                                        if tsid != False:
+                                            sid = tsid
+                                            student = models.Student.pull(sid)
 
                                 # if no student found, write a failure note
                                 if student is None and counter > 2:

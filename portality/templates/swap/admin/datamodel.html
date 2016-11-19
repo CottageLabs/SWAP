@@ -123,13 +123,19 @@ input{
             		<td><input class="suggests" type="text" name="campus"
             		{% if record %} value="{{record.data.campus}}"{% endif %}
             		></td>
-                </tr>
+              </tr>
     	        <tr>
-                    <td style="text-align:right;padding:6px 10px 0 100px;">college region</td>
+                <td style="text-align:right;padding:6px 10px 0 100px;">college region</td>
             		<td><input class="suggests" type="text" name="region"
             		{% if record %} value="{{record.data.region}}"{% endif %}
             		></td>
-                </tr>
+              </tr>
+    	        <tr>
+                <td style="text-align:right;padding:6px 10px 0 100px;">post code</td>
+            		<td><input type="text" name="post_code"
+            		{% if record %} value="{{record.data.post_code}}"{% endif %}
+            		></td>
+              </tr>
     	        <tr>
                     <td style="text-align:right;padding:6px 10px 0 100px;">SWAP locale</td>
             		<td><select name="locale">
