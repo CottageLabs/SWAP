@@ -295,8 +295,6 @@ def index(model=None):
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
 
-                                # if still not found, try only first and last name
-                                # but only accept if just one found, or ucas number 
                                 if student is None:
                                     qry['query']['bool']['must'] = []
                                     if len(last_name) > 1:
