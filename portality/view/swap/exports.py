@@ -193,7 +193,7 @@ def download_csv(recordlist,keys):
                         else:
                             tidykey += line.get(key,"")
                 elif key in ['school_qualifications','post_school_qualifications']:
-                    unquote = True
+                    unquote = False
                     tidykey = ""
                     firstline = True
                     for line in record[key]:
@@ -213,13 +213,20 @@ def download_csv(recordlist,keys):
                         tidykey = ",".join(record[key])
                     else:
                         tidykey = record[key]
+                print 'found ' + key
                 csvdata.write('"' + fixify(tidykey,unquote) + '"')
             elif key in ['school_qualifications','post_school_qualifications']:
+                print 'not found ' + key
                 csvdata.write('"",""')
             elif key == "applications":
+                print 'not found ' + key
                 csvdata.write('"","",""')
             elif key not in ['applications_info','applications_course','school_qualifications_levels','post_school_qualifications_levels']:
+                print 'not found ' + key
                 csvdata.write('""')
+            else:
+                print 'nothing for ' + key
+                pass
     # dump to the browser as a csv attachment
     csvdata.seek(0)
     return send_file(
