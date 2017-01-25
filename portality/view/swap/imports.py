@@ -403,7 +403,7 @@ def index(model=None):
                         student = None
                         try:
                             qry['query']['bool']['must'] = [] #{'term':{'archive'+app.config['FACET_FIELD']:'current'}}
-                            if len(rc.get('last_name',"")) > 1 and len(rc.get('first_name',"")) > 1 and :
+                            if len(rc.get('last_name',"")) > 1 and len(rc.get('first_name',"")) > 1:
                                 qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'], 'fuzziness':0.9}}})
                                 qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'], 'fuzziness':0.9}}})
                             q = models.Student().query(q=qry)
