@@ -215,6 +215,8 @@ def download_csv(recordlist,keys):
                         tidykey = record[key]
                 print 'found ' + key
                 csvdata.write('"' + fixify(tidykey,unquote) + '"')
+                if not unquote:
+                    print tidykey
             elif key in ['school_qualifications','post_school_qualifications']:
                 print 'not found ' + key
                 csvdata.write('"",""')
