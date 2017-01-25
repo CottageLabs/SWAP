@@ -153,7 +153,7 @@ def download_csv(recordlist,keys):
             unquote = True
             if firstkey:
                 firstkey = False
-            else:
+            elif key not in ['applications_info','applications_course','school_qualifications_levels','post_school_qualifications_levels']:
                 csvdata.write(',')
             if key in record.keys() or key == 'address' or key in progressionkeys:
                 if key == 'address':
