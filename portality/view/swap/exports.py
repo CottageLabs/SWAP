@@ -178,7 +178,7 @@ def download_csv(recordlist,keys):
                                 ai += '\n'
                             au += line['institution_shortname']
                             ac += line['course_code']
-                            ai += line['course_name'] + " (" + line['start_year'] + ") " + line['conditions'] + line['decisions']
+                            ai += line['course_name'] + " (" + line['start_year'] + ") " + line['conditions'] + ' ' + line['decisions']
                     tidykey = au + '","' + ac + '","' + ai
                 elif key in progressionkeys:
                     tidykey = ""
@@ -191,8 +191,9 @@ def download_csv(recordlist,keys):
                         if (key == 'starting_year'):
                             tidykey += line.get('starting_year',line.get('start_year',''))
                         else:
-                            tidykey += line.get(key,"")                  
+                            tidykey += line.get(key,"")
                 elif key in ['school_qualifications','post_school_qualifications']:
+                    unquote = True
                     tidykey = ""
                     firstline = True
                     for line in record[key]:
@@ -217,7 +218,7 @@ def download_csv(recordlist,keys):
                 csvdata.write('"",""')
             elif key == "applications":
                 csvdata.write('"","",""')
-            elif key not in ['applications_info','applications_course']:
+            elif key not in ['applications_info','applications_course','school_qualifications_levels','post_school_qualifications_levels']:
                 csvdata.write('""')
     # dump to the browser as a csv attachment
     csvdata.seek(0)
