@@ -194,15 +194,18 @@ def download_csv(recordlist,keys):
                             tidykey += line.get(key,"")
                 elif key in ['school_qualifications','post_school_qualifications']:
                     unquote = False
-                    tidykey = ""
+                    qa = ''
+                    ql = ''
                     firstline = True
                     for line in record[key]:
                         if firstline:
                             firstline = False
                         else:
-                            tidykey += '\n'
-                        tidykey += line['date'] + " grade " + line['grade'] + " in " + line['level'] + " " + line['subject'] + " (" + line['ftpt'] + ")"
-                        tidykey += '","' + line['level']
+                            qa += '\n'
+                            ql += '\n'
+                        qa += line['date'] + " grade " + line['grade'] + " in " + line['level'] + " " + line['subject'] + " (" + line['ftpt'] + ")"
+                        ql += line['level']
+                    tidykey = qa + '","' + ql
                 else:
                     if isinstance(record[key],bool):
                         if record[key]:
