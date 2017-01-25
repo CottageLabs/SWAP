@@ -403,37 +403,39 @@ def index(model=None):
                         student = None
                         try:
                             qry['query']['bool']['must'] = [] #{'term':{'archive'+app.config['FACET_FIELD']:'current'}}
-                            if len(rc.get('last_name',"")) > 1:
-                                qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'], 'fuzziness':0.8}}})
-                            if len(rc.get('first_name',"")) > 1:
-                                qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'], 'fuzziness':0.8}}})
+                            if len(rc.get('last_name',"")) > 1 and len(rc.get('first_name',"")) > 1 and :
+                                qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'], 'fuzziness':0.9}}})
+                                qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'], 'fuzziness':0.9}}})
                             q = models.Student().query(q=qry)
-                            if q.get('hits',{}).get('total',0) > 1 and len(rc.get('date_of_birth',"")) > 1:
-                                # tidy the date of birth and test for EN/US format, then narrow the search
-                                # convert date of birth format if necessary
-                                try:
-                                    dob = rc['date_of_birth']
-                                    if '-' in date_of_birth: dob = dob.replace('-','/')
-                                    parts = date_of_birth.split('/')
-                                    tryflip = true
-                                    if parts[1] > 12:
-                                        parts = [parts[1],parts[0],parts[2]]
-                                        tryflip = false
-                                    if len(str(parts[2])) == 2:
-                                        if parts[2] > 50:
-                                            parts[2] = str("19" + str(parts[2]))
-                                        else:
-                                            parts[2] = str("20" + str(parts[2]))    
-                                    dob = str(parts[0]) + '/' + str(parts[1]) + '/' + str(parts[2])
-                                    qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
-                                    q = models.Student().query(q=qry)
-                                    if  q.get('hits',{}).get('total',0) == 0 and tryflip:
-                                        dob = str(parts[1]) + '/' + str(parts[0]) + '/' + str(parts[2])
-                                        del qry['query']['bool']['must'][-1]
+                            if q.get('hits',{}).get('total',0) > 1:
+                                if len(rc.get('date_of_birth',"")) > 1:
+                                    # tidy the date of birth and test for EN/US format, then narrow the search
+                                    # convert date of birth format if necessary
+                                    try:
+                                        dob = rc['date_of_birth']
+                                        if '-' in date_of_birth: dob = dob.replace('-','/')
+                                        parts = date_of_birth.split('/')
+                                        tryflip = true
+                                        if parts[1] > 12:
+                                            parts = [parts[1],parts[0],parts[2]]
+                                            tryflip = false
+                                        if len(str(parts[2])) == 2:
+                                            if parts[2] > 50:
+                                                parts[2] = str("19" + str(parts[2]))
+                                            else:
+                                                parts[2] = str("20" + str(parts[2]))    
+                                        dob = str(parts[0]) + '/' + str(parts[1]) + '/' + str(parts[2])
                                         qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
                                         q = models.Student().query(q=qry)
-                                except:
-                                    pass
+                                        if  q.get('hits',{}).get('total',0) == 0 and tryflip:
+                                            dob = str(parts[1]) + '/' + str(parts[0]) + '/' + str(parts[2])
+                                            del qry['query']['bool']['must'][-1]
+                                            qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
+                                            q = models.Student().query(q=qry)
+                                    except:
+                                        pass
+                                else:
+                                    q = {};
                             sid = q['hits']['hits'][0]['_source']['id']
                             student = models.Student.pull(sid)
                         except:
@@ -484,11 +486,9 @@ def index(model=None):
                             if len(rec.get('ucas_number',"")) > 1:
                                 qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:rec['ucas_number']}})
                             else:
-                                if len(rec.get('last_name',"")) > 1:
-                                    qry['query']['bool']['must'].append({'match':{'last_name':{'query':rec['last_name'], 'fuzziness':0.8}}})
-                                if len(rec.get('first_name',"")) > 1:
-                                    qry['query']['bool']['must'].append({'match':{'first_name':{'query':rec['first_name'], 'fuzziness':0.8}}})
-                                if len(rec.get('date_of_birth',"")) > 1:
+                                if len(rec.get('last_name',"")) > 1 and len(rec.get('date_of_birth',"")) > 1 and len(rec.get('first_name',"")) > 1:
+                                    qry['query']['bool']['must'].append({'match':{'last_name':{'query':rec['last_name'], 'fuzziness':0.9}}})
+                                    qry['query']['bool']['must'].append({'match':{'first_name':{'query':rec['first_name'], 'fuzziness':0.9}}})
                                     qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:rec['date_of_birth']}})
                             q = models.Student().query(q=qry)
                             sid = q['hits']['hits'][0]['_source']['id']
