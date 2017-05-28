@@ -99,7 +99,6 @@ $.fn.holder.display.swap = function(obj) {
   </div>';
 
   if ( !$('#swapheader').length ) {
-    $('#blueheader').remove();
     obj.parent().before(swapheadertemplate);
     $('.'+options.class+'.default').after(swapoverviewtemplate);
     $('.'+options.class+'.options').show();
