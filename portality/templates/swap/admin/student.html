@@ -909,6 +909,11 @@ fieldset{
                     </tr>
                 </tbody>
             </table>
+				<p>
+					<input type="checkbox" name="single_parent"
+          {% if record %}{% if record.data.single_parent %} checked="checked"{% endif %}{% endif %}
+					> Tick if single parent
+				</p>
 	    </div>
 	</div>
 

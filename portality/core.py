@@ -41,7 +41,7 @@ def initialise_index(app):
                 }))
                 print 'default archive named "current" has been created'
     if len(app.config.get('SUPER_USER',[])) != 0:
-        time.sleep(1)
+        time.sleep(2)
         un = app.config['SUPER_USER'][0]
         ia = i + '/account/' + un
         ae = requests.get(ia)
@@ -49,7 +49,7 @@ def initialise_index(app):
             su = {
                 "id":un, 
                 "email":"test@test.com",
-                "swap_locale":"east",
+                "swap_locale":"East",
                 "api_key":str(uuid.uuid4()),
                 "password":generate_password_hash(un)
             }

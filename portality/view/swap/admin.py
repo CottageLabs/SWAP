@@ -31,6 +31,14 @@ def index():
     return render_template('swap/admin/index.html')
 
 
+
+# show the reporting page
+@blueprint.route('/report', methods=['GET'])
+def report():
+    if request.method == 'GET':
+        return render_template('swap/admin/report.html')
+
+
 # update admin settings
 @blueprint.route('/settings', methods=['GET','POST'])
 def settings():
