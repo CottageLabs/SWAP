@@ -34,7 +34,7 @@ $.fn.holder.display.swap = function(obj) {
   var swapheadertemplate = '\
   <div class="row" id="swapheader" style="margin-top:-10px;">\
     <div class="col-md-12">\
-      <h1 style="color:white;font-size:54px;text-align:center;">SWAP reporting</h1>\
+      <h1 style="font-size:54px;text-align:center;">SWAP reporting</h1>\
       <p style="text-align:center;"><a href="/admin">Click here to go back to SWAP admin</a></p>\
     </div>\
   </div>\
