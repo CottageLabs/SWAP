@@ -32,14 +32,6 @@ $.fn.holder.display.swap = function(obj) {
   if (options.paging) return;
   
   var swapheadertemplate = '\
-  <div class="row" id="swapheader" style="margin-top:-10px;">\
-    <div class="col-md-12">\
-      <div class="jumbotron" style="background-color:#66bbff;">\
-        <h1 style="color:white;font-size:54px;text-align:center;">Scottish Wider Access Programme</h1>\
-      </div>\
-    </div>\
-  </div>\
-  \
   <div class="row">\
     <div class="col-md-12">\
       <div class="well">\
