@@ -32,6 +32,15 @@ $.fn.holder.display.swap = function(obj) {
   if (options.paging) return;
   
   var swapheadertemplate = '\
+  <div class="row" id="swapheader" style="margin-top:-10px;">\
+    <div class="col-md-12">\
+      <div class="jumbotron" style="background-color:#66bbff;">\
+        <h1 style="color:white;font-size:54px;text-align:center;">SWAP reporting</h1>\
+        <p><a href="/admin">Click here to go back to SWAP admin</a></p>\
+      </div>\
+    </div>\
+  </div>\
+  \
   <div class="row">\
     <div class="col-md-12">\
       <div class="well">\
@@ -92,6 +101,7 @@ $.fn.holder.display.swap = function(obj) {
   </div>';
 
   if ( !$('#swapheader').length ) {
+    $('#blueheader').hide();
     obj.parent().before(swapheadertemplate);
     $('.'+options.class+'.default').after(swapoverviewtemplate);
     $('.'+options.class+'.options').show();
