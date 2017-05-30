@@ -1197,31 +1197,16 @@ fieldset{
 	    <div class="span12">		
             <table class="table table-bordered">
                 <tr>
-                    <td style="text-align:right;padding:6px 10px 0 0;">Interested in being matched with a mentor for help with:</td>
+                    <td style="text-align:right;padding:6px 10px 0 0;">Interested in being matched with a mentor:</td>
                     <td>
-                        <select name="mentorrequest" multiple="multiple" class="select2this" placeholder="select all that apply">
+                        <select name="mentorrequest">
                             <option></option>
                             <option
-                            {% if record %}{% if record.data.mentorrequest == "Dealing with money / finances" %} selected="selected"{% endif %}{% endif %}
-                            >Dealing with money / finances</option>
+                            {% if record %}{% if record.data.mentorrequest == "No" %} selected="selected"{% endif %}{% endif %}
+                            >No</option>
                             <option
-                            {% if record %}{% if record.data.mentorrequest == "Family issues" %} selected="selected"{% endif %}{% endif %}
-                            >Family issues</option>
-                            <option
-                            {% if record %}{% if record.data.mentorrequest == "Time management skills" %} selected="selected"{% endif %}{% endif %}
-                            >Time management skills / tips</option>
-                            <option
-                            {% if record %}{% if record.data.mentorrequest == "Academic issues (including university course choices)" %} selected="selected"{% endif %}{% endif %}
-                            >Academic issues (including university course choices)</option>
-                            <option
-                            {% if record %}{% if record.data.mentorrequest == "Social issues" %} selected="selected"{% endif %}{% endif %}
-                            >Social issues</option>
-                            <option
-                            {% if record %}{% if record.data.mentorrequest == "General support" %} selected="selected"{% endif %}{% endif %}
-                            >General support</option>
-                            <option
-                            {% if record %}{% if record.data.mentorrequest == "Other" %} selected="selected"{% endif %}{% endif %}
-                            >Other</option>
+                            {% if record %}{% if record.data.mentorrequest == "Yes" %} selected="selected"{% endif %}{% endif %}
+                            >Yes</option>
                         </select>
                     </td>
                 </tr>
