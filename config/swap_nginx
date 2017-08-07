@@ -1,0 +1,84 @@
+
+client_header_timeout       10m;
+client_body_timeout         10m;
+client_max_body_size 1024M;
+client_body_buffer_size 128k;
+large_client_header_buffers 8 64k;
+proxy_buffer_size 256k;
+proxy_buffers 4 256k;
+proxy_busy_buffers_size 256k;
+proxy_connect_timeout 600;
+proxy_send_timeout 600;
+proxy_read_timeout 600;
+send_timeout 600;
+keepalive_timeout 600;
+
+server {
+    listen 80;
+
+    server_name swapsurvey.org www.swapsurvey.org;
+
+    access_log /var/log/nginx/swap-access.log;
+    error_log /var/log/nginx/swap-error.log;
+
+    location /registration {
+        rewrite ^ https://$server_name$request_uri? permanent;
+    }
+
+    location /account {
+        rewrite ^ https://$server_name$request_uri? permanent;
+    }
+
+    location /courses {
+        rewrite ^ https://$server_name$request_uri? permanent;
+    }
+
+    location /admin {
+        rewrite ^ https://$server_name$request_uri? permanent;
+    }
+
+    location /static {
+        autoindex off;
+        root /home/leaps/swap/src/swap/portality;
+        break;
+    }
+
+    location / {
+        proxy_pass http://localhost:5006/;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 443;
+    ssl on;
+
+    ssl_certificate /etc/letsencrypt/live/swapsurvey.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/swapsurvey.org/privkey.pem;
+
+    keepalive_timeout 600;
+
+    server_name swapsurvey.org www.swapsurvey.org;
+
+    access_log /var/log/nginx/swap-access.log;
+    error_log /var/log/nginx/swap-error.log;
+
+    location /static {
+        autoindex off;
+        root /home/leaps/swap/src/swap/portality;
+        break;
+    }
+
+    location / {
+        proxy_pass http://localhost:5006/;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+}
+

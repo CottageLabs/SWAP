@@ -478,6 +478,7 @@ def index(model=None):
                         }
                     }
                     for rec in records:
+                        rec = {k.replace(" ",""): v for k,v in rec.items()}
                         # look for the student in the index
                         counter += 1
                         student = None
