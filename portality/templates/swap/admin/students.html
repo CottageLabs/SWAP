@@ -43,7 +43,7 @@ jQuery(document).ready(function() {
         {% if current_user.swap_locale %}
         if ( $('#default_swap').length == 0 ) {
             $('body').append('<div id="default_swap" style="display:none;"></div>');
-            $('.facetview_search_options_container').after('<p id="localeupdate>Please wait, updating for locale...</p>');
+            $('.facetview_search_options_container').after('<p id="localeupdate">Please wait, updating for locale...</p>');
             setTimeout(function() {$('.facetview_filterchoice[href="{{current_user.swap_locale}}"][rel="locale.exact"]').trigger('click'); $('#localeupdate').remove(); },1500)
         } else {
             $(".tablesorter").tablesorter({
