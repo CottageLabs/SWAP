@@ -55,14 +55,12 @@ def index(model=None):
             students = _get_students(uni,what)
             return _download_applications(students, what, uni)
 
-
         else:
-    
-            if 1==1:
+            try:
                 records = []
                 if "csv" in request.files.get('upfile').filename:
                     upfile = request.files.get('upfile')
-                    if model.lower() == 'ucas':
+                    if model.lower() == 'ucas' or model.lower() == 'asr':
                         reader = csv.reader( upfile )
                     else:
                         reader = csv.DictReader( upfile )
@@ -77,7 +75,68 @@ def index(model=None):
                         return render_template('swap/admin/import.html')
 
 
-                if model.lower() == 'ucas':
+                if model.lower() == 'asr':
+                    # starts with header rows that are not much use
+                    headers = True
+                    counter = 0
+                    updates = []
+                    failures = []
+                    for rec in records:
+                        if rec[0].trim().lower() == 'surname':
+                            headers = False
+                        elif not headers:
+                            counter += 1
+                            try:
+                                last_name = rec[0].trim()
+                                first_name = rec[1].trim()
+                                gender = rec[2] # M / F but not needed anyway
+                                date_of_birth = rec[3] # like 07-Jan-81
+                                ucas_number = rec[4].trim()
+                                app_scheme_code = rec[5] # like UC01, no obvious use
+                                institution_code = rec[6].trim()
+                                institution_shortname = rec[7].trim()
+                                course_code = rec[8].trim()
+                                campus = rec[9] # seems to be single uppercase letter, no obvious use
+                                course_name = rec[10].trim() # if "Not placed" then other fields after ucas number will be empty
+                                start_year = rec[11].trim()
+                                
+                                # these records should only exist for students with ucas numbers already in system, so only match by that
+                                qry = {
+                                    'query':{
+                                        'bool':{
+                                            'must':[
+                                            ]
+                                        }
+                                    },
+                                    'sort': {'created_date.exact': 'desc'}
+                                }
+                                qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:ucas_number}})
+                                q = models.Student().query(q=qry)
+                                if q.get('hits',{}).get('total',0) == 1:
+                                    sid = q['hits']['hits'][0]['_source']['id']
+                                    student = models.Student.pull(sid)
+                                    student.data['applications'].append({
+                                        "choice_number": 'Final',
+                                        "institution_code": institution_code,
+                                        "institution_shortname": institution_shortname,
+                                        "course_code": course_code,
+                                        "decisions": "Not placed" if course_name.trim().lower == "not placed" else "",
+                                        "course_name": "" if course_name.trim().lower == "not placed" else course_name,
+                                        "start_year": start_year
+                                    })
+                                    student.save()
+                                    updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a>')
+                                else:
+                                    failures.append('Could not fin student in system with UCAS number ' + ucas_number + ' out of row ' + str(counter))
+                            except:
+                                failures.append('Failed to read what appeared to be student data out of row ' + str(counter))
+
+                    flash('Processed ' + str(counter) + ' rows of data')
+                    return render_template('swap/admin/import.html', model=model, failures=failures, updates=updates)
+
+
+
+                elif model.lower() == 'ucas':
                     # start with no student and an empty applications list
                     student = None
                     appnset = []
@@ -415,10 +474,10 @@ def index(model=None):
                                         dob = rc['date_of_birth']
                                         if '-' in date_of_birth: dob = dob.replace('-','/')
                                         parts = date_of_birth.split('/')
-                                        tryflip = true
+                                        tryflip = True
                                         if parts[1] > 12:
                                             parts = [parts[1],parts[0],parts[2]]
-                                            tryflip = false
+                                            tryflip = False
                                         if len(str(parts[2])) == 2:
                                             if parts[2] > 50:
                                                 parts[2] = str("19" + str(parts[2]))
@@ -603,7 +662,7 @@ def index(model=None):
                 flash(str(len(records)) + " records have been imported, there are now " + str(checklen) + " records.")
                 return render_template('swap/admin/import.html', model=model)
 
-            else: # should be an exception handler
+            except:
                 flash("There was an error importing your records. Please try again.")
                 return render_template('swap/admin/import.html', model=model)
 
