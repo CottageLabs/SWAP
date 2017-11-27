@@ -82,23 +82,23 @@ def index(model=None):
                     updates = []
                     failures = []
                     for rec in records:
-                        if rec[0].trim().lower() == 'surname':
+                        if rec[0].strip().lower() == 'surname':
                             headers = False
                         elif not headers:
                             counter += 1
                             try:
-                                last_name = rec[0].trim()
-                                first_name = rec[1].trim()
+                                last_name = rec[0].strip()
+                                first_name = rec[1].strip()
                                 gender = rec[2] # M / F but not needed anyway
                                 date_of_birth = rec[3] # like 07-Jan-81
-                                ucas_number = rec[4].trim()
+                                ucas_number = rec[4].strip()
                                 app_scheme_code = rec[5] # like UC01, no obvious use
-                                institution_code = rec[6].trim()
-                                institution_shortname = rec[7].trim()
-                                course_code = rec[8].trim()
+                                institution_code = rec[6].strip()
+                                institution_shortname = rec[7].strip()
+                                course_code = rec[8].strip()
                                 campus = rec[9] # seems to be single uppercase letter, no obvious use
-                                course_name = rec[10].trim() # if "Not placed" then other fields after ucas number will be empty
-                                start_year = rec[11].trim()
+                                course_name = rec[10].strip() # if "Not placed" then other fields after ucas number will be empty
+                                start_year = rec[11].strip()
                                 
                                 # these records should only exist for students with ucas numbers already in system, so only match by that
                                 qry = {
@@ -120,14 +120,14 @@ def index(model=None):
                                         "institution_code": institution_code,
                                         "institution_shortname": institution_shortname,
                                         "course_code": course_code,
-                                        "decisions": "Not placed" if course_name.trim().lower == "not placed" else "",
-                                        "course_name": "" if course_name.trim().lower == "not placed" else course_name,
+                                        "decisions": "Not placed" if course_name.strip().lower == "not placed" else "",
+                                        "course_name": "" if course_name.strip().lower == "not placed" else course_name,
                                         "start_year": start_year
                                     })
                                     student.save()
                                     updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a>')
                                 else:
-                                    failures.append('Could not fin student in system with UCAS number ' + ucas_number + ' out of row ' + str(counter))
+                                    failures.append('Could not find student in system with UCAS number ' + ucas_number + ' out of row ' + str(counter))
                             except:
                                 failures.append('Failed to read what appeared to be student data out of row ' + str(counter))
 
