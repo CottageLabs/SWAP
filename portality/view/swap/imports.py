@@ -520,6 +520,73 @@ def index(model=None):
 
 
 
+                elif model.lower() == 'college_progression':
+                    failures = []
+                    updates = []
+                    counter = 0
+                    # query the student index for a matching student
+                    qry = {
+                        'query':{
+                            'bool':{
+                                'must':[
+                                ]
+                            }
+                        }
+                    }
+                    for rec in records:
+                        rec = {k.replace(" ",""): v for k,v in rec.items()}
+                        # look for the student in the index
+                        counter += 1
+                        student = None
+                        try:
+                            qry['query']['bool']['must'].append({'match':{'last_name':{'query':rec['last_name'], 'fuzziness':0.9}}})
+                            qry['query']['bool']['must'].append({'match':{'first_name':{'query':rec['first_name'], 'fuzziness':0.9}}})
+                            qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:rec['date_of_birth']}})
+                            q = models.Student().query(q=qry)
+                            sid = q['hits']['hits'][0]['_source']['id']
+                            student = models.Student.pull(sid)
+                        except:
+                            failures.append('Could not find student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
+
+                        if student is not None:
+                            try:
+                                progn = {
+                                    'access_course': rec.get('access_course',''),
+                                    'progress_where': rec.get('progress_where',''),
+                                    'campus': rec.get('campus',''),
+                                    'course_name': rec.get('course_name',''),
+                                    'reg_1st_year': rec.get('reg_1st_year',''),
+                                    '1st_year_result': rec.get('1st_year_result',''),
+                                    'reg_2nd_year': rec.get('reg_2nd_year',''),
+                                    '2nd_year_result': rec.get('2nd_year_result',''),
+                                    'progression_to_university': rec.get('progression_to_university','')
+                                }
+
+                                which = False
+                                if 'college_progressions' not in student.data: student.data['college_progressions'] = []
+                                if len(student.data['college_progressions']) > 0:
+                                    c = 0
+                                    for prog in student.data['college_progressions']:
+                                        if prog['progress_where'] == progn['progress_where'] and prog['course_name'] == progn['course_name']:
+                                            which = c
+                                        c += 1
+                                
+                                if isinstance(which,bool):
+                                    student.data['college_progressions'].append(progn)
+                                else:
+                                    student.data['college_progressions'][which] = progn
+                                student.save()
+                                updates.append('Saved student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' college progression data.')
+                            except:
+                                failures.append('Failed to save student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' college progression data.')
+
+                    flash('Processed ' + str(counter) + ' rows of data')
+                    return render_template('swap/admin/import.html', model=model, failures=failures, updates=updates)
+
+
+
+
+
                 elif model.lower() == 'university':
                     failures = []
                     updates = []

@@ -84,6 +84,9 @@ class Student(DomainObject):
         progressions = []
         schoolquals = []
         postschoolquals = []
+        
+        if 'has_highers' not in self.data: self.data['has_highers'] = False
+        highers = ['Higher','Higher Grade','Advanced Higher','Baccalaureate','Bachillerato','High School Diploma','High School leavers certificate','Matura']
 
         for k,v in enumerate(request.form.getlist('school_qualification_subject')):
             if v is not None and len(v) > 0 and v != " ":
@@ -93,8 +96,9 @@ class Student(DomainObject):
                         "level": request.form.getlist('school_qualification_level')[k],
                         "grade": request.form.getlist('school_qualification_grade')[k],
                         "date": request.form.getlist('school_qualification_date')[k],
-                        "ftpt": request.form.getlist('school_qualification_ftpt')[k],
+                        "ftpt": request.form.getlist('school_qualification_ftpt')[k]
                     }
+                    if schoolqual['level'] in highers: self.data['has_highers'] = True
                     schoolquals.append(schoolqual)
                 except:
                     pass
@@ -107,8 +111,9 @@ class Student(DomainObject):
                         "level": request.form.getlist('post_school_qualification_level')[k],
                         "grade": request.form.getlist('post_school_qualification_grade')[k],
                         "date": request.form.getlist('post_school_qualification_date')[k],
-                        "ftpt": request.form.getlist('post_school_qualification_ftpt')[k],
+                        "ftpt": request.form.getlist('post_school_qualification_ftpt')[k]
                     }
+                    if postschoolqual['level'] in highers: self.data['has_highers'] = True
                     postschoolquals.append(postschoolqual)
                 except:
                     pass
