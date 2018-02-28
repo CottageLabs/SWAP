@@ -37,8 +37,9 @@ def index():
     elif request.method == 'POST':
         keys = request.form.keys()
         if 'applications_UF' in keys:
-            if 'bool' not in query['query'].keys(): query['query'] = {'bool':{'must':[]}}
-            query['query']['bool']['must'].append({'term':{'applications.decisions.exact':'UF'}})
+            if 'bool' not in query['query'].keys(): query['query'] = {'bool':{'should':[]}}
+            query['query']['bool']['should'].append({'term':{'applications.decisions.exact':'UF'}})
+            query['query']['bool']['should'].append({'term':{'applications.choice_number.exact':'Final'}})
         s = models.Student.query(q=query)
         students = []
         for i in s.get('hits',{}).get('hits',[]): 
@@ -169,7 +170,7 @@ def download_csv(recordlist,keys):
                     ai = ''
                     firstline = True
                     for line in record[key]:
-                        if ( applications_UF and 'UF' in line['decisions'] ) or (applications_UF and line['decisions'] == 'UF') or not applications_UF:
+                        if ( applications_UF and 'UF' in line['decisions'] ) or (applications_UF and line['decisions'] == 'UF') or (applications_UF and line['choice_number'] == 'Final') or not applications_UF:
                             if firstline:
                                 firstline = False
                             else:
@@ -178,7 +179,7 @@ def download_csv(recordlist,keys):
                                 ai += '\n'
                             au += line['institution_shortname']
                             ac += line['course_code']
-                            ai += line['course_name'] + " (" + line['start_year'] + ") " + line['conditions'] + ' ' + line['decisions']
+                            ai += line['course_name'] + " (" + line['start_year'] + ") " + line.get('conditions','') + ' ' + line.get('decisions','')
                     tidykey = au + '","' + ac + '","' + ai
                 elif key in progressionkeys:
                     tidykey = ""
