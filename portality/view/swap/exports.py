@@ -38,6 +38,7 @@ def index():
         keys = request.form.keys()
         if 'applications_UF' in keys:
             if 'bool' not in query['query'].keys(): query['query'] = {'bool':{'should':[]}}
+            if 'should' not in query['query']['bool'].keys(): query['query']['bool']['should'] = []
             query['query']['bool']['should'].append({'term':{'applications.decisions.exact':'UF'}})
             query['query']['bool']['should'].append({'term':{'applications.choice_number.exact':'Final'}})
         s = models.Student.query(q=query)
