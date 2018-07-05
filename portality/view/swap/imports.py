@@ -638,7 +638,7 @@ def index(model=None):
                                     '2nd_year_result': rec.get('2nd_year_result',''),
                                     'reg_3rd_year': rec.get('reg_3rd_year',''),
                                     '3rd_year_result': rec.get('3rd_year_result',''),
-                                    'reg_4th_year_or_left': rec.get('reg_4th_year_or_left',''),
+                                    'reg_4th_year': rec.get('reg_4th_year',rec.get('reg_4th_year_or_left','')),
                                     'degree_classification_awarded': rec.get('degree_classification_awarded','')
                                 }
                                 
@@ -647,7 +647,7 @@ def index(model=None):
                                 if len(student.data['progressions']) > 0:
                                     c = 0
                                     for prog in student.data['progressions']:
-                                        if prog['institution_shortname'] == progn['institution_shortname'] and prog['course_code'] == progn['course_code']:
+                                        if prog['institution_shortname'] == progn['institution_shortname'] and prog['course_name'] == progn['course_name']:
                                             which = c
                                         c += 1
                                 

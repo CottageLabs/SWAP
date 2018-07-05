@@ -84,7 +84,7 @@ def download_csv(recordlist,keys):
             keys.remove(k)
             keys = [k] + keys
 
-    progressionkeys = ['starting_year','course_name','course_code','institution_shortname','decisions','reg_1st_year','1st_year_result','reg_2nd_year','2nd_year_result','reg_3rd_year_or_left','reg_4th_year_or_left','degree_classification_awarded']
+    progressionkeys = ['starting_year','course_name','course_code','institution_shortname','decisions','reg_1st_year','1st_year_result','reg_2nd_year','2nd_year_result','reg_3rd_year','3rd_year_result','reg_4th_year','degree_classification_awarded']
     if 'uniprogression' in keys:
         keys.remove('uniprogression')
         for ky in progressionkeys:
