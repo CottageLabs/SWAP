@@ -171,7 +171,8 @@ def download_csv(recordlist,keys):
                     ai = ''
                     firstline = True
                     for line in record[key]:
-                        if ( applications_UF and 'UF' in line['decisions'] ) or (applications_UF and line['decisions'] == 'UF') or (applications_UF and line['choice_number'] == 'Final') or not applications_UF:
+                        #if ( applications_UF and 'UF' in line['decisions'] ) or (applications_UF and line['decisions'] == 'UF') or (applications_UF and line['choice_number'] == 'Final') or not applications_UF:
+                        if (applications_UF and line['choice_number'] == 'Final') or not applications_UF:
                             if firstline:
                                 firstline = False
                             else:
