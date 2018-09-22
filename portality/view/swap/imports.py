@@ -115,6 +115,11 @@ def index(model=None):
                                 if q.get('hits',{}).get('total',0) == 1:
                                     sid = q['hits']['hits'][0]['_source']['id']
                                     student = models.Student.pull(sid)
+                                    nofaps = []
+                                    for ap in student.data['applications']:
+                                        if ap['choice_number'] != 'Final':
+                                            nofaps.append(ap)
+                                    student.data['applications'] = nofaps
                                     student.data['applications'].append({
                                         "choice_number": 'Final',
                                         "institution_code": institution_code,
