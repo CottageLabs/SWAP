@@ -335,6 +335,9 @@ def index(model=None):
                                         qry['query']['bool']['must'].append(lnqry)
                                     if len(first_name) > 1:
                                         qry['query']['bool']['must'].append(fnqry)
+                                    if len(post_code) > 1:
+                                        qry['query']['bool']['should'] = pcqry
+                                        qry['query']['bool']['minimum_should_match'] = 1
 
                                     q = models.Student().query(q=qry)
                                     if q.get('hits',{}).get('total',0) == 1:
@@ -359,7 +362,8 @@ def index(model=None):
                                         sid = q['hits']['hits'][0]['_source']['id']
                                         student = models.Student.pull(sid)
 
-                                if student is None:
+                                # disable matching just on name
+                                '''if student is None:
                                     qry['query']['bool']['must'] = []
                                     if len(last_name) > 1:
                                         qry['query']['bool']['must'].append(lnqry)
@@ -380,7 +384,7 @@ def index(model=None):
                                                     tsid = False
                                         if tsid != False:
                                             sid = tsid
-                                            student = models.Student.pull(sid)
+                                            student = models.Student.pull(sid)'''
 
                                 # if no student found, write a failure note
                                 if student is None and counter > 2:
@@ -466,7 +470,10 @@ def index(model=None):
                         counter += 1
                         student = None
                         try:
-                            qry['query']['bool']['must'] = [] #{'term':{'archive'+app.config['FACET_FIELD']:'current'}}
+                            qry['query']['bool']['must'] = []
+                            # archive search
+                            if len(rc.get('archive',"")) > 1:
+                                qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rc['archive']}})
                             if len(rc.get('last_name',"")) > 1 and len(rc.get('first_name',"")) > 1:
                                 qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'], 'fuzziness':0.9}}})
                                 qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'], 'fuzziness':0.9}}})
@@ -499,7 +506,7 @@ def index(model=None):
                                     except:
                                         pass
                                 else:
-                                    q = {};
+                                    q = {}
                             sid = q['hits']['hits'][0]['_source']['id']
                             student = models.Student.pull(sid)
                         except:
@@ -547,6 +554,8 @@ def index(model=None):
                             qry['query']['bool']['must'].append({'match':{'last_name':{'query':rec['last_name'], 'fuzziness':0.9}}})
                             qry['query']['bool']['must'].append({'match':{'first_name':{'query':rec['first_name'], 'fuzziness':0.9}}})
                             qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:rec['date_of_birth']}})
+                            if len(rec.get('archive',"")) > 1:
+                                qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rec['archive']}})
                             q = models.Student().query(q=qry)
                             sid = q['hits']['hits'][0]['_source']['id']
                             student = models.Student.pull(sid)
@@ -617,14 +626,16 @@ def index(model=None):
                             qry['query']['bool']['must'] = [] #{'term':{'archive'+app.config['FACET_FIELD']:'current'}}
                             if len(rec.get('ucas_number',"")) > 1:
                                 qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:rec['ucas_number']}})
-                            else:
-                                if len(rec.get('last_name',"")) > 1 and len(rec.get('date_of_birth',"")) > 1 and len(rec.get('first_name',"")) > 1:
-                                    qry['query']['bool']['must'].append({'match':{'last_name':{'query':rec['last_name'], 'fuzziness':0.9}}})
-                                    qry['query']['bool']['must'].append({'match':{'first_name':{'query':rec['first_name'], 'fuzziness':0.9}}})
-                                    qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:rec['date_of_birth']}})
-                            q = models.Student().query(q=qry)
-                            sid = q['hits']['hits'][0]['_source']['id']
-                            student = models.Student.pull(sid)
+                            elif len(rec.get('last_name',"")) > 1 and len(rec.get('date_of_birth',"")) > 1 and len(rec.get('first_name',"")) > 1:
+                                qry['query']['bool']['must'].append({'match':{'last_name':{'query':rec['last_name'], 'fuzziness':0.9}}})
+                                qry['query']['bool']['must'].append({'match':{'first_name':{'query':rec['first_name'], 'fuzziness':0.9}}})
+                                qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:rec['date_of_birth']}})
+                            if len(qry['query']['bool']['must']) != 0:
+                                if len(rec.get('archive',"")) > 1:
+                                    qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rec['archive']}})
+                                q = models.Student().query(q=qry)
+                                sid = q['hits']['hits'][0]['_source']['id']
+                                student = models.Student.pull(sid)
                         except:
                             failures.append('Could not find student ' + rec.get('first_name',"") + " " + rec.get('last_name',"") + ' on row ' + str(counter) + ' in the system.')
 
