@@ -342,7 +342,7 @@ fieldset{
                     		    >Female</option>
                     		    <option value="Other"
 								{% if record %}{% if record.data.gender == "Other" %} selected="selected"{% endif %}{% endif %}
-								>In another way</option>
+								>Identify in another way</option>
                     		    <option value="Do not wish to disclose"
     	                   		{% if record %}{% if record.data.gender == "Prefer not to say" %} selected="selected"{% endif %}{% endif %}
 								>Prefer not to say</option>
@@ -952,8 +952,8 @@ fieldset{
                         <select name="residency">
                             <option></option>
                             <option
-                            {% if record %}{% if record.data.residency == "UK/EU citizen" %} selected="selected"{% endif %}{% endif %}
-                            >UK/EU citizen</option>
+                            {% if record %}{% if record.data.residency == "UK/EU/EEA citizen" %} selected="selected"{% endif %}{% endif %}
+                            >UK/EU/EEA citizen</option>
                             <option
                             {% if record %}{% if record.data.residency == "Refugee" %} selected="selected"{% endif %}{% endif %}
                             >Refugee</option>
