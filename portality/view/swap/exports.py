@@ -84,11 +84,11 @@ def download_csv(recordlist,keys):
             keys.remove(k)
             keys = [k] + keys
 
-    progressionkeys = ['starting_year','course_name','course_code','institution_shortname','decisions','reg_1st_year','1st_year_result','reg_2nd_year','2nd_year_result','reg_3rd_year','3rd_year_result','reg_4th_year','degree_classification_awarded']
+    uniprogressionkeys = ['starting_year','course_name','course_code','institution_shortname','decisions','reg_1st_year','1st_year_result','reg_2nd_year','2nd_year_result','reg_3rd_year','3rd_year_result','reg_4th_year','degree_classification_awarded']
     if 'uniprogression' in keys:
         keys.remove('uniprogression')
-        for ky in progressionkeys:
-            keys.append(ky)
+        for ky in uniprogressionkeys:
+            keys.append('uni_' + ky)
 
     if 'mentoring' in keys:
         i = keys.index('mentoring') + 1
@@ -100,16 +100,22 @@ def download_csv(recordlist,keys):
         keys.insert(i,'mentornotes')
         keys.remove('mentoring')
 
-    if 'progression' in keys:
-        i = keys.index('progression') + 1
+    if 'college_courses' in keys:
+        i = keys.index('college_courses') + 1
         keys.insert(i,'completedunits')
         keys.insert(i,'profilegrades')
         keys.insert(i,'courseexit')
         keys.insert(i,'exitreason')
         keys.insert(i,'progress')
         keys.insert(i,'progresswhere')
-        keys.remove('progression')
-    
+        keys.remove('college_courses')
+
+    college_progressionkeys = ['access_course','progress_where','campus','course_name','reg_1st_year','1st_year_result','reg_2nd_year','2nd_year_result','progression_to_university']
+    if 'college_progression' in keys:
+        keys.remove('college_progression')
+        for ky in college_progressionkeys:
+            keys.append('college_' + ky)
+
     if 'withdrawn' in keys:
         i = keys.index('withdrawn') + 1
         keys.insert(i,'exitreason')
@@ -157,7 +163,7 @@ def download_csv(recordlist,keys):
                 firstkey = False
             elif key not in ['applications_info','applications_course','school_qualifications_levels','post_school_qualifications_levels']:
                 csvdata.write(',')
-            if key in record.keys() or key == 'address' or key in progressionkeys:
+            if key in record.keys() or key == 'address' or key in uniprogressionkeys or key in college_progressionkeys:
                 if key == 'address':
                     tidykey = record.get('address_line_1','') + '\n'
                     if record.get('address_line_2',''):
@@ -183,7 +189,8 @@ def download_csv(recordlist,keys):
                             ac += line['course_code']
                             ai += line['course_name'] + " (" + line['start_year'] + ") " + line.get('conditions','') + ' ' + line.get('decisions','')
                     tidykey = au + '","' + ac + '","' + ai
-                elif key in progressionkeys:
+                elif key in uniprogressionkeys:
+                    ky = key.replace('uni_','')
                     tidykey = ""
                     firstline = True
                     for line in record.get('progressions',[]):
@@ -191,10 +198,20 @@ def download_csv(recordlist,keys):
                             firstline = False
                         else:
                             tidykey += '\n'
-                        if (key == 'starting_year'):
+                        if (ky == 'starting_year'):
                             tidykey += line.get('starting_year',line.get('start_year',''))
                         else:
-                            tidykey += line.get(key,"")
+                            tidykey += line.get(ky,"")
+                elif key in college_progressionkeys:
+                    ky = key.replace('college_','')
+                    tidykey = ""
+                    firstline = True
+                    for line in record.get('college_progressions',[]):
+                        if firstline:
+                            firstline = False
+                        else:
+                            tidykey += '\n'
+                        tidykey += line.get(ky,"")
                 elif key in ['school_qualifications','post_school_qualifications']:
                     unquote = False
                     qa = ''

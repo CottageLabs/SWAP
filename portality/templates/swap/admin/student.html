@@ -220,6 +220,11 @@ jQuery(document).ready(function() {
 
 {% endif %}
 
+	$('#gender').bind('change',function(e) {
+	   $('#gender_other').val('').hide();
+	   if ( $('#gender').val() == 'Other' ) $('#gender_other').show();
+	});
+
 });
 </script>
 
@@ -326,15 +331,29 @@ fieldset{
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Gender</td>
-                		<td><select name="gender" tabindex=4>
-                		    <option></option>
-                		    <option
-                		    {% if record %}{% if record.data.gender == "Male" %} selected="selected"{% endif %}{% endif %}
-                		    >Male</option>
-                		    <option
-                		    {% if record %}{% if record.data.gender == "Female" %} selected="selected"{% endif %}{% endif %}
-                		    >Female</option>
-                		</select></td>
+                		<td>
+                    		    <select name="gender" tabindex=4>
+                    		    <option></option>
+                    		    <option
+                    		    {% if record %}{% if record.data.gender == "Male" %} selected="selected"{% endif %}{% endif %}
+                    		    >Male</option>
+                    		    <option
+                    		    {% if record %}{% if record.data.gender == "Female" %} selected="selected"{% endif %}{% endif %}
+                    		    >Female</option>
+                    		    <option value="Other"
+								{% if record %}{% if record.data.gender == "Other" %} selected="selected"{% endif %}{% endif %}
+								>In another way</option>
+                    		    <option value="Do not wish to disclose"
+    	                   		{% if record %}{% if record.data.gender == "Prefer not to say" %} selected="selected"{% endif %}{% endif %}
+								>Prefer not to say</option>
+                    		</select>
+                		    <p id="gender_other"{% if not record or record.data.gender != "Other" %} style="display:none"{% endif %}>
+                		        Describe gender identity here, 
+                		        or leave blank to record it as "Other": <br>
+                    		    <input type="text" class="form-control" name="gender_other"{% if record %} value="{{record.data.gender_other}}"{% endif %}>
+                    		</p>
+
+                    	</td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">...</td>
                 		<td><input type="text" name="address_line_2" tabindex=13
@@ -924,6 +943,31 @@ fieldset{
 	<div class="row-fluid">
 	    <div class="span12">		
 	        <table class="table">
+                <tr>
+                    <td>
+                        <p><strong>Student residency
+                        </strong></p>
+                    </td>
+                    <td>
+                        <select name="residency">
+                            <option></option>
+                            <option
+                            {% if record %}{% if record.data.residency == "UK/EU citizen" %} selected="selected"{% endif %}{% endif %}
+                            >UK/EU citizen</option>
+                            <option
+                            {% if record %}{% if record.data.residency == "Refugee" %} selected="selected"{% endif %}{% endif %}
+                            >Refugee</option>
+                            <option
+                            {% if record %}{% if record.data.residency == "Asylum seeker" %} selected="selected"{% endif %}{% endif %}
+                            >Asylum seeker</option>
+                        </select>
+                        <br><input type="checkbox" name="veteran"
+                        {% if record %}{% if record.data.veteran %} checked="checked"{% endif %}{% endif %}
+                        >
+                        Tick if veteran
+                    </td>
+                </tr>
+
                 <tr>
                     <td>
                         <p><strong>Student situation immediately
