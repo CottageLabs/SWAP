@@ -84,11 +84,11 @@ def download_csv(recordlist,keys):
             keys.remove(k)
             keys = [k] + keys
 
-    uniprogressionkeys = ['starting_year','course_name','course_code','institution_shortname','decisions','reg_1st_year','1st_year_result','reg_2nd_year','2nd_year_result','reg_3rd_year','3rd_year_result','reg_4th_year','degree_classification_awarded']
+    uniprogressionkeys = ['uni_starting_year','uni_course_name','uni_course_code','uni_institution_shortname','uni_decisions','uni_reg_1st_year','uni_1st_year_result','uni_reg_2nd_year','uni_2nd_year_result','uni_reg_3rd_year','uni_3rd_year_result','uni_reg_4th_year','uni_degree_classification_awarded']
     if 'uniprogression' in keys:
         keys.remove('uniprogression')
         for ky in uniprogressionkeys:
-            keys.append('uni_' + ky)
+            keys.append(ky)
 
     if 'mentoring' in keys:
         i = keys.index('mentoring') + 1
@@ -110,11 +110,11 @@ def download_csv(recordlist,keys):
         keys.insert(i,'progresswhere')
         keys.remove('college_courses')
 
-    college_progressionkeys = ['access_course','progress_where','campus','course_name','reg_1st_year','1st_year_result','reg_2nd_year','2nd_year_result','progression_to_university']
+    college_progressionkeys = ['college_access_course','college_progress_where','college_campus','college_course_name','college_reg_1st_year','college_1st_year_result','college_reg_2nd_year','college_2nd_year_result','college_progression_to_university']
     if 'college_progression' in keys:
         keys.remove('college_progression')
         for ky in college_progressionkeys:
-            keys.append('college_' + ky)
+            keys.append(ky)
 
     if 'withdrawn' in keys:
         i = keys.index('withdrawn') + 1
