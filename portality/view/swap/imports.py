@@ -769,9 +769,9 @@ def _get_students(institution,whatsort):
     if not isinstance(institution,bool):
         if whatsort == 'applications':
             qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:'current'}})
-            qry['query']['bool']['must'].append({'term':{'applications.institution_shortname'+app.config['FACET_FIELD']:institution}})
+            qry['query']['bool']['must'].append({'term':{'applications.institution_shortname':institution}})
         else:
-            qry['query']['bool']['must'].append({'term':{'progressions.institution_shortname'+app.config['FACET_FIELD']:institution}})
+            qry['query']['bool']['must'].append({'term':{'progressions.institution_shortname':institution}})
 
     q = models.Student().query(q=qry)
     students = [i['_source'] for i in q.get('hits',{}).get('hits',[])]
