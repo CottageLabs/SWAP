@@ -287,9 +287,6 @@ def index(model=None):
                                     'query':{
                                         'bool':{
                                             'must':[
-                                                '''{'term':
-                                                    {'archive'+app.config['FACET_FIELD']:'current'}
-                                                }'''
                                             ]
                                         }
                                     },
@@ -613,9 +610,6 @@ def index(model=None):
                         'query':{
                             'bool':{
                                 'must':[
-                                    '''{'term':
-                                        {'archive'+app.config['FACET_FIELD']:'current'}
-                                    }'''
                                 ]
                             }
                         }
