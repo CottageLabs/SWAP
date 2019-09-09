@@ -49,8 +49,11 @@ def index(model=None):
         # check if it is a submission request from the university import page
         # for an export of university progressions
         if request.form['submit'] == 'Export the university list':
-            uni = request.form['exportuniversity']
             what = request.form['exportwhat']
+            if what == 'applications':
+                uni = request.form['appnsuniversity']
+            else:
+                uni = request.form['progsuniversity']
             
             students = _get_students(uni,what)
             return _download_applications(students, what, uni)
@@ -757,9 +760,6 @@ def _get_students(institution,whatsort):
         'query':{
             'bool':{
                 'must':[
-                    '''{'term':
-                        {'archive'+app.config['FACET_FIELD']:'current'}
-                    }'''
                 ]
             }
         },
@@ -769,9 +769,9 @@ def _get_students(institution,whatsort):
     if not isinstance(institution,bool):
         if whatsort == 'applications':
             qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:'current'}})
-            qry['query']['bool']['must'].append({'term':{'applications.institution_shortname':institution}})
+            qry['query']['bool']['must'].append({'term':{'applications.institution_shortname'+app.config['FACET_FIELD']:institution}})
         else:
-            qry['query']['bool']['must'].append({'term':{'progressions.institution_shortname':institution}})
+            qry['query']['bool']['must'].append({'term':{'progressions.institution_shortname'+app.config['FACET_FIELD']:institution}})
 
     q = models.Student().query(q=qry)
     students = [i['_source'] for i in q.get('hits',{}).get('hits',[])]

@@ -58,7 +58,7 @@ jQuery(document).ready(function() {
                 </select>
             </p>
             <p class="choicedrops" id="appns" style="display:none;">For which university do you wish to export applicants? 
-                <select name="exportuniversity">
+                <select name="appnsuniversity">
                     <option></option>
                     {% for uni in appn_unis %}
                     <option>{{uni}}</option>
@@ -66,7 +66,7 @@ jQuery(document).ready(function() {
                 </select>
             </p>
             <p class="choicedrops" id="progs" style="display:none;">For which university do you wish to export students? 
-                <select name="exportuniversity">
+                <select name="progsuniversity">
                     <option></option>
                     {% for uni in prog_unis %}
                     <option>{{uni}}</option>
