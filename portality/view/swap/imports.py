@@ -119,6 +119,7 @@ def index(model=None):
 
                 elif model.lower() == 'ucas': # this is the main student applications, may also be referred to as ASR, but is not the ASR final data
                     previous = None
+                    addun = False
                     appnset = []
                     counter = 0
                     updates = []
@@ -201,29 +202,34 @@ def index(model=None):
                                     "start_year": rec[21].strip()
                                 }
 
-                                if student is None:
+                                if previous is not None and (student is None or previous.id != student.id or counter == len(records)):
+                                    if counter == len(records):
+                                        appnset.append(nappn) # make sure to catch the last one
+                                    oldappns = previous.data.get('applications',[])
+                                    changed = len(oldappns) != len(appnset) or any(x != y for x, y in zip(oldappns,appnset))
+                                    if changed or addun:
+                                        if addun:
+                                            addun = False
+                                            updates.append('Updated student <a href="/admin/student/' + previous.id + '">' + previous.data['first_name'] + ' ' + previous.data['last_name'] + '</a> with UCAS number ' + previous.data['ucas_number'])
+                                        if changed:
+                                            previous.data['applications'] = appnset
+                                            updates.append('Updated student <a href="/admin/student/' + previous.id + '">' + previous.data['first_name'] + ' ' + previous.data['last_name'] + '</a>')
+                                        previous.save()
+                                    else:
+                                        stayedsame.append('Found <a href="/admin/student/' + previous.id + '">' + previous.data['first_name'] + ' ' + previous.data['last_name'] + '</a> - no change.')
                                     appnset = []
-                                    failures.append('Failed to find student ' + rec[1] + ' ' + rec[0] + ' from row ' + str(counter))
-                                else:
-                                    if previous is not None and (previous != student.id or counter == len(records)):
-                                        if counter == len(records):
-                                            appnset.append(nappn) # make sure to catch the last one
-                                        oldappns = student.data.get('applications',[])
-                                        changed = len(oldappns) != len(appnset) or any(x != y for x, y in zip(oldappns,appnset))
-                                        if changed or len(rec[3]) > 1 and not len(student.data.get('ucas_number',"")) > 1:
-                                            if changed:
-                                                student.data['applications'] = appnset
-                                                updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a>')
-                                            if len(rec[3]) > 1 and not len(student.data.get('ucas_number',"")) > 1:
-                                                student.data['ucas_number'] = rec[3].strip()
-                                                updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a> with UCAS number ' + rec[3])
-                                            student.save()
-                                        else:
-                                            stayedsame.append('Found <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a> - no change.')
-                                        appnset = []
-                                    previous = student.id
-                                    student = None
+                                    previous = None
 
+                                if student is None:
+                                    failures.append('Failed to find student ' + rec[1] + ' ' + rec[0] + ' (' + rec[3] + ') from row ' + str(counter))
+                                    appnset = []
+                                
+                                if previous is None or student is None or previous.id != student.id:
+                                    previous = student
+                                    if previous is not None and len(rec[3]) > 1 and not previous.data.get('ucas_number',False):
+                                        previous.data['ucas_number'] = rec[3].strip()
+                                        addun = True
+                                student = None
                                 appnset.append(nappn)
                             except:
                                 # failed to add the appn data to the student
