@@ -127,7 +127,11 @@ def download_csv(recordlist,keys):
 
     if 'applications' in keys:
         i = keys.index('applications') + 1
-        keys.insert(i,'applications_info')
+        #keys.insert(i,'applications_info')
+        keys.insert(i,'decisions')
+        keys.insert(i,'conditions')
+        keys.insert(i,'start_year')
+        keys.insert(i,'course_name')
         keys.insert(i,'applications_course')
 
     if 'school_qualifications' in keys:
@@ -138,10 +142,23 @@ def download_csv(recordlist,keys):
         i = keys.index('post_school_qualifications') + 1
         keys.insert(i,'post_school_qualifications_levels')
 
+    # convert ucas applications recordlist to output a student on every line
+    hasappns = False
+    longrecordlist = []
+    for rec in recordlist:
+        if rec.get('applications',False):
+            hasappns = True
+            rapps = rec['applications']
+            for ra in rapps:
+                rec.applications = [ra]
+                longrecordlist.append(rec)
+        else:
+            longrecordlist.append(rec)
+
     # make a csv string of the records
     csvdata = StringIO.StringIO()
     firstrecord = True
-    for record in recordlist:
+    for record in longrecordlist:
         # for the first one, put the keys on the first line, otherwise just newline
         if firstrecord:
             fk = True
@@ -174,7 +191,11 @@ def download_csv(recordlist,keys):
                     unquote = False
                     au = ''
                     ac = ''
-                    ai = ''
+                    #ai = ''
+                    an = ''
+                    asy = ''
+                    aco = ''
+                    ade = ''
                     firstline = True
                     for line in record[key]:
                         #if ( applications_UF and 'UF' in line['decisions'] ) or (applications_UF and line['decisions'] == 'UF') or (applications_UF and line['choice_number'] == 'Final') or not applications_UF:
@@ -184,11 +205,20 @@ def download_csv(recordlist,keys):
                             else:
                                 au += '\n'
                                 ac += '\n'
-                                ai += '\n'
+                                #ai += '\n'
+                                an += '\n'
+                                asy += '\n'
+                                aco += '\n'
+                                ade += '\n'
                             au += line['institution_shortname']
                             ac += line['course_code']
-                            ai += line['course_name'] + " (" + line['start_year'] + ") " + line.get('conditions','') + ' ' + line.get('decisions','')
-                    tidykey = au + '","' + ac + '","' + ai
+                            #ai += line['course_name'] + " (" + line['start_year'] + ") " + line.get('conditions','') + ' ' + line.get('decisions','')
+                            an += line['course_name']
+                            asy += line['start_year']
+                            aco += line['conditions']
+                            ade += line['decisions']
+                    #tidykey = au + '","' + ac + '","' + ai
+                    tidykey = au + '","' + ac + '","' + an + '","' + asy + '","' + aco + '","' + ade
                 elif key in uniprogressionkeys:
                     ky = key.replace('uni_','')
                     tidykey = ""
@@ -243,7 +273,7 @@ def download_csv(recordlist,keys):
                 csvdata.write('"",""')
             elif key == "applications":
                 csvdata.write('"","",""')
-            elif key not in ['applications_info','applications_course','school_qualifications_levels','post_school_qualifications_levels']:
+            elif key not in ['applications_info','applications_course','school_qualifications_levels','post_school_qualifications_levels'] and (not hasappns or key not in ['course_name','start_year','conditions','decisions']):
                 csvdata.write('""')
                 
     # dump to the browser as a csv attachment
