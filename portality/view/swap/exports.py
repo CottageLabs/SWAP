@@ -150,7 +150,7 @@ def download_csv(recordlist,keys):
             hasappns = True
             rapps = rec['applications']
             for ra in rapps:
-                rec.applications = [ra]
+                rec['applications'] = [ra]
                 longrecordlist.append(rec)
         else:
             longrecordlist.append(rec)
