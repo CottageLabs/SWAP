@@ -146,7 +146,7 @@ def download_csv(recordlist,keys):
     hasappns = False
     longrecordlist = []
     for rec in recordlist:
-        if rec.get('applications',False):
+        if 'applications' in keys and rec.get('applications',False):
             hasappns = True
             rapps = rec['applications']
             for ra in rapps:
