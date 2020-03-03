@@ -4,7 +4,7 @@ from datetime import datetime
 import cStringIO as StringIO
 import string
 
-import json
+import json, copy
 
 from flask import Blueprint, request, flash, abort, make_response, render_template, redirect, send_file
 from flask.ext.login import current_user
@@ -148,7 +148,7 @@ def download_csv(recordlist,keys):
     for rec in recordlist:
         if 'applications' in keys and rec.get('applications',False):
             hasappns = True
-            rapps = rec['applications']
+            rapps = copy.deepcopy(rec['applications'])
             for ra in rapps:
                 rec['applications'] = [ra]
                 longrecordlist.append(rec)
