@@ -127,12 +127,11 @@ def download_csv(recordlist,keys):
 
     if 'applications' in keys:
         i = keys.index('applications') + 1
-        #keys.insert(i,'applications_info')
         keys.insert(i,'decisions')
         keys.insert(i,'conditions')
         keys.insert(i,'start_year')
         keys.insert(i,'course_name')
-        keys.insert(i,'applications_course')
+        keys.insert(i,'course_code')
 
     if 'school_qualifications' in keys:
         i = keys.index('school_qualifications') + 1
@@ -179,7 +178,7 @@ def download_csv(recordlist,keys):
             unquote = True
             if firstkey:
                 firstkey = False
-            elif key not in ['applications_info','applications_course','school_qualifications_levels','post_school_qualifications_levels']:
+            elif key not in ['course_code','course_name','start_year','conditions','decisions','school_qualifications_levels','post_school_qualifications_levels']:
                 csvdata.write(',')
             if key in record.keys() or key == 'address' or key in uniprogressionkeys or key in college_progressionkeys:
                 if key == 'address':
@@ -274,7 +273,7 @@ def download_csv(recordlist,keys):
                 csvdata.write('"",""')
             elif key == "applications":
                 csvdata.write('"","",""')
-            elif key not in ['applications_info','applications_course','school_qualifications_levels','post_school_qualifications_levels'] and (not hasappns or key not in ['course_name','start_year','conditions','decisions']):
+            elif key not in ['course_code','course_name','start_year','conditions','decisions','school_qualifications_levels','post_school_qualifications_levels'] and (not hasappns or key not in ['course_name','start_year','conditions','decisions']):
                 csvdata.write('""')
                 
     # dump to the browser as a csv attachment
