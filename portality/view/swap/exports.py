@@ -215,7 +215,7 @@ def download_csv(recordlist,keys):
                             #ai += line['course_name'] + " (" + line['start_year'] + ") " + line.get('conditions','') + ' ' + line.get('decisions','')
                             an += line['course_name']
                             asy += line['start_year']
-                            aco += line['conditions']
+                            aco += line.get('conditions','') # older ones do not all have conditions
                             ade += line['decisions']
                     #tidykey = au + '","' + ac + '","' + ai
                     tidykey = au + '","' + ac + '","' + an + '","' + asy + '","' + aco + '","' + ade
