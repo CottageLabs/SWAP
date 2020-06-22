@@ -272,8 +272,8 @@ def download_csv(recordlist,keys):
             elif key in ['school_qualifications','post_school_qualifications']:
                 csvdata.write('"",""')
             elif key == "applications":
-                csvdata.write('"","",""')
-            elif key not in ['course_code','course_name','start_year','conditions','decisions','school_qualifications_levels','post_school_qualifications_levels'] and (not hasappns or key not in ['course_name','start_year','conditions','decisions']):
+                csvdata.write('"","","","","",""')
+            elif key not in ['course_code','course_name','start_year','conditions','decisions','school_qualifications_levels','post_school_qualifications_levels'] and (not hasappns or key not in ['course_code','course_name','start_year','conditions','decisions']):
                 csvdata.write('""')
                 
     # dump to the browser as a csv attachment
