@@ -47,13 +47,8 @@ def stream(index='record',key='tags',size=100):
                 ],
                 'must_not':[
                     {
-                        'term':{
-                            'disabled'+app.config['FACET_FIELD']: "on"
-                        }
-                    },
-                    {
-                        'term':{
-                            'disabled'+app.config['FACET_FIELD']: True
+                        'exists':{
+                            'field': 'disabled'
                         }
                     }
                 ]

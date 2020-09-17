@@ -421,6 +421,10 @@ class Course(DomainObject):
         if len(rec['contacts']) == 0: del rec['contacts']
         for k, v in rec.items():
             self.data[k] = v
+            
+        for kk, vv in self.data.items():
+            if vv == True and kk not in request.form.keys():
+                del self.data[kk]
         
         self.save()
 
