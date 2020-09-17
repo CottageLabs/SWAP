@@ -89,6 +89,11 @@ def dropdowns(model,key='name'):
                         'term':{
                             'disabled'+app.config['FACET_FIELD']: "on"
                         }
+                    },
+                    {
+                        'term':{
+                            'disabled'+app.config['FACET_FIELD']: True
+                        }
                     }
                 ]
             }

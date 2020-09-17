@@ -50,6 +50,11 @@ def stream(index='record',key='tags',size=100):
                         'term':{
                             'disabled'+app.config['FACET_FIELD']: "on"
                         }
+                    },
+                    {
+                        'term':{
+                            'disabled'+app.config['FACET_FIELD']: True
+                        }
                     }
                 ]
             }
