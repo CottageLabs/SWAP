@@ -47,8 +47,8 @@ def stream(index='record',key='tags',size=100):
                 ],
                 'must_not':[
                     {
-                        'exists':{
-                            'field': 'disabled'
+                        'query_string':{
+                            'query': 'disabled:*'
                         }
                     }
                 ]

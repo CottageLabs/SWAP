@@ -83,14 +83,8 @@ def student():
 def dropdowns(model,key='name'):
     qry = {
         'query':{
-            'bool':{
-                'must_not':[
-                    {
-                        'exists':{
-                            'field': 'disabled'
-                        }
-                    }
-                ]
+            'query_string':{
+                'query': 'NOT disabled:*'
             }
         },
         'size': 0,
