@@ -83,7 +83,7 @@ def index(model=None):
                     failures = []
                     for rec in records:
                         if rec[0].strip().lower() != 'surname':
-                            if 1 == 1: #try:
+                            try:
                                 # these records should only exist for students with ucas numbers already in system, so only match by that
                                 qry = { 'query': { 'bool': { 'must': [] } }, 'sort': {'created_date.exact': 'desc'} }
                                 qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:rec[4].strip()}})
@@ -109,7 +109,7 @@ def index(model=None):
                                     updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a>')
                                 else:
                                     failures.append('Could not find student in system with UCAS number ' + rec[4])
-                            else: #except:
+                            except:
                                 failures.append('Failed to read student data for ' + rec[4])
 
                     flash('Processed data')
