@@ -149,11 +149,12 @@ def download_csv(recordlist,keys):
             hasappns = True
             rapps = copy.deepcopy(rec['applications'])
             for ra in rapps:
-                if ( applications_UF and 'UF' in ra.get('decisions',[]) ) or (applications_UF and ra.get('decisions',False) == 'UF') or (applications_UF and ra.get('choice_number',False) == 'Final') or not applications_UF:
+                #if ( applications_UF and 'UF' in ra.get('decisions',[]) ) or (applications_UF and ra.get('decisions',False) == 'UF') or (applications_UF and ra.get('choice_number',False) == 'Final') or not applications_UF:
+                if (applications_UF and ra.get('choice_number',False) == 'Final') or not applications_UF:
                     nr = copy.deepcopy(rec)
                     nr['applications'] = [ra]
                     longrecordlist.append(nr)
-        elif ('applications' not in keys) or ('applications' in keys and not applications_UF):
+        else:
             longrecordlist.append(rec)
 
     # make a csv string of the records
@@ -199,8 +200,8 @@ def download_csv(recordlist,keys):
                     ade = ''
                     firstline = True
                     for line in record[key]:
-                        if ( applications_UF and 'UF' in line.get('decisions',[]) ) or (applications_UF and line.get('decisions',False) == 'UF') or (applications_UF and line.get('choice_number',False) == 'Final') or not applications_UF:
-                        #if (applications_UF and line['choice_number'] == 'Final') or not applications_UF:
+                        #if ( applications_UF and 'UF' in line.get('decisions',[]) ) or (applications_UF and line.get('decisions',False) == 'UF') or (applications_UF and line.get('choice_number',False) == 'Final') or not applications_UF:
+                        if (applications_UF and line['choice_number'] == 'Final') or not applications_UF:
                             if firstline:
                                 firstline = False
                             else:
