@@ -153,7 +153,7 @@ def download_csv(recordlist,keys):
                     nr = copy.deepcopy(rec)
                     nr['applications'] = [ra]
                     longrecordlist.append(nr)
-        else:
+        elif ('applications' not in keys) or ('applications' in keys and not applications_UF):
             longrecordlist.append(rec)
 
     # make a csv string of the records
