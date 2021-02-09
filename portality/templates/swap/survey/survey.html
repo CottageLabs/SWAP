@@ -277,7 +277,7 @@ input.bigfield{
 	                    <td style="text-align:right;padding:6px 10px 0 0;"><label for="date_of_birth">Date of birth</label></td>
                 		<td><input type="text" id="date_of_birth" class="dobdatepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout" tabindex=3></td>
 
-	                    <td style="text-align:right;padding:6px 10px 0 0;"><label for="phone">Mobile phone</label></td>
+	                    <td style="text-align:right;padding:6px 10px 0 0;"><label for="mobile_phone">Mobile phone</label></td>
                 		<td><input type="text" id="mobile_phone" name="mobile_phone" tabindex=11 data-type="phone"></td>
                     </tr>
         	        <tr>
@@ -541,7 +541,7 @@ input.bigfield{
 	<div class="row-fluid">
 	    <div class="span12">
 					<p>
-						<input type="checkbox" name="no_school_quals">
+						<input type="checkbox" id="no_school_quals" name="no_school_quals">
 						<label for="no_school_quals">I do not hold any qualifications from school</label>
 					</p>
 			</div>
@@ -882,8 +882,8 @@ input.bigfield{
                             <option>Blind/partially sighted</option>
                             <option>Other</option>
                         </select>
-                        <br><input type="checkbox" name="registered_disabled">
-                        Tick if registered disabled
+                        <br><input type="checkbox" id="registered_disabled" name="registered_disabled">
+                        <label for="registered_disabled">Tick if registered disabled</label>
                     </td>
                 </tr>
 
