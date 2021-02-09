@@ -260,30 +260,30 @@ input.bigfield{
 	        <table>
 	            <tbody>
         	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 0;">First name</td>
-                		<td><input label="first name" type="text" name="first_name" data-required="true" tabindex=1></td>
+	                    <td style="text-align:right;padding:6px 10px 0 0;"><label for="first_name">First name</label></td>
+                		<td><input type="text" name="first_name" data-required="true" tabindex=1></td>
 
-	                    <td style="text-align:right;padding:6px 10px 0 0;">Email address</td>
-                		<td><input label="email" type="text" name="email" data-type="email" data-required="true" data-trigger="keyup focusout" tabindex=9></td>
+	                    <td style="text-align:right;padding:6px 10px 0 0;"><label for="email">Email address</label></td>
+                		<td><input type="text" name="email" data-type="email" data-required="true" data-trigger="keyup focusout" tabindex=9></td>
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Last name</td>
-                		<td><input label="last name" type="text" name="last_name" data-required="true" tabindex=2></td>
+                		<td><input type="text" name="last_name" data-required="true" tabindex=2></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Home phone</td>
-                		<td><input label="home phone" type="text" name="home_phone" tabindex=10 data-type="phone"></td>
+                		<td><input type="text" name="home_phone" tabindex=10 data-type="phone"></td>
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Date of birth</td>
-                		<td><input label="date of birth" type="text" class="dobdatepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout" tabindex=3></td>
+                		<td><input type="text" class="dobdatepicker" name="date_of_birth" data-required="true" data-trigger="keyup change focusout" tabindex=3></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Mobile phone</td>
-                		<td><input label="mobile phone" type="text" name="mobile_phone" tabindex=11 data-type="phone"></td>
+                		<td><input type="text" name="mobile_phone" tabindex=11 data-type="phone"></td>
                     </tr>
         	        <tr>
-	                    <td style="text-align:right;padding:6px 10px 0 100px;">Gender</td>
+	                    <td style="text-align:right;padding:6px 10px 0 100px;"><label for="gender">Gender</label</td>
                 		<td>
-                		    <select label="gender" id="gender" name="gender" tabindex=4>
+                		    <select id="gender" name="gender" tabindex=4>
                 		        <option></option>
                 		        <option value="Male">Male</option>
                 		        <option value="Female">Female</option>
@@ -293,16 +293,16 @@ input.bigfield{
                 		    <p id="show_gender_other" style="display:none">
             		        If you want to tell us how you identify your gender, please enter it here, 
             		        or leave blank and we will simply record it as "Other": <br>
-                		    <input label="other gender" type="text" class="form-control" id="gender_other" name="gender_other">
+                		    <input type="text" class="form-control" id="gender_other" name="gender_other">
                     		</p>
                 		</td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Address</td>
-                		<td><input label="address line 1" type="text" name="address_line_1" tabindex=12></td>
+                		<td><input type="text" name="address_line_1" tabindex=12></td>
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">College</td>
-                		<td><select label="college" name="college" data-required="true" tabindex=5 class="collegeselector">
+                		<td><select name="college" data-required="true" tabindex=5 class="collegeselector">
                 		    <option></option>
                 		    {% for opt in selections.colleges %}
                 		        <option>{{ opt }}</option>
@@ -310,11 +310,11 @@ input.bigfield{
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">...</td>
-                		<td><input label="address line 2" type="text" name="address_line_2" tabindex=13></td>
+                		<td><input type="text" name="address_line_2" tabindex=13></td>
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Campus</td>
-                		<td><select label="campus" name="campus" data-required="true" tabindex=6 class="campusselector">
+                		<td><select name="campus" data-required="true" tabindex=6 class="campusselector">
                 		    <option></option>
                 		    {% for opt in selections.campus %}
                 		        <option>{{ opt }}</option>
@@ -322,11 +322,11 @@ input.bigfield{
                 		</select></td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Town / city</td>
-                		<td><input label="city" type="text" name="city" tabindex=14></td>
+                		<td><input type="text" name="city" tabindex=14></td>
                     </tr>
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Course</td>
-                		<td><select label="course" name="course" data-required="true" tabindex=7 class="courseselector">
+                		<td><select name="course" data-required="true" tabindex=7 class="courseselector">
                 		    <option></option>
                 		    {% for opt in selections.courses %}
                 		        <option>{{ opt }}</option>
@@ -342,7 +342,7 @@ input.bigfield{
                 		    </span></p>
 	                    </td>
                 		<td>
-                		    <input label="post code" id="post_code_box" type="text" name="post_code" required="true" data-ispostcode="true" tabindex=15>
+                		    <input id="post_code_box" type="text" name="post_code" required="true" data-ispostcode="true" tabindex=15>
                 		</td>
                     </tr>
         	        <tr>
@@ -352,7 +352,7 @@ input.bigfield{
 	                        of the distance in <strong>one</strong> direction</p>
         	            </td>
         	            <td>
-                	        <select label="travel" name="travel" tabindex=8>
+                	        <select name="travel" tabindex=8>
                                 <option></option>
                                 <option>1</option>
                                 <option>2</option>
@@ -408,7 +408,7 @@ input.bigfield{
         	            </td>
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Your nationality</td>
-                		<td><select label="nationality" name="nationality" tabindex=16>
+                		<td><select name="nationality" tabindex=16>
                                     <option></option>
                                     <option>Scottish</option>
                                     <option>English</option>
@@ -450,7 +450,7 @@ input.bigfield{
 	                        I agree to the <br>
                             <a target="_blank" href="/policy">SWAP data policy</a>
 	                    </td>
-                		<td><select label="data policy agreement" name="data_policy_agreement" data-required="true" tabindex=17>
+                		<td><select name="data_policy_agreement" data-required="true" tabindex=17>
                 		    <option></option>
                 		    <option>Yes</option>
                 		</select></td>
@@ -511,23 +511,23 @@ input.bigfield{
                 </thead>
                 <tbody>
                     <tr>
-                		<td><select label="school qualification subject" name="school_qualification_subject">
+                		<td><select name="school_qualification_subject">
                 		    <option></option>
                 		    {% for opt in selections.school_subjects %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><select label="school qualification label" name="school_qualification_level" style="width:150px;">
+                		<td><select name="school_qualification_level" style="width:150px;">
                 		    <option></option>
                 		    {% for opt in selections.school_levels %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><input label="school qualification grade" type="text" name="school_qualification_grade" style="width:100px;"></td>
+                		<td><input type="text" name="school_qualification_grade" style="width:100px;"></td>
                 		<td>
-							<input label="school qualification date" type="text" class="datepicker" name="school_qualification_date" data-trigger="keyup change focusout">
+							<input type="text" class="datepicker" name="school_qualification_date" data-trigger="keyup change focusout">
                 		</td>
-                		<td><select label="school qualification full time or part time" name="school_qualification_ftpt" style="width:100px;">
+                		<td><select name="school_qualification_ftpt" style="width:100px;">
                 		    <option></option>
                 		    <option>Full time</option>
                 		    <option>Part time</option>
@@ -541,7 +541,7 @@ input.bigfield{
 	<div class="row-fluid">
 	    <div class="span12">
 					<p>
-						<input label="no school qualifications" type="checkbox" name="no_school_quals">
+						<input type="checkbox" name="no_school_quals">
 						I do not hold any qualifications from school
 					</p>
 			</div>
@@ -569,18 +569,18 @@ input.bigfield{
                 </thead>
                 <tbody>
                     <tr>
-                		<td><input label="post school qualification subject" type="text" name="post_school_qualification_subject"></td>
-                		<td><select label="post school qualification level" name="post_school_qualification_level" style="width:150px;">
+                		<td><input type="text" name="post_school_qualification_subject"></td>
+                		<td><select name="post_school_qualification_level" style="width:150px;">
                 		    <option></option>
                 		    {% for opt in selections.post_school_levels %}
                 		        <option>{{ opt }}</option>
                 		    {% endfor %}
                 		</select></td>
-                		<td><input label="post school qualification grade" type="text" name="post_school_qualification_grade" style="width:100px;"></td>
+                		<td><input type="text" name="post_school_qualification_grade" style="width:100px;"></td>
                 		<td>
-							<input label="post school qualification date" type="text" class="datepicker" name="post_school_qualification_date" data-trigger="keyup change focusout">
+							<input type="text" class="datepicker" name="post_school_qualification_date" data-trigger="keyup change focusout">
                 		</td>
-                		<td><select label="post school qualification full time or part time" name="post_school_qualification_ftpt" style="width:100px;">
+                		<td><select name="post_school_qualification_ftpt" style="width:100px;">
                 		    <option></option>
                 		    <option>Full time</option>
                 		    <option>Part time</option>
@@ -594,7 +594,7 @@ input.bigfield{
 	<div class="row-fluid">
 	    <div class="span12">
 					<p>
-						<input label="no post school qualifications" type="checkbox" name="no_post_school_quals">
+						<input type="checkbox" name="no_post_school_quals">
 						I have not achieved any qualifications post school
 					</p>
 			</div>
@@ -608,7 +608,7 @@ input.bigfield{
 											<td style="text-align:right;padding:6px 10px 0 0;">
 													Around what date were you last in full time education? (do not include your current study)
 											</td>
-											<td><input label="last full time education" type="text" class="datepicker" name="last_ft_education" data-trigger="keyup change focusout"></td>
+											<td><input type="text" class="datepicker" name="last_ft_education" data-trigger="keyup change focusout"></td>
 									</tr>
 							</tbody>
 					</table>
@@ -629,18 +629,18 @@ input.bigfield{
                 <tbody>
                     <tr>
                         <td>HNC</td>
-                        <td><input label="parents with HNC" type="checkbox" name="parents_with_hnc"></td>
-                        <td><input label="siblings with HNC" type="checkbox" name="siblings_with_hnc"></td>
+                        <td><input type="checkbox" name="parents_with_hnc"></td>
+                        <td><input type="checkbox" name="siblings_with_hnc"></td>
                     </tr>
                     <tr>
                         <td>HND</td>
-                        <td><input label="parents with HND" type="checkbox" name="parents_with_hnd"></td>
-                        <td><input label="siblings with HND" type="checkbox" name="siblings_with_hnd"></td>
+                        <td><input type="checkbox" name="parents_with_hnd"></td>
+                        <td><input type="checkbox" name="siblings_with_hnd"></td>
                     </tr>
                     <tr>
                         <td>Degree</td>
-                        <td><input label="parents with degree" type="checkbox" name="parents_with_degree"></td>
-                        <td><input label="siblings with degree" type="checkbox" name="siblings_with_degree"></td>
+                        <td><input type="checkbox" name="parents_with_degree"></td>
+                        <td><input type="checkbox" name="siblings_with_degree"></td>
                     </tr>
                 </tbody>
 	        </table>            
@@ -676,13 +676,13 @@ input.bigfield{
                             </strong></p>
                         </td>
                         <td>
-                            <select label="residency" name="residency">
+                            <select name="residency">
                                 <option value="">choose one</option>
                                 <option>UK, EU/EEA citizen</option>
                                 <option>Refugee</option>
                                 <option>Asylum seeker</option>
                             </select>
-                            <br><input label="veteran" type="checkbox" name="veteran">
+                            <br><input type="checkbox" name="veteran">
                             Have you served any time in the armed forces?
                         </td>
                     </tr>
@@ -695,7 +695,7 @@ input.bigfield{
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Pre-school aged children</td>
                 		<td>
-                	        <select label="dependents pre school children" name="dependents_pre_school_children">
+                	        <select name="dependents_pre_school_children">
                                 <option></option>
                                 <option>1</option>
                                 <option>2</option>
@@ -708,7 +708,7 @@ input.bigfield{
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Secondary school aged children</td>
                 		<td>
-                	        <select label="dependents secondary school children" name="dependents_secondary_school_children">
+                	        <select name="dependents_secondary_school_children">
                                 <option></option>
                                 <option>1</option>
                                 <option>2</option>
@@ -722,7 +722,7 @@ input.bigfield{
         	        <tr>
 	                    <td style="text-align:right;padding:6px 10px 0 0;">Primary school aged children</td>
                 		<td>
-                	        <select label="dependents primary school children" name="dependents_primary_school_children">
+                	        <select name="dependents_primary_school_children">
                                 <option></option>
                                 <option>1</option>
                                 <option>2</option>
@@ -735,7 +735,7 @@ input.bigfield{
 
 	                    <td style="text-align:right;padding:6px 10px 0 100px;">Dependent adults (relatives/friends)</td>
                 		<td>
-                	        <select label="dependents adults" name="dependents_adults">
+                	        <select name="dependents_adults">
                                 <option></option>
                                 <option>1</option>
                                 <option>2</option>
@@ -749,7 +749,7 @@ input.bigfield{
                 </tbody>
             </table>
 				<p>
-					Are you a single parent? If so tick here: <input label="single parent" type="checkbox" name="single_parent">
+					Are you a single parent? If so tick here: <input type="checkbox" name="single_parent">
 				</p>
 	    </div>
 	</div>
@@ -767,7 +767,7 @@ input.bigfield{
 	        prior to starting your access programme?</strong> <br>Click in the box to see options.</p>
                     </td>
                     <td>
-                        <select label="situation" name="situation" multiple="multiple" class="select2this" placeholder="select all that apply">
+                        <select name="situation" multiple="multiple" class="select2this" placeholder="select all that apply">
                             <option></option>
                             <option>Employed full time</option>
                             <option>Employed part time</option>
@@ -786,7 +786,7 @@ input.bigfield{
                         <p><strong>What was your main occupation over the last two years (if applicable)?</strong></p>
                     </td>
                     <td>
-                        <input label="main occupation" type="text" name="main_occupation" placeholder="type your occupation here">
+                        <input type="text" name="main_occupation" placeholder="type your occupation here">
                     </td>
                 </tr>
                 
@@ -796,7 +796,7 @@ input.bigfield{
                         are on a SWAP Programme?</strong> <br>Click in the box to see options.</p>
                     </td>
                     <td>
-                        <select label="funding" name="funding" multiple="multiple" class="select2this" placeholder="select all that apply">
+                        <select name="funding" multiple="multiple" class="select2this" placeholder="select all that apply">
                             <option></option>
                             <option>College bursary</option>
                             <option>College (other)</option>
@@ -819,7 +819,7 @@ input.bigfield{
                         Racial Equality.</p>
                     </td>
                     <td>
-                        <select label="ethnicity" name="ethnicity">
+                        <select name="ethnicity">
                             <option value="">choose one</option>
                             
                             <optgroup label="White">
@@ -868,7 +868,7 @@ input.bigfield{
                         Disability Discrimination Act. Click in the box to see options.</p>
                     </td>
                     <td>
-                        <select label="disability" name="disability" multiple="multiple" class="select2this" placeholder="select all that apply">
+                        <select name="disability" multiple="multiple" class="select2this" placeholder="select all that apply">
                             <option></option>
                             <option>No known disability</option>
                             <option>Multiple disabilities</option>
@@ -882,7 +882,7 @@ input.bigfield{
                             <option>Blind/partially sighted</option>
                             <option>Other</option>
                         </select>
-                        <br><input label="registered disabled" type="checkbox" name="registered_disabled">
+                        <br><input type="checkbox" name="registered_disabled">
                         Tick if registered disabled
                     </td>
                 </tr>
@@ -896,7 +896,7 @@ input.bigfield{
                         form.</p>
                     </td>
                     <td>
-                        <select label="local authority care" name="local_authority_care">
+                        <select name="local_authority_care">
                             <option value="">choose one</option>
                             <option>Less than 1 week</option>
                             <option>1 week to 3 months</option>
@@ -993,7 +993,7 @@ input.bigfield{
                         </strong></p>
                     </td>
                     <td>
-                        <select label="why on SWAP" name="why_on_swap">
+                        <select name="why_on_swap">
                             <option></option>
                             <option>To get back into learning</option>
                             <option>To do a specific qualification (e.g. Nursing)</option>
@@ -1011,7 +1011,7 @@ input.bigfield{
                         </strong></p>
                     </td>
                     <td>
-                        <select label="where heard about SWAP" name="where_heard_about">
+                        <select name="where_heard_about">
                             <option></option>
                             <option>Newspaper / advert</option>
                             <option>Leaflet</option>
@@ -1048,13 +1048,13 @@ input.bigfield{
 	<div class="row-fluid" style="margin-top:30px;">
 			<div class="span6">
 				<p>
-					<input label="confirm information given is true" type="checkbox" name="confirm_true" data-required="true">
+					<input type="checkbox" name="confirm_true" data-required="true">
 					<b>I confirm that the information given on this form is true, complete and accurate and no information has been omitted.</b>
 				</p>
 			</div>
 	    <div class="span6">
 	        <div class="alert alert-success">
-            	<input label="save" id="triggersave" class="btn btn-success span2" style="margin-left:100px;" type="submit" name="submit" value="Submit your registration" />
+            	<input id="triggersave" class="btn btn-success span2" style="margin-left:100px;" type="submit" name="submit" value="Submit your registration" />
 	        </div>
 	    </div>
 	    <div class="span6">
