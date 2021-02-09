@@ -10,6 +10,7 @@ body, html{
     width:100%;
     height:100%;
     font-family:Arial, Helvetica, sans-serif;
+    font-size: 12px;
     background:url(/static/back_banner.png) repeat-x;
     background-color:#333333;
 }
@@ -73,7 +74,7 @@ input.parsley-error, textarea.parsley-error, select.parsley-error, p.parsley-err
     border: 1px solid #EED3D7 !important;
 }
 ul.parsley-error-list {
-    font-size: 10px;
+    font-size: 12px;
     margin: -5px 0 0 0;
     width:200px;
     list-style-type:none;
