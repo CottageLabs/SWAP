@@ -227,8 +227,12 @@ def index(model=None):
                                 if previous is None or student is None or previous.id != student.id:
                                     previous = student
                                     if previous is not None and len(rec[3]) > 1 and not previous.data.get('ucas_number',False):
-                                        previous.data['ucas_number'] = rec[3].strip()
-                                        addun = True
+                                        try:
+                                            int(rec[3].strip())
+                                            previous.data['ucas_number'] = rec[3].strip()
+                                            addun = True
+                                        except:
+                                            pass
                                 student = None
                                 appnset.append(nappn)
                             except:
