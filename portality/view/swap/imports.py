@@ -285,6 +285,7 @@ def index(model=None):
                             q = {}
                             qry['query']['bool']['must'] = []
                             try:
+                                if len(rc.get('archive',"")) > 1: qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rc['archive']}})
                                 if len(rc.get('ucas_number',"")) > 1:
                                     qry['query']['bool']['must'].append({'term':{'ucas_number'+app.config['FACET_FIELD']:rc['ucas_number']}})
                                     q = models.Student().query(q=qry)
@@ -295,9 +296,7 @@ def index(model=None):
                                 pass
                             if student is None:
                                 qry['query']['bool']['must'] = []
-                                # archive search
-                                if len(rc.get('archive',"")) > 1:
-                                    qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rc['archive']}})
+                                if len(rc.get('archive',"")) > 1: qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rc['archive']}})
                                 if len(rc.get('last_name',"")) > 1 and len(rc.get('first_name',"")) > 1 and len(rc.get('date_of_birth',"")) > 1:
                                     qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'], 'fuzziness':0.9}}})
                                     qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'], 'fuzziness':0.9}}})
