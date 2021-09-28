@@ -1536,17 +1536,17 @@ fieldset{
                     <td>And if they withdrew, their <b>main reason</b> for leaving.</td>
                     <td><select name="exitreason">
                         <option></option>
-                        <option {% if record.data.exitreason == "Finance" %} selected="selected"{% endif %}>Finance</option>
-                        <option {% if record.data.exitreason == "Domestic" %} selected="selected"{% endif %}>Domestic</option>
-                        <option {% if record.data.exitreason == "Course difficulty" %} selected="selected"{% endif %}>Course difficulty</option>
-                        <option {% if record.data.exitreason == "Lost interest" %} selected="selected"{% endif %}>Lost interest</option>
-                        <option {% if record.data.exitreason == "Got a job" %} selected="selected"{% endif %}>Got a job</option>
-                        <option {% if record.data.exitreason == "Health" %} selected="selected"{% endif %}>Health</option>
-                        <option {% if record.data.exitreason == "Unsuitable" %} selected="selected"{% endif %}>Unsuitable</option>
-                        <option {% if record.data.exitreason == "Timetable" %} selected="selected"{% endif %}>Timetable</option>
-                        <option {% if record.data.exitreason == "Did not fit in" %} selected="selected"{% endif %}>Did not fit in</option>
-                        <option {% if record.data.exitreason == "Teachers" %} selected="selected"{% endif %}>Teachers</option>
-                        <option {% if record.data.exitreason == "Other" %} selected="selected"{% endif %}>Other</option>
+                        <option {% if record.data.exitreason.lower() == "finance" %} selected="selected"{% endif %}>Finance</option>
+                        <option {% if record.data.exitreason.lower() == "domestic" %} selected="selected"{% endif %}>Domestic</option>
+                        <option {% if record.data.exitreason.lower() == "course difficulty" %} selected="selected"{% endif %}>Course difficulty</option>
+                        <option {% if record.data.exitreason.lower() == "lost interest" %} selected="selected"{% endif %}>Lost interest</option>
+                        <option {% if record.data.exitreason.lower() == "got a job" %} selected="selected"{% endif %}>Got a job</option>
+                        <option {% if record.data.exitreason.lower() == "health" %} selected="selected"{% endif %}>Health</option>
+                        <option {% if record.data.exitreason.lower() == "unsuitable" %} selected="selected"{% endif %}>Unsuitable</option>
+                        <option {% if record.data.exitreason.lower() == "timetable" %} selected="selected"{% endif %}>Timetable</option>
+                        <option {% if record.data.exitreason.lower() == "did not fit in" %} selected="selected"{% endif %}>Did not fit in</option>
+                        <option {% if record.data.exitreason.lower() == "teachers" %} selected="selected"{% endif %}>Teachers</option>
+                        <option {% if record.data.exitreason.lower() == "other" %} selected="selected"{% endif %}>Other</option>
                     </select></td>
                 </tr>
                 <tr>

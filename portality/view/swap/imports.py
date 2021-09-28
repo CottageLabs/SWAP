@@ -298,38 +298,39 @@ def index(model=None):
                                 qry['query']['bool']['must'] = []
                                 if len(rc.get('archive',"")) > 1: qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rc['archive']}})
                                 if len(rc.get('last_name',"")) > 1 and len(rc.get('first_name',"")) > 1 and len(rc.get('date_of_birth',"")) > 1:
-                                    qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'], 'fuzziness':0.9}}})
-                                    qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'], 'fuzziness':0.9}}})
+                                    qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'].replace(' ',''), 'fuzziness':0.9}}})
+                                    qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'].replace(' ',''), 'fuzziness':0.9}}})
                                     # tidy the date of birth and test for EN/US format, then narrow the search
                                     # convert date of birth format if necessary
                                     try:
-                                        dob = rc['date_of_birth']
+                                        dob = rc['date_of_birth'].replace(' ','')
                                         if '-' in date_of_birth: dob = dob.replace('-','/')
                                         parts = date_of_birth.split('/')
-                                        tryflip = True
-                                        if parts[1] > 12:
-                                            parts = [parts[1],parts[0],parts[2]]
-                                            tryflip = False
-                                        if len(str(parts[2])) == 2:
-                                            if parts[2] > 50:
-                                                parts[2] = str("19" + str(parts[2]))
-                                            else:
-                                                parts[2] = str("20" + str(parts[2]))
-                                        if len(str(parts[0])) != 2:
-                                            parts[0] = '0' + str(parts[0])
-                                        if len(str(parts[1])) != 2:
-                                            parts[1] = '0' + str(parts[1])
-                                        dob = str(parts[0]) + '/' + str(parts[1]) + '/' + str(parts[2])
-                                        qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
-                                        q = models.Student().query(q=qry)
-                                        if  q.get('hits',{}).get('total',0) == 0 and tryflip:
-                                            dob = str(parts[1]) + '/' + str(parts[0]) + '/' + str(parts[2])
-                                            del qry['query']['bool']['must'][-1]
+                                        if len(parts) == 3:
+                                            tryflip = True
+                                            if parts[1] > 12:
+                                                parts = [parts[1],parts[0],parts[2]]
+                                                tryflip = False
+                                            if len(str(parts[2])) == 2:
+                                                if parts[2] > 50:
+                                                    parts[2] = str("19" + str(parts[2]))
+                                                else:
+                                                    parts[2] = str("20" + str(parts[2]))
+                                            if len(str(parts[0])) != 2:
+                                                parts[0] = '0' + str(parts[0])
+                                            if len(str(parts[1])) != 2:
+                                                parts[1] = '0' + str(parts[1])
+                                            dob = str(parts[0]) + '/' + str(parts[1]) + '/' + str(parts[2])
                                             qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
                                             q = models.Student().query(q=qry)
+                                            if  q.get('hits',{}).get('total',0) == 0 and tryflip:
+                                                dob = str(parts[1]) + '/' + str(parts[0]) + '/' + str(parts[2])
+                                                del qry['query']['bool']['must'][-1]
+                                                qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
+                                                q = models.Student().query(q=qry)
                                     except:
                                         pass
-                                if q.get('hits',{}).get('total',0) > 1:
+                                if q.get('hits',{}).get('total',0) > 0:
                                     sid = q['hits']['hits'][0]['_source']['id']
                                     student = models.Student.pull(sid)
                         except:
@@ -337,12 +338,12 @@ def index(model=None):
 
                         if student is not None:
                             try:
-                                student.data['completedunits'] = rc.get('completedunits','')
-                                student.data['profilegrades'] = rc.get('profilegrades','')
-                                student.data['courseexit'] = rc.get('courseexit','')
-                                student.data['exitreason'] = rc.get('exitreason','')
-                                student.data['progress'] = rc.get('progress','')
-                                student.data['progresswhere'] = rc.get('progresswhere','')
+                                student.data['completedunits'] = rc.get('completedunits','').replace(' ','')
+                                student.data['profilegrades'] = rc.get('profilegrades','').replace(' ','')
+                                student.data['courseexit'] = rc.get('courseexit','').replace(' ','')
+                                student.data['exitreason'] = rc.get('exitreason','').replace(' ','')
+                                student.data['progress'] = rc.get('progress','').replace(' ','')
+                                student.data['progresswhere'] = rc.get('progresswhere','').replace(' ','')
                                 student.save()
                                 updates.append('Saved student ' + rc.get('first_name',"") + " " + rc.get('last_name',"") + ' progression data.')
                             except:
