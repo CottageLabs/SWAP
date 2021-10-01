@@ -294,6 +294,7 @@ def index(model=None):
                                         student = models.Student.pull(sid)
                             except:
                                 pass
+                            print(student)
                             if student is None:
                                 qry['query']['bool']['must'] = []
                                 if len(rc.get('archive',"")) > 1: qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rc['archive']}})
