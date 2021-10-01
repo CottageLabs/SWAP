@@ -294,18 +294,20 @@ def index(model=None):
                                         student = models.Student.pull(sid)
                             except:
                                 pass
-                            print(student)
                             if student is None:
+                                print(rc)
                                 qry['query']['bool']['must'] = []
                                 if len(rc.get('archive',"")) > 1: qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rc['archive']}})
                                 if len(rc.get('last_name',"")) > 1 and len(rc.get('first_name',"")) > 1 and len(rc.get('date_of_birth',"")) > 1:
                                     qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'].strip(), 'fuzziness':0.9}}})
                                     qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'].strip(), 'fuzziness':0.9}}})
+                                    print(qry)
                                     # tidy the date of birth and test for EN/US format, then narrow the search
                                     # convert date of birth format if necessary
                                     dob = rc['date_of_birth'].replace(' ','')
                                     if '-' in dob: dob = dob.replace('-','/')
                                     parts = dob.split('/')
+                                    print(parts)
                                     if len(parts) == 3:
                                         tryflip = True
                                         if parts[1] > 12:
@@ -322,8 +324,10 @@ def index(model=None):
                                             parts[1] = '0' + str(parts[1])
                                         dob = str(parts[0]) + '/' + str(parts[1]) + '/' + str(parts[2])
                                         qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
+                                        print(qry)
                                         q = models.Student().query(q=qry)
-                                        if  q.get('hits',{}).get('total',0) == 0 and tryflip:
+                                        print(q)
+                                        if q.get('hits',{}).get('total',0) == 0 and tryflip:
                                             dob = str(parts[1]) + '/' + str(parts[0]) + '/' + str(parts[2])
                                             del qry['query']['bool']['must'][-1]
                                             qry['query']['bool']['must'].append({'term':{'date_of_birth'+app.config['FACET_FIELD']:dob}})
