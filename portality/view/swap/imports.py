@@ -299,7 +299,7 @@ def index(model=None):
                                 if len(rc.get('archive',"")) > 1: qry['query']['bool']['must'].append({'term':{'archive'+app.config['FACET_FIELD']:rc['archive']}})
                                 if len(rc.get('last_name',"")) > 1 and len(rc.get('first_name',"")) > 1 and len(rc.get('date_of_birth',"")) > 1:
                                     qry['query']['bool']['must'].append({'match':{'last_name':{'query':rc['last_name'].strip(), 'fuzziness':0.9}}})
-                                    qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'].strip()), 'fuzziness':0.9}}})
+                                    qry['query']['bool']['must'].append({'match':{'first_name':{'query':rc['first_name'].strip(), 'fuzziness':0.9}}})
                                     # tidy the date of birth and test for EN/US format, then narrow the search
                                     # convert date of birth format if necessary
                                     try:
