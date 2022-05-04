@@ -224,12 +224,8 @@ def download_csv(recordlist,keys):
                 elif key in uniprogressionkeys:
                     ky = key.replace('uni_','')
                     tidykey = ""
-                    firstline = True
-                    for line in record.get('progressions',[]):
-                        if firstline:
-                            firstline = False
-                        else:
-                            tidykey += '\n'
+                    if len(record.get('progressions', [])) > 0:
+                        line = record['progressions'][len(record['progressions']) - 1]
                         if (ky == 'starting_year'):
                             tidykey += line.get('starting_year',line.get('start_year',''))
                         else:

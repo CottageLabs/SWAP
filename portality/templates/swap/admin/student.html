@@ -1565,6 +1565,9 @@ fieldset{
                     <td>If the student progressed to an FEC / HEI, which one (if known).</td>
                     <td><select name="progresswhere">
                         <option></option>
+                        {% if record.data.progresswhere and record.data.progresswhere not in selections.colleges and record.data.progresswhere not in selections.unis %}
+                        <option selected="selected">{{val}}</option>
+                        {% endif %}
                         <optgroup label="Colleges">
                             {% for val in selections.colleges %}
                             <option 

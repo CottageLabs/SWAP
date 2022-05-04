@@ -341,7 +341,7 @@ def index(model=None):
                                 student.data['courseexit'] = rc.get('courseexit','').replace(' ','')
                                 student.data['exitreason'] = rc.get('exitreason','').replace(' ','')
                                 student.data['progress'] = rc.get('progress','').replace(' ','')
-                                student.data['progresswhere'] = rc.get('progresswhere','').replace(' ','')
+                                student.data['progresswhere'] = rc.get('progresswhere',rc.get('progress_where','')).replace(' ','')
                                 student.save()
                                 updates.append('Saved student ' + rc.get('first_name',"") + " " + rc.get('last_name',"") + ' data.')
                             except:
@@ -485,7 +485,7 @@ def index(model=None):
                                 if len(student.data['progressions']) > 0:
                                     c = 0
                                     for prog in student.data['progressions']:
-                                        if prog['institution_shortname'] == progn['institution_shortname'] and prog['course_name'] == progn['course_name']:
+                                        if prog['institution_shortname'] == progn['institution_shortname']: #and prog['course_name'] == progn['course_name']:
                                             which = c
                                         c += 1
                                 
