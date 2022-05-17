@@ -1565,23 +1565,44 @@ fieldset{
                     <td>If the student progressed to an FEC / HEI, which one (if known).</td>
                     <td><select name="progresswhere">
                         <option></option>
-                        {% if record.data.progresswhere and record.data.progresswhere not in selections.colleges and record.data.progresswhere not in selections.unis %}
-                        <option selected="selected">{{val}}</option>
+                        {% if record.data.progresswhere %}
+                            {% if record.data.progresswhere and record.data.progresswhere not in selections.colleges and record.data.progresswhere not in selections.unis %}
+                            <option selected="selected">{{record.data.progresswhere}}</option>
+                            {% endif %}
+                            <optgroup label="Colleges">
+                                {% for val in selections.colleges %}
+                                <option 
+                                {% if val == record.data.progresswhere %}selected="selected"{% endif %}
+                                >{{val}}</option>
+                                {% endfor %}
+                            </optgroup>
+                            <optgroup label="Universities">
+                                {% for val in selections.unis %}
+                                <option 
+                                {% if val == record.data.progresswhere %}selected="selected"{% endif %}
+                                >{{val}}</option>
+                                {% endfor %}
+                            </optgroup>
                         {% endif %}
-                        <optgroup label="Colleges">
-                            {% for val in selections.colleges %}
-                            <option 
-                            {% if val == record.data.progresswhere %}selected="selected"{% endif %}
-                            >{{val}}</option>
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Universities">
-                            {% for val in selections.unis %}
-                            <option 
-                            {% if val == record.data.progresswhere %}selected="selected"{% endif %}
-                            >{{val}}</option>
-                            {% endfor %}
-                        </optgroup>
+                        {% if record.data.progress_where %}
+                            {% if record.data.progress_where and record.data.progress_where not in selections.colleges and record.data.progress_where not in selections.unis %}
+                            <option selected="selected">{{record.data.progress_where}}</option>
+                            {% endif %}
+                            <optgroup label="Colleges">
+                                {% for val in selections.colleges %}
+                                <option 
+                                {% if val == record.data.progress_where %}selected="selected"{% endif %}
+                                >{{val}}</option>
+                                {% endfor %}
+                            </optgroup>
+                            <optgroup label="Universities">
+                                {% for val in selections.unis %}
+                                <option 
+                                {% if val == record.data.progress_where %}selected="selected"{% endif %}
+                                >{{val}}</option>
+                                {% endfor %}
+                            </optgroup>
+                        {% endif %}
                     </select></td>
 
 
