@@ -162,8 +162,10 @@ def index(model=None):
                                         parts[0] = '0' + str(parts[0])
                                     if len(str(mon)) == 1:
                                         mon = '0' + str(mon)
+                                    if len(str(parts[2])) == 1:
+                                        parts[2] = '0' + str(parts[2])
                                     if len(str(parts[2])) == 2:
-                                        if parts[2] > 50:
+                                        if int(parts[2]) > 50:
                                             year = str("19" + str(parts[2]))
                                         else:
                                             year = str("20" + str(parts[2]))
