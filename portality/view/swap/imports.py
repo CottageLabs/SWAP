@@ -130,6 +130,7 @@ def index(model=None):
                         if rec[0].strip().lower() != 'surname':
                             try:
                                 date_of_birth = rec[2].strip()
+                                if '-' in date_of_birth: date_of_birth = date_of_birth.replace('-',' ')
                                 if ' ' in date_of_birth:
                                     parts = date_of_birth.split(' ')
                                     mon = "01"
