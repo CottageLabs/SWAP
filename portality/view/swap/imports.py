@@ -96,14 +96,23 @@ def index(model=None):
                                         if ap['choice_number'] != 'Final':
                                             nofaps.append(ap)
                                     student.data['applications'] = nofaps
+                                    #student.data['applications'].append({
+                                    #    "choice_number": 'Final',
+                                    #    "institution_code": rec[9].strip(),
+                                    #    "institution_shortname": rec[8].strip(),
+                                    #    "course_code": rec[10].strip(),
+                                    #    "decisions": "Not placed" if rec[12].strip().lower == "not placed" else "",
+                                    #    "course_name": "" if rec[12].strip().strip().lower == "not placed" else rec[12].strip(),
+                                    #    "start_year": rec[14].strip()
+                                    #})
                                     student.data['applications'].append({
                                         "choice_number": 'Final',
                                         "institution_code": rec[9].strip(),
                                         "institution_shortname": rec[8].strip(),
                                         "course_code": rec[10].strip(),
-                                        "decisions": "Not placed" if rec[12].strip().lower == "not placed" else "",
-                                        "course_name": "" if rec[12].strip().strip().lower == "not placed" else rec[12].strip(),
-                                        "start_year": rec[14].strip()
+                                        "decisions": "Not placed" if rec[15].strip().lower == "not placed" else "",
+                                        "course_name": "" if rec[15].strip().strip().lower == "not placed" else rec[15].strip(),
+                                        "start_year": rec[21].strip()
                                     })
                                     student.save()
                                     updates.append('Updated student <a href="/admin/student/' + student.id + '">' + student.data['first_name'] + ' ' + student.data['last_name'] + '</a>')
